@@ -17,13 +17,13 @@ public class CodeUtil {
 
 
 
-        entityPackage = "stusqlserver";
+        entityPackage = "textMySqlDB";
 
-       DbCodeGenerateFactory.codeGenerate("student", entityPackage);
+       DbCodeGenerateFactory.codeGenerate("user", entityPackage);
 //        DbCodeGenerateFactory.codeGenerate("TS_ROLE", entityPackage);
 //        DbCodeGenerateFactory.codeGenerate("TS_MENU", entityPackage);
 
-        testOracle();
+//        testOracle();
     }
 
 

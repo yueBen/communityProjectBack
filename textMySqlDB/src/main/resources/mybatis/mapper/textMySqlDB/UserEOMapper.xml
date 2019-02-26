@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.textMySqlDB.dao.UserEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.textMySqlDB.entity.UserEO" >
+    <id column="uid" property="uid" />
+    <result column="createTime" property="createTime" />
+    <result column="username" property="username" />
+    <result column="userpwd" property="userpwd" />
+    <result column="role" property="role" />
+  </resultMap>
+
+  <!-- user table all fields -->
+  <sql id="Base_Column_List" >
+     uid, createTime, username, userpwd, role
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="uid != null" >
+        and uid ${uidOperator} #{uid}
+      </if>
+      <if test="createTime != null" >
+        and createTime ${createTimeOperator} #{createTime}
+      </if>
+      <if test="createTime1 != null" >
+        and createTime &gt;= #{createTime1}
+      </if>
+      <if test="createTime2 != null" >
+        and createTime &lt;= #{createTime2}
+      </if>
+      <if test="username != null" >
+        and username ${usernameOperator} #{username}
+      </if>
+      <if test="userpwd != null" >
+        and userpwd ${userpwdOperator} #{userpwd}
+      </if>
+      <if test="role != null" >
+        and role ${roleOperator} #{role}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.textMySqlDB.entity.UserEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="uid">
+        SELECT SEQ_user.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into user(<include refid="Base_Column_List" />)
+    values (#{uid, jdbcType=${po.jdbcType}}, #{createTime, jdbcType=${po.jdbcType}}, #{username, jdbcType=${po.jdbcType}}, #{userpwd, jdbcType=${po.jdbcType}}, #{role, jdbcType=${po.jdbcType}})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.textMySqlDB.entity.UserEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="uid">
+        SELECT SEQ_user.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="uid != null" >uid,</if>
+                <if test="createTime != null" >createTime,</if>
+                <if test="username != null" >username,</if>
+                <if test="userpwd != null" >userpwd,</if>
+                <if test="role != null" >role,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="uid != null" >#{uid, jdbcType=${po.jdbcType}},</if>
+                <if test="createTime != null" >#{createTime, jdbcType=${po.jdbcType}},</if>
+                <if test="username != null" >#{username, jdbcType=${po.jdbcType}},</if>
+                <if test="userpwd != null" >#{userpwd, jdbcType=${po.jdbcType}},</if>
+                <if test="role != null" >#{role, jdbcType=${po.jdbcType}},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.textMySqlDB.entity.UserEO" >
+    update user
+       set  createTime = #{createTime},
+            username = #{username},
+            userpwd = #{userpwd},
+            role = #{role}
+     where  uid = #{uid}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.textMySqlDB.entity.UserEO" >
+    update user
+    <set >
+      <if test="createTime != null" >
+        createTime = #{createTime},
+      </if>
+      <if test="username != null" >
+        username = #{username},
+      </if>
+      <if test="userpwd != null" >
+        userpwd = #{userpwd},
+      </if>
+      <if test="role != null" >
+        role = #{role},
+      </if>
+    </set>
+     where uid = #{uid}
+  </update>
+
+  <!-- 根据id查询 user -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from user
+     where uid = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user
+     where uid = #{value}
+
+  </delete>
+
+  <!-- user 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from user
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询user列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+		select <include refid="Base_Column_List" /> from user
+			<include refid="Base_Where_Clause"/>
+			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
+				${pager.orderCondition}
+			</if>
+			limit ${pager.pageOffset},${pager.pageSize}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from user
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+		${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>
