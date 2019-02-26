@@ -33,7 +33,7 @@ public class File_Form_Up {
     public ResponseMessage upFiles(String username,String userpwd, MultipartFile photo, MultipartFile[] files) throws Exception{
         //获取项目根目录
         String classPath = ResourceUtils.getURL("classpath:").getPath();
-        String path = classPath.substring(0,classPath.indexOf("stwl_claim")+10);
+        String path = classPath.substring(0,classPath.indexOf("communityProjectBack")+20);
 
         //获取前端表单字段名并打印，方法接收的字段名要与表单的字段名对应上
         System.out.println(username);
