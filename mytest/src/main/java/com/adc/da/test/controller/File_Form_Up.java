@@ -1,23 +1,18 @@
 package com.adc.da.test.controller;
 
-import com.adc.da.test.entity.DemoEO;
+import com.adc.da.FileUpLoad;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import io.swagger.annotations.Api;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.List;
 
 @RestController
 @RequestMapping("/${restPath}/test/File_Form_Up")
@@ -50,22 +45,13 @@ public class File_Form_Up {
 
     //输出MultipartFile
     public void outFile(MultipartFile mtf,String path) throws Exception{
-        int b;
-        byte[] bytes = new byte[1024];
+
         //创建下载文件对象
         File file = new File(path + "/" + mtf.getOriginalFilename());
         //判断存放文件的文件夹是否存在，不存在则创建一个
         if(!file.getParentFile().exists()) file.getParentFile().mkdir();
 
-        if(mtf != null && !mtf.isEmpty()){
-            InputStream is = mtf.getInputStream();
-            FileOutputStream fos = new FileOutputStream(file);
+        FileUpLoad.MulFileToFile(mtf,file);
 
-            while((b = is.read(bytes))!=-1){
-                fos.write(bytes,0,b);
-            }
-            is.close();
-            fos.close();
-        }
     }
 }

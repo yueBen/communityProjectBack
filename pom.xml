@@ -45,11 +45,10 @@
 
 	<modules>
 		<module>adc-da-main</module>
-		<module>demo</module>
-		<module>stwl-claim-sys</module>
-		<module>stwl-claim-ssologin</module>
+
 		<module>mytest</module>
-		<module>adc-test</module>
+		<module>myutil</module>
+
 	</modules>
 
 	<repositories>

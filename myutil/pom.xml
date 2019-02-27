@@ -9,7 +9,7 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>mytest</artifactId>
+    <artifactId>myutil</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -168,9 +168,9 @@
 
         <!--定时器-->
         <!--<dependency>-->
-            <!--<groupId>com.adc</groupId>-->
-            <!--<artifactId>adc-da-quartz</artifactId>-->
-            <!--<version>1.0.0</version>-->
+        <!--<groupId>com.adc</groupId>-->
+        <!--<artifactId>adc-da-quartz</artifactId>-->
+        <!--<version>1.0.0</version>-->
         <!--</dependency>-->
 
         <dependency>
@@ -194,11 +194,6 @@
             <groupId>com.adc</groupId>
             <artifactId>myutil</artifactId>
             <version>1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
     </dependencies>
