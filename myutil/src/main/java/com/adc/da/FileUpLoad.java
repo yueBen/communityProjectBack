@@ -30,13 +30,11 @@ public class FileUpLoad {
         String massage = MulFileToFile(mtf,file);
 
         if (massage == "ok"){
-            String path = file.getAbsolutePath();
-            System.err.println(path);
+            return massage;
 
         }else{
             return massage;
         }
-        return "";
     }
     
     /**  

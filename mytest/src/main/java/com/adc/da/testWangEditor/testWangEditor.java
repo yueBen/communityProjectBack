@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Encoder;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.List;
 
 
@@ -41,16 +44,27 @@ public class testWangEditor {
         String rootPath = classPath.substring(0, classPath.indexOf("communityProjectBack") + 20);
         String fileName = System.currentTimeMillis() + mtf.getOriginalFilename();
 
-        File newFile = new File(rootPath + "/zzz/" + fileName);
+        File newFile = new File(rootPath + "/mytest/src/main/resources/static/img/" + fileName);
 
 
         try {
-            FileUpLoad.outFileUrl(mtf,newFile);
+            if(FileUpLoad.outFileUrl(mtf,newFile) == "ok"){
+                FileInputStream fis = new FileInputStream(newFile);
+                byte[] bytes = new byte[fis.available()];
+
+                System.err.println("------fileupload---------"+fis.read(bytes));
+
+                fis.close();
+
+                BASE64Encoder encoder = new BASE64Encoder();
+                return Result.success("data:images/gif;base64,"+encoder.encode(bytes));
+            }else{
+                return Result.error("error");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error("error");
         }
-
-        return Result.success("ok");
     }
 }
