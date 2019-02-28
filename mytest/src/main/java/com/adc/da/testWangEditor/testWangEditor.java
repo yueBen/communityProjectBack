@@ -1,7 +1,6 @@
 package com.adc.da.testWangEditor;
 
 import com.adc.da.FileUpLoad;
-import com.adc.da.test.controller.File_Form_Up;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import io.swagger.annotations.Api;
@@ -15,8 +14,6 @@ import sun.misc.BASE64Encoder;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.List;
 
 
 /**
@@ -38,7 +35,6 @@ public class testWangEditor {
     @RequestMapping("/test")
     @ResponseBody
     public ResponseMessage photoUpLoad(@RequestParam("22410") MultipartFile mtf) throws Exception {
-//    public ResponseMessage photoUpLoad(@RequestParam("22410")String files) throws Exception{
         //获取项目根目录
         String classPath = ResourceUtils.getURL("classpath:").getPath();
         String rootPath = classPath.substring(0, classPath.indexOf("communityProjectBack") + 20);
@@ -48,17 +44,17 @@ public class testWangEditor {
 
 
         try {
-            if(FileUpLoad.outFileUrl(mtf,newFile) == "ok"){
+            if (FileUpLoad.outFileUrl(mtf, newFile).equals("ok")) {
                 FileInputStream fis = new FileInputStream(newFile);
                 byte[] bytes = new byte[fis.available()];
 
-                System.err.println("------fileupload---------"+fis.read(bytes));
+                System.err.println("------fileupload---------" + fis.read(bytes));
 
                 fis.close();
 
                 BASE64Encoder encoder = new BASE64Encoder();
-                return Result.success("data:images/gif;base64,"+encoder.encode(bytes));
-            }else{
+                return Result.success("data:images/gif;base64," + encoder.encode(bytes));
+            } else {
                 return Result.error("error");
             }
 
