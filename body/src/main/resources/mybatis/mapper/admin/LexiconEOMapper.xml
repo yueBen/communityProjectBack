@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.admin.dao.LexiconEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.admin.entity.LexiconEO" >
+    <id column="id" property="id" />
+    <result column="word" property="word" />
+    <result column="level" property="level" />
+  </resultMap>
+
+  <!-- lexicon table all fields -->
+  <sql id="Base_Column_List" >
+     id, word, level
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+      <if test="word != null" >
+        and word ${wordOperator} #{word}
+      </if>
+      <if test="level != null" >
+        and level ${levelOperator} #{level}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.admin.entity.LexiconEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_lexicon.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into lexicon(<include refid="Base_Column_List" />)
+    values (#{id, jdbcType=${po.jdbcType}}, #{word, jdbcType=${po.jdbcType}}, #{level, jdbcType=${po.jdbcType}})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.admin.entity.LexiconEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_lexicon.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into lexicon
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="id != null" >id,</if>
+                <if test="word != null" >word,</if>
+                <if test="level != null" >level,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
+                <if test="word != null" >#{word, jdbcType=${po.jdbcType}},</if>
+                <if test="level != null" >#{level, jdbcType=${po.jdbcType}},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.admin.entity.LexiconEO" >
+    update lexicon
+       set  word = #{word},
+            level = #{level}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.admin.entity.LexiconEO" >
+    update lexicon
+    <set >
+      <if test="word != null" >
+        word = #{word},
+      </if>
+      <if test="level != null" >
+        level = #{level},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 lexicon -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from lexicon
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from lexicon
+     where id = #{value}
+
+  </delete>
+
+  <!-- lexicon 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from lexicon
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询lexicon列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+		select <include refid="Base_Column_List" /> from lexicon
+			<include refid="Base_Where_Clause"/>
+			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
+				${pager.orderCondition}
+			</if>
+			limit ${pager.pageOffset},${pager.pageSize}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from lexicon
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+		${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

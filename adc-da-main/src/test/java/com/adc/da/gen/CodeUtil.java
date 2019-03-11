@@ -17,9 +17,9 @@ public class CodeUtil {
 
 
 
-        entityPackage = "textMySqlDB";
+        entityPackage = "admin";
 
-       DbCodeGenerateFactory.codeGenerate("user", entityPackage);
+       DbCodeGenerateFactory.codeGenerate("lexicon", entityPackage);
 //        DbCodeGenerateFactory.codeGenerate("TS_ROLE", entityPackage);
 //        DbCodeGenerateFactory.codeGenerate("TS_MENU", entityPackage);
 

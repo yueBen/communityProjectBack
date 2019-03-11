@@ -256,6 +256,13 @@
 			<version>1.0.0</version>
 		</dependency>
 
+
+		<dependency>
+			<groupId>com.adc</groupId>
+			<artifactId>body</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>

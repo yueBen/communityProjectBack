@@ -48,6 +48,7 @@
 
 		<module>mytest</module>
 		<module>myutil</module>
+		<module>body</module>
 
 	</modules>
 

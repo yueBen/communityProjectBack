@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.personInfo.dao.StickyNoteEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.personInfo.entity.StickyNoteEO" >
+    <id column="id" property="id" />
+    <result column="u_id_1" property="uId1" />
+    <result column="u_id_2" property="uId2" />
+    <result column="create_time" property="createTime" />
+    <result column="status" property="status" />
+    <result column="content" property="content" />
+  </resultMap>
+
+  <!-- sticky_note table all fields -->
+  <sql id="Base_Column_List" >
+     id, u_id_1, u_id_2, create_time, status, content
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+      <if test="uId1 != null" >
+        and u_id_1 ${uId1Operator} #{uId1}
+      </if>
+      <if test="uId2 != null" >
+        and u_id_2 ${uId2Operator} #{uId2}
+      </if>
+      <if test="createTime != null" >
+        and create_time ${createTimeOperator} #{createTime}
+      </if>
+      <if test="createTime1 != null" >
+        and create_time &gt;= #{createTime1}
+      </if>
+      <if test="createTime2 != null" >
+        and create_time &lt;= #{createTime2}
+      </if>
+      <if test="status != null" >
+        and status ${statusOperator} #{status}
+      </if>
+      <if test="content != null" >
+        and content ${contentOperator} #{content}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.personInfo.entity.StickyNoteEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_sticky_note.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into sticky_note(<include refid="Base_Column_List" />)
+    values (#{id, jdbcType=${po.jdbcType}}, #{uId1, jdbcType=${po.jdbcType}}, #{uId2, jdbcType=${po.jdbcType}}, #{createTime, jdbcType=${po.jdbcType}}, #{status, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.personInfo.entity.StickyNoteEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_sticky_note.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into sticky_note
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="id != null" >id,</if>
+                <if test="uId1 != null" >u_id_1,</if>
+                <if test="uId2 != null" >u_id_2,</if>
+                <if test="createTime != null" >create_time,</if>
+                <if test="status != null" >status,</if>
+                <if test="content != null" >content,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
+                <if test="uId1 != null" >#{uId1, jdbcType=${po.jdbcType}},</if>
+                <if test="uId2 != null" >#{uId2, jdbcType=${po.jdbcType}},</if>
+                <if test="createTime != null" >#{createTime, jdbcType=${po.jdbcType}},</if>
+                <if test="status != null" >#{status, jdbcType=${po.jdbcType}},</if>
+                <if test="content != null" >#{content, jdbcType=${po.jdbcType}},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.personInfo.entity.StickyNoteEO" >
+    update sticky_note
+       set  u_id_1 = #{uId1},
+            u_id_2 = #{uId2},
+            create_time = #{createTime},
+            status = #{status},
+            content = #{content}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.personInfo.entity.StickyNoteEO" >
+    update sticky_note
+    <set >
+      <if test="uId1 != null" >
+        u_id_1 = #{uId1},
+      </if>
+      <if test="uId2 != null" >
+        u_id_2 = #{uId2},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="content != null" >
+        content = #{content},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 sticky_note -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from sticky_note
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sticky_note
+     where id = #{value}
+
+  </delete>
+
+  <!-- sticky_note 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from sticky_note
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询sticky_note列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+		select <include refid="Base_Column_List" /> from sticky_note
+			<include refid="Base_Where_Clause"/>
+			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
+				${pager.orderCondition}
+			</if>
+			limit ${pager.pageOffset},${pager.pageSize}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from sticky_note
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+		${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

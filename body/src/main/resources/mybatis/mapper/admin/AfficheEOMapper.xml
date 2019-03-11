@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.admin.dao.AfficheEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.admin.entity.AfficheEO" >
+    <id column="id" property="id" />
+    <result column="u_id" property="uId" />
+    <result column="create_time" property="createTime" />
+    <result column="type" property="type" />
+    <result column="title" property="title" />
+    <result column="content" property="content" />
+    <result column="phont_path" property="phontPath" />
+  </resultMap>
+
+  <!-- affiche table all fields -->
+  <sql id="Base_Column_List" >
+     id, u_id, create_time, type, title, content, phont_path
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+      <if test="uId != null" >
+        and u_id ${uIdOperator} #{uId}
+      </if>
+      <if test="createTime != null" >
+        and create_time ${createTimeOperator} #{createTime}
+      </if>
+      <if test="createTime1 != null" >
+        and create_time &gt;= #{createTime1}
+      </if>
+      <if test="createTime2 != null" >
+        and create_time &lt;= #{createTime2}
+      </if>
+      <if test="type != null" >
+        and type ${typeOperator} #{type}
+      </if>
+      <if test="title != null" >
+        and title ${titleOperator} #{title}
+      </if>
+      <if test="content != null" >
+        and content ${contentOperator} #{content}
+      </if>
+      <if test="phontPath != null" >
+        and phont_path ${phontPathOperator} #{phontPath}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.admin.entity.AfficheEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_affiche.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into affiche(<include refid="Base_Column_List" />)
+    values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{createTime, jdbcType=${po.jdbcType}}, #{type, jdbcType=${po.jdbcType}}, #{title, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}}, #{phontPath, jdbcType=${po.jdbcType}})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.admin.entity.AfficheEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_affiche.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into affiche
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="id != null" >id,</if>
+                <if test="uId != null" >u_id,</if>
+                <if test="createTime != null" >create_time,</if>
+                <if test="type != null" >type,</if>
+                <if test="title != null" >title,</if>
+                <if test="content != null" >content,</if>
+                <if test="phontPath != null" >phont_path,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
+                <if test="uId != null" >#{uId, jdbcType=${po.jdbcType}},</if>
+                <if test="createTime != null" >#{createTime, jdbcType=${po.jdbcType}},</if>
+                <if test="type != null" >#{type, jdbcType=${po.jdbcType}},</if>
+                <if test="title != null" >#{title, jdbcType=${po.jdbcType}},</if>
+                <if test="content != null" >#{content, jdbcType=${po.jdbcType}},</if>
+                <if test="phontPath != null" >#{phontPath, jdbcType=${po.jdbcType}},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.admin.entity.AfficheEO" >
+    update affiche
+       set  u_id = #{uId},
+            create_time = #{createTime},
+            type = #{type},
+            title = #{title},
+            content = #{content},
+            phont_path = #{phontPath}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.admin.entity.AfficheEO" >
+    update affiche
+    <set >
+      <if test="uId != null" >
+        u_id = #{uId},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="type != null" >
+        type = #{type},
+      </if>
+      <if test="title != null" >
+        title = #{title},
+      </if>
+      <if test="content != null" >
+        content = #{content},
+      </if>
+      <if test="phontPath != null" >
+        phont_path = #{phontPath},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 affiche -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from affiche
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from affiche
+     where id = #{value}
+
+  </delete>
+
+  <!-- affiche 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from affiche
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询affiche列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+		select <include refid="Base_Column_List" /> from affiche
+			<include refid="Base_Where_Clause"/>
+			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
+				${pager.orderCondition}
+			</if>
+			limit ${pager.pageOffset},${pager.pageSize}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from affiche
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+		${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

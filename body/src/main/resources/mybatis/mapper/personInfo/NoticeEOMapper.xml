@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.personInfo.dao.NoticeEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.personInfo.entity.NoticeEO" >
+    <id column="id" property="id" />
+    <result column="u_id" property="uId" />
+    <result column="to_id" property="toId" />
+    <result column="type" property="type" />
+    <result column="create_time" property="createTime" />
+    <result column="content" property="content" />
+    <result column="satus" property="satus" />
+  </resultMap>
+
+  <!-- notice table all fields -->
+  <sql id="Base_Column_List" >
+     id, u_id, to_id, type, create_time, content, satus
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+      <if test="uId != null" >
+        and u_id ${uIdOperator} #{uId}
+      </if>
+      <if test="toId != null" >
+        and to_id ${toIdOperator} #{toId}
+      </if>
+      <if test="type != null" >
+        and type ${typeOperator} #{type}
+      </if>
+      <if test="createTime != null" >
+        and create_time ${createTimeOperator} #{createTime}
+      </if>
+      <if test="createTime1 != null" >
+        and create_time &gt;= #{createTime1}
+      </if>
+      <if test="createTime2 != null" >
+        and create_time &lt;= #{createTime2}
+      </if>
+      <if test="content != null" >
+        and content ${contentOperator} #{content}
+      </if>
+      <if test="satus != null" >
+        and satus ${satusOperator} #{satus}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.personInfo.entity.NoticeEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_notice.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into notice(<include refid="Base_Column_List" />)
+    values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{toId, jdbcType=${po.jdbcType}}, #{type, jdbcType=${po.jdbcType}}, #{createTime, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}}, #{satus, jdbcType=${po.jdbcType}})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.personInfo.entity.NoticeEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_notice.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into notice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="id != null" >id,</if>
+                <if test="uId != null" >u_id,</if>
+                <if test="toId != null" >to_id,</if>
+                <if test="type != null" >type,</if>
+                <if test="createTime != null" >create_time,</if>
+                <if test="content != null" >content,</if>
+                <if test="satus != null" >satus,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
+                <if test="uId != null" >#{uId, jdbcType=${po.jdbcType}},</if>
+                <if test="toId != null" >#{toId, jdbcType=${po.jdbcType}},</if>
+                <if test="type != null" >#{type, jdbcType=${po.jdbcType}},</if>
+                <if test="createTime != null" >#{createTime, jdbcType=${po.jdbcType}},</if>
+                <if test="content != null" >#{content, jdbcType=${po.jdbcType}},</if>
+                <if test="satus != null" >#{satus, jdbcType=${po.jdbcType}},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.personInfo.entity.NoticeEO" >
+    update notice
+       set  u_id = #{uId},
+            to_id = #{toId},
+            type = #{type},
+            create_time = #{createTime},
+            content = #{content},
+            satus = #{satus}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.personInfo.entity.NoticeEO" >
+    update notice
+    <set >
+      <if test="uId != null" >
+        u_id = #{uId},
+      </if>
+      <if test="toId != null" >
+        to_id = #{toId},
+      </if>
+      <if test="type != null" >
+        type = #{type},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="content != null" >
+        content = #{content},
+      </if>
+      <if test="satus != null" >
+        satus = #{satus},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 notice -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from notice
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from notice
+     where id = #{value}
+
+  </delete>
+
+  <!-- notice 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from notice
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询notice列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+		select <include refid="Base_Column_List" /> from notice
+			<include refid="Base_Where_Clause"/>
+			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
+				${pager.orderCondition}
+			</if>
+			limit ${pager.pageOffset},${pager.pageSize}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from notice
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+		${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

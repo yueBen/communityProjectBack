@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.article.dao.HistoryEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.article.entity.HistoryEO" >
+    <id column="id" property="id" />
+    <result column="u_id" property="uId" />
+    <result column="a_id" property="aId" />
+    <result column="browse_time" property="browseTime" />
+    <result column="author_photo" property="authorPhoto" />
+    <result column="article_img" property="articleImg" />
+    <result column="author_name" property="authorName" />
+    <result column="content" property="content" />
+    <result column="browse_num" property="browseNum" />
+    <result column="collection_num" property="collectionNum" />
+    <result column="comment_num" property="commentNum" />
+  </resultMap>
+
+  <!-- history table all fields -->
+  <sql id="Base_Column_List" >
+     id, u_id, a_id, browse_time, author_photo, article_img, author_name, content, browse_num, collection_num, comment_num
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+      <if test="uId != null" >
+        and u_id ${uIdOperator} #{uId}
+      </if>
+      <if test="aId != null" >
+        and a_id ${aIdOperator} #{aId}
+      </if>
+      <if test="browseTime != null" >
+        and browse_time ${browseTimeOperator} #{browseTime}
+      </if>
+      <if test="browseTime1 != null" >
+        and browse_time &gt;= #{browseTime1}
+      </if>
+      <if test="browseTime2 != null" >
+        and browse_time &lt;= #{browseTime2}
+      </if>
+      <if test="authorPhoto != null" >
+        and author_photo ${authorPhotoOperator} #{authorPhoto}
+      </if>
+      <if test="articleImg != null" >
+        and article_img ${articleImgOperator} #{articleImg}
+      </if>
+      <if test="authorName != null" >
+        and author_name ${authorNameOperator} #{authorName}
+      </if>
+      <if test="content != null" >
+        and content ${contentOperator} #{content}
+      </if>
+      <if test="browseNum != null" >
+        and browse_num ${browseNumOperator} #{browseNum}
+      </if>
+      <if test="collectionNum != null" >
+        and collection_num ${collectionNumOperator} #{collectionNum}
+      </if>
+      <if test="commentNum != null" >
+        and comment_num ${commentNumOperator} #{commentNum}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.article.entity.HistoryEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_history.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into history(<include refid="Base_Column_List" />)
+    values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{aId, jdbcType=${po.jdbcType}}, #{browseTime, jdbcType=${po.jdbcType}}, #{authorPhoto, jdbcType=${po.jdbcType}}, #{articleImg, jdbcType=${po.jdbcType}}, #{authorName, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}}, #{browseNum, jdbcType=${po.jdbcType}}, #{collectionNum, jdbcType=${po.jdbcType}}, #{commentNum, jdbcType=${po.jdbcType}})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.article.entity.HistoryEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_history.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into history
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="id != null" >id,</if>
+                <if test="uId != null" >u_id,</if>
+                <if test="aId != null" >a_id,</if>
+                <if test="browseTime != null" >browse_time,</if>
+                <if test="authorPhoto != null" >author_photo,</if>
+                <if test="articleImg != null" >article_img,</if>
+                <if test="authorName != null" >author_name,</if>
+                <if test="content != null" >content,</if>
+                <if test="browseNum != null" >browse_num,</if>
+                <if test="collectionNum != null" >collection_num,</if>
+                <if test="commentNum != null" >comment_num,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
+                <if test="uId != null" >#{uId, jdbcType=${po.jdbcType}},</if>
+                <if test="aId != null" >#{aId, jdbcType=${po.jdbcType}},</if>
+                <if test="browseTime != null" >#{browseTime, jdbcType=${po.jdbcType}},</if>
+                <if test="authorPhoto != null" >#{authorPhoto, jdbcType=${po.jdbcType}},</if>
+                <if test="articleImg != null" >#{articleImg, jdbcType=${po.jdbcType}},</if>
+                <if test="authorName != null" >#{authorName, jdbcType=${po.jdbcType}},</if>
+                <if test="content != null" >#{content, jdbcType=${po.jdbcType}},</if>
+                <if test="browseNum != null" >#{browseNum, jdbcType=${po.jdbcType}},</if>
+                <if test="collectionNum != null" >#{collectionNum, jdbcType=${po.jdbcType}},</if>
+                <if test="commentNum != null" >#{commentNum, jdbcType=${po.jdbcType}},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.article.entity.HistoryEO" >
+    update history
+       set  u_id = #{uId},
+            a_id = #{aId},
+            browse_time = #{browseTime},
+            author_photo = #{authorPhoto},
+            article_img = #{articleImg},
+            author_name = #{authorName},
+            content = #{content},
+            browse_num = #{browseNum},
+            collection_num = #{collectionNum},
+            comment_num = #{commentNum}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.article.entity.HistoryEO" >
+    update history
+    <set >
+      <if test="uId != null" >
+        u_id = #{uId},
+      </if>
+      <if test="aId != null" >
+        a_id = #{aId},
+      </if>
+      <if test="browseTime != null" >
+        browse_time = #{browseTime},
+      </if>
+      <if test="authorPhoto != null" >
+        author_photo = #{authorPhoto},
+      </if>
+      <if test="articleImg != null" >
+        article_img = #{articleImg},
+      </if>
+      <if test="authorName != null" >
+        author_name = #{authorName},
+      </if>
+      <if test="content != null" >
+        content = #{content},
+      </if>
+      <if test="browseNum != null" >
+        browse_num = #{browseNum},
+      </if>
+      <if test="collectionNum != null" >
+        collection_num = #{collectionNum},
+      </if>
+      <if test="commentNum != null" >
+        comment_num = #{commentNum},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 history -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from history
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from history
+     where id = #{value}
+
+  </delete>
+
+  <!-- history 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from history
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询history列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+		select <include refid="Base_Column_List" /> from history
+			<include refid="Base_Where_Clause"/>
+			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
+				${pager.orderCondition}
+			</if>
+			limit ${pager.pageOffset},${pager.pageSize}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from history
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+		${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.personInfo.dao.PersonInfoEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.personInfo.entity.PersonInfoEO" >
+    <id column="id" property="id" />
+    <result column="u_id" property="uId" />
+    <result column="name" property="name" />
+    <result column="phone" property="phone" />
+    <result column="birthday" property="birthday" />
+    <result column="address" property="address" />
+    <result column="gender" property="gender" />
+    <result column="introduce" property="introduce" />
+    <result column="ranking" property="ranking" />
+    <result column="praise_num" property="praiseNum" />
+    <result column="photo_path" property="photoPath" />
+  </resultMap>
+
+  <!-- person_info table all fields -->
+  <sql id="Base_Column_List" >
+     id, u_id, name, phone, birthday, address, gender, introduce, ranking, praise_num, photo_path
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+      <if test="uId != null" >
+        and u_id ${uIdOperator} #{uId}
+      </if>
+      <if test="name != null" >
+        and name ${nameOperator} #{name}
+      </if>
+      <if test="phone != null" >
+        and phone ${phoneOperator} #{phone}
+      </if>
+      <if test="birthday != null" >
+        and birthday ${birthdayOperator} #{birthday}
+      </if>
+      <if test="birthday1 != null" >
+        and birthday &gt;= #{birthday1}
+      </if>
+      <if test="birthday2 != null" >
+        and birthday &lt;= #{birthday2}
+      </if>
+      <if test="address != null" >
+        and address ${addressOperator} #{address}
+      </if>
+      <if test="gender != null" >
+        and gender ${genderOperator} #{gender}
+      </if>
+      <if test="introduce != null" >
+        and introduce ${introduceOperator} #{introduce}
+      </if>
+      <if test="ranking != null" >
+        and ranking ${rankingOperator} #{ranking}
+      </if>
+      <if test="praiseNum != null" >
+        and praise_num ${praiseNumOperator} #{praiseNum}
+      </if>
+      <if test="photoPath != null" >
+        and photo_path ${photoPathOperator} #{photoPath}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.personInfo.entity.PersonInfoEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_person_info.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into person_info(<include refid="Base_Column_List" />)
+    values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{name, jdbcType=${po.jdbcType}}, #{phone, jdbcType=${po.jdbcType}}, #{birthday, jdbcType=${po.jdbcType}}, #{address, jdbcType=${po.jdbcType}}, #{gender, jdbcType=${po.jdbcType}}, #{introduce, jdbcType=${po.jdbcType}}, #{ranking, jdbcType=${po.jdbcType}}, #{praiseNum, jdbcType=${po.jdbcType}}, #{photoPath, jdbcType=${po.jdbcType}})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.personInfo.entity.PersonInfoEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_person_info.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into person_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="id != null" >id,</if>
+                <if test="uId != null" >u_id,</if>
+                <if test="name != null" >name,</if>
+                <if test="phone != null" >phone,</if>
+                <if test="birthday != null" >birthday,</if>
+                <if test="address != null" >address,</if>
+                <if test="gender != null" >gender,</if>
+                <if test="introduce != null" >introduce,</if>
+                <if test="ranking != null" >ranking,</if>
+                <if test="praiseNum != null" >praise_num,</if>
+                <if test="photoPath != null" >photo_path,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
+                <if test="uId != null" >#{uId, jdbcType=${po.jdbcType}},</if>
+                <if test="name != null" >#{name, jdbcType=${po.jdbcType}},</if>
+                <if test="phone != null" >#{phone, jdbcType=${po.jdbcType}},</if>
+                <if test="birthday != null" >#{birthday, jdbcType=${po.jdbcType}},</if>
+                <if test="address != null" >#{address, jdbcType=${po.jdbcType}},</if>
+                <if test="gender != null" >#{gender, jdbcType=${po.jdbcType}},</if>
+                <if test="introduce != null" >#{introduce, jdbcType=${po.jdbcType}},</if>
+                <if test="ranking != null" >#{ranking, jdbcType=${po.jdbcType}},</if>
+                <if test="praiseNum != null" >#{praiseNum, jdbcType=${po.jdbcType}},</if>
+                <if test="photoPath != null" >#{photoPath, jdbcType=${po.jdbcType}},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.personInfo.entity.PersonInfoEO" >
+    update person_info
+       set  u_id = #{uId},
+            name = #{name},
+            phone = #{phone},
+            birthday = #{birthday},
+            address = #{address},
+            gender = #{gender},
+            introduce = #{introduce},
+            ranking = #{ranking},
+            praise_num = #{praiseNum},
+            photo_path = #{photoPath}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.personInfo.entity.PersonInfoEO" >
+    update person_info
+    <set >
+      <if test="uId != null" >
+        u_id = #{uId},
+      </if>
+      <if test="name != null" >
+        name = #{name},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday},
+      </if>
+      <if test="address != null" >
+        address = #{address},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender},
+      </if>
+      <if test="introduce != null" >
+        introduce = #{introduce},
+      </if>
+      <if test="ranking != null" >
+        ranking = #{ranking},
+      </if>
+      <if test="praiseNum != null" >
+        praise_num = #{praiseNum},
+      </if>
+      <if test="photoPath != null" >
+        photo_path = #{photoPath},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 person_info -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from person_info
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from person_info
+     where id = #{value}
+
+  </delete>
+
+  <!-- person_info 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from person_info
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询person_info列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+		select <include refid="Base_Column_List" /> from person_info
+			<include refid="Base_Where_Clause"/>
+			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
+				${pager.orderCondition}
+			</if>
+			limit ${pager.pageOffset},${pager.pageSize}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from person_info
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+		${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>
