@@ -4,16 +4,16 @@
   <!-- Result Map-->
   <resultMap id="BaseResultMap" type="com.adc.da.personInfo.entity.PersonInfoEO" >
     <id column="id" property="id" />
-    <result column="u_id" property="uId" />
-    <result column="name" property="name" />
-    <result column="phone" property="phone" />
-    <result column="birthday" property="birthday" />
-    <result column="address" property="address" />
-    <result column="gender" property="gender" />
-    <result column="introduce" property="introduce" />
-    <result column="ranking" property="ranking" />
-    <result column="praise_num" property="praiseNum" />
-    <result column="photo_path" property="photoPath" />
+    <result column="u_id"       jdbcType="VARCHAR"      property="uId" />
+    <result column="name"       jdbcType="VARCHAR"      property="name" />
+    <result column="phone"      jdbcType="VARCHAR"      property="phone" />
+    <result column="birthday"   jdbcType="TIMESTAMP"    property="birthday" />
+    <result column="address"    jdbcType="VARCHAR"      property="address" />
+    <result column="gender"     jdbcType="VARCHAR"      property="gender" />
+    <result column="introduce"  jdbcType="VARCHAR"      property="introduce" />
+    <result column="ranking"    jdbcType="INTEGER"      property="ranking" />
+    <result column="praise_num" jdbcType="INTEGER"      property="praiseNum" />
+    <result column="photo_path" jdbcType="VARCHAR"      property="photoPath" />
   </resultMap>
 
   <!-- person_info table all fields -->
@@ -73,7 +73,7 @@
         SELECT SEQ_person_info.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into person_info(<include refid="Base_Column_List" />)
-    values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{name, jdbcType=${po.jdbcType}}, #{phone, jdbcType=${po.jdbcType}}, #{birthday, jdbcType=${po.jdbcType}}, #{address, jdbcType=${po.jdbcType}}, #{gender, jdbcType=${po.jdbcType}}, #{introduce, jdbcType=${po.jdbcType}}, #{ranking, jdbcType=${po.jdbcType}}, #{praiseNum, jdbcType=${po.jdbcType}}, #{photoPath, jdbcType=${po.jdbcType}})
+    values (#{id}, #{uId}, #{name}, #{phone}, #{birthday}, #{address}, #{gender}, #{introduce}, #{ranking}, #{praiseNum}, #{photoPath})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -96,17 +96,17 @@
                 <if test="photoPath != null" >photo_path,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
-                <if test="uId != null" >#{uId, jdbcType=${po.jdbcType}},</if>
-                <if test="name != null" >#{name, jdbcType=${po.jdbcType}},</if>
-                <if test="phone != null" >#{phone, jdbcType=${po.jdbcType}},</if>
-                <if test="birthday != null" >#{birthday, jdbcType=${po.jdbcType}},</if>
-                <if test="address != null" >#{address, jdbcType=${po.jdbcType}},</if>
-                <if test="gender != null" >#{gender, jdbcType=${po.jdbcType}},</if>
-                <if test="introduce != null" >#{introduce, jdbcType=${po.jdbcType}},</if>
-                <if test="ranking != null" >#{ranking, jdbcType=${po.jdbcType}},</if>
-                <if test="praiseNum != null" >#{praiseNum, jdbcType=${po.jdbcType}},</if>
-                <if test="photoPath != null" >#{photoPath, jdbcType=${po.jdbcType}},</if>
+                <if test="id != null" >#{id},</if>
+                <if test="uId != null" >#{uId},</if>
+                <if test="name != null" >#{name},</if>
+                <if test="phone != null" >#{phone},</if>
+                <if test="birthday != null" >#{birthday},</if>
+                <if test="address != null" >#{address},</if>
+                <if test="gender != null" >#{gender},</if>
+                <if test="introduce != null" >#{introduce},</if>
+                <if test="ranking != null" >#{ranking},</if>
+                <if test="praiseNum != null" >#{praiseNum},</if>
+                <if test="photoPath != null" >#{photoPath},</if>
             </trim>
   </insert>
 

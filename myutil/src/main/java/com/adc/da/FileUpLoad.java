@@ -1,5 +1,6 @@
 package com.adc.da;
 
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -13,6 +14,14 @@ import java.io.InputStream;
  * @date 2019-02-27
  */
 public class FileUpLoad {
+
+
+
+    public static String getPathRoot() throws Exception{
+        String classPath = ResourceUtils.getURL("classpath:").getPath();
+        String path = classPath.substring(0, classPath.indexOf("communityProjectBack") + 20);
+        return path;
+    }
 
     /**
     *
@@ -58,23 +67,23 @@ public class FileUpLoad {
     * @author yueben
     * date 2019-02-27
     **/
-    public static String MulFileToFile(MultipartFile mtf,File file) throws Exception{
+    public static String MulFileToFile(MultipartFile mtf,File file) throws Exception {
         int b;
         byte[] bytes = new byte[1024];
 
         if (file.exists() && file.length() == 0) return "fileNull";
 
-        if(mtf != null && !mtf.isEmpty()){
+        if (mtf != null && !mtf.isEmpty()) {
             InputStream is = mtf.getInputStream();
             FileOutputStream fos = new FileOutputStream(file);
 
-            while((b = is.read(bytes))!=-1){
-                fos.write(bytes,0,b);
+            while ((b = is.read(bytes)) != -1) {
+                fos.write(bytes, 0, b);
             }
             is.close();
             fos.close();
             return "ok";
-        }else{
+        } else {
             return "null";
         }
 

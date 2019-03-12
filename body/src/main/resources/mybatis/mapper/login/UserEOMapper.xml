@@ -3,13 +3,13 @@
 <mapper namespace="com.adc.da.login.dao.UserEODao" >
   <!-- Result Map-->
   <resultMap id="BaseResultMap" type="com.adc.da.login.entity.UserEO" >
-    <id column="id" property="id" />
-    <result column="user_name" property="userName" />
-    <result column="user_pwd" property="userPwd" />
-    <result column="create_time" property="createTime" />
-    <result column="online_time" property="onlineTime" />
-    <result column="status" property="status" />
-    <result column="account_level" property="accountLevel" />
+    <id column="id"                 jdbcType="VARCHAR"      property="id" />
+    <result column="user_name"      jdbcType="VARCHAR"      property="userName" />
+    <result column="user_pwd"       jdbcType="VARCHAR"      property="userPwd" />
+    <result column="create_time"    jdbcType="TIMESTAMP"    property="createTime" />
+    <result column="online_time"    jdbcType="TIMESTAMP"    property="onlineTime" />
+    <result column="status"         jdbcType="INTEGER"      property="status" />
+    <result column="account_level"  jdbcType="INTEGER"      property="accountLevel" />
   </resultMap>
 
   <!-- user table all fields -->
@@ -57,39 +57,91 @@
     </trim>
   </sql>
 
+
+    <!--登录-->
+    <select id="userLogin" resultMap="BaseResultMap" parameterType="com.adc.da.login.entity.UserEO">
+        select <include refid="Base_Column_List" /> from user where
+        user_name = #{userName,jdbcType=VARCHAR} and user_pwd = #{userPwd, jdbcType=VARCHAR}
+        and status != 0
+    </select>
+
+    <!-- 注册 -->
+    <insert id="insertSelective" parameterType="com.adc.da.login.entity.UserEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_user.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >id,</if>
+            <if test="userName != null" >user_name,</if>
+            <if test="userPwd != null" >user_pwd,</if>
+            <if test="createTime != null" >create_time,</if>
+            <if test="onlineTime != null" >online_time,</if>
+            <if test="status != null" >status,</if>
+            <if test="accountLevel != null" >account_level,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >#{id},</if>
+            <if test="userName != null" >#{userName},</if>
+            <if test="userPwd != null" >#{userPwd},</if>
+            <if test="createTime != null" >#{createTime},</if>
+            <if test="onlineTime != null" >#{onlineTime},</if>
+            <if test="status != null" >#{status},</if>
+            <if test="accountLevel != null" >#{accountLevel},</if>
+        </trim>
+    </insert>
+
+    <!-- 上线，禁言，密码重置，逻辑删除 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.login.entity.UserEO" >
+        update user
+        <set >
+            <if test="userName != null" >
+                user_name = #{userName},
+            </if>
+            <if test="userPwd != null" >
+                user_pwd = #{userPwd},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime},
+            </if>
+            <if test="onlineTime != null" >
+                online_time = #{onlineTime},
+            </if>
+            <if test="status != null" >
+                status = #{status},
+            </if>
+            <if test="accountLevel != null" >
+                account_level = #{accountLevel},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--条件查询，用户等级，状态-->
+    <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select <include refid="Base_Column_List"/> from user
+        <include refid="Base_Where_Clause"/>
+        order by create_time desc
+        limit ${pager.pageOffset},${pager.pageSize}
+    </select>
+
+
+    <!--用户名验重-->
+    <select id="userNameCheck" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(*) from user where user_name = #{username,jdbcType=VARCHAR}
+    </select>
+
+
+
+
+
   <!-- 插入记录 -->
   <insert id="insert" parameterType="com.adc.da.login.entity.UserEO" >
     <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
         SELECT SEQ_user.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into user(<include refid="Base_Column_List" />)
-    values (#{id, jdbcType=${po.jdbcType}}, #{userName, jdbcType=${po.jdbcType}}, #{userPwd, jdbcType=${po.jdbcType}}, #{createTime, jdbcType=${po.jdbcType}}, #{onlineTime, jdbcType=${po.jdbcType}}, #{status, jdbcType=${po.jdbcType}}, #{accountLevel, jdbcType=${po.jdbcType}})
-  </insert>
-
-  <!-- 动态插入记录 主键是序列 -->
-  <insert id="insertSelective" parameterType="com.adc.da.login.entity.UserEO" >
-        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
-        SELECT SEQ_user.NEXTVAL FROM DUAL
-    </selectKey> -->
-        insert into user
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-                <if test="id != null" >id,</if>
-                <if test="userName != null" >user_name,</if>
-                <if test="userPwd != null" >user_pwd,</if>
-                <if test="createTime != null" >create_time,</if>
-                <if test="onlineTime != null" >online_time,</if>
-                <if test="status != null" >status,</if>
-                <if test="accountLevel != null" >account_level,</if>
-            </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
-                <if test="userName != null" >#{userName, jdbcType=${po.jdbcType}},</if>
-                <if test="userPwd != null" >#{userPwd, jdbcType=${po.jdbcType}},</if>
-                <if test="createTime != null" >#{createTime, jdbcType=${po.jdbcType}},</if>
-                <if test="onlineTime != null" >#{onlineTime, jdbcType=${po.jdbcType}},</if>
-                <if test="status != null" >#{status, jdbcType=${po.jdbcType}},</if>
-                <if test="accountLevel != null" >#{accountLevel, jdbcType=${po.jdbcType}},</if>
-            </trim>
+    values (#{id}, #{userName}, #{userPwd}, #{createTime}, #{onlineTime}, #{status}, #{accountLevel})
   </insert>
 
   <!-- 根据pk，修改记录-->
@@ -104,31 +156,6 @@
      where  id = #{id}
   </update>
 
-  <!-- 修改记录，只修改只不为空的字段 -->
-  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.login.entity.UserEO" >
-    update user
-    <set >
-      <if test="userName != null" >
-        user_name = #{userName},
-      </if>
-      <if test="userPwd != null" >
-        user_pwd = #{userPwd},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime},
-      </if>
-      <if test="onlineTime != null" >
-        online_time = #{onlineTime},
-      </if>
-      <if test="status != null" >
-        status = #{status},
-      </if>
-      <if test="accountLevel != null" >
-        account_level = #{accountLevel},
-      </if>
-    </set>
-     where id = #{id}
-  </update>
 
   <!-- 根据id查询 user -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -156,17 +183,9 @@
 		select <include refid="Base_Column_List" /> from user
 			<include refid="Base_Where_Clause"/>
 			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
-				${pager.orderCondition}
+                ${pager.orderCondition}
 			</if>
 			limit ${pager.pageOffset},${pager.pageSize}
-  </select>
-
-  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-    select <include refid="Base_Column_List"/> from user
-    <include refid="Base_Where_Clause"/>
-    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
-		${pager.orderCondition}
-    </if>
   </select>
 
 </mapper>

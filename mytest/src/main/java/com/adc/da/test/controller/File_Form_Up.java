@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 
 @RestController
 @RequestMapping("/${restPath}/test/File_Form_Up")
@@ -25,33 +23,33 @@ public class File_Form_Up {
     * @CreateDate:     2018/11/16 15:36
     */
     @PostMapping("/up_files")
-    public ResponseMessage upFiles(String username,String userpwd, MultipartFile photo, MultipartFile[] files) throws Exception{
+    public ResponseMessage upFiles(String username, String userpwd, MultipartFile photo, MultipartFile[] files) throws Exception {
         //获取项目根目录
         String classPath = ResourceUtils.getURL("classpath:").getPath();
-        String path = classPath.substring(0,classPath.indexOf("communityProjectBack")+20);
+        String path = classPath.substring(0, classPath.indexOf("communityProjectBack") + 20);
 
         //获取前端表单字段名并打印，方法接收的字段名要与表单的字段名对应上
         System.out.println(username);
         System.out.println(userpwd);
         //将照片存放在项目的zzz/photo下
-        outFile(photo,path+"/zzz/photo");
+        outFile(photo, path + "/zzz/photo");
 
         //将前端传入的多文件存放在项目的/zzz/word下
-        for(MultipartFile mf : files){
-            outFile(mf,path+"/zzz/word");
+        for (MultipartFile mf : files) {
+            outFile(mf, path + "/zzz/word");
         }
         return Result.success();
     }
 
     //输出MultipartFile
-    public void outFile(MultipartFile mtf,String path) throws Exception{
+    public void outFile(MultipartFile mtf, String path) throws Exception {
 
         //创建下载文件对象
         File file = new File(path + "/" + mtf.getOriginalFilename());
         //判断存放文件的文件夹是否存在，不存在则创建一个
-        if(!file.getParentFile().exists()) file.getParentFile().mkdir();
+        if (!file.getParentFile().exists()) file.getParentFile().mkdir();
 
-        FileUpLoad.MulFileToFile(mtf,file);
+        FileUpLoad.MulFileToFile(mtf, file);
 
     }
 }
