@@ -34,6 +34,14 @@ public class PersonInfoEOPage extends BasePage {
     private String rankingOperator = "=";
     private String praiseNum;
     private String praiseNumOperator = "=";
+
+    private String commentNum;
+    private String commentNumOperator = "=";
+    private String messageNum;
+    private String messageNumOperator = "=";
+    private String browseNum;
+    private String browseNumOperator = "=";
+
     private String photoPath;
     private String photoPathOperator = "=";
 
@@ -229,4 +237,51 @@ public class PersonInfoEOPage extends BasePage {
         this.photoPathOperator = photoPathOperator;
     }
 
+    public String getCommentNum() {
+        return commentNum;
+    }
+
+    public void setCommentNum(String commentNum) {
+        this.commentNum = commentNum;
+    }
+
+    public String getCommentNumOperator() {
+        return commentNumOperator;
+    }
+
+    public void setCommentNumOperator(String commentNumOperator) {
+        this.commentNumOperator = commentNumOperator;
+    }
+
+    public String getMessageNum() {
+        return messageNum;
+    }
+
+    public void setMessageNum(String messageNum) {
+        this.messageNum = messageNum;
+    }
+
+    public String getMessageNumOperator() {
+        return messageNumOperator;
+    }
+
+    public void setMessageNumOperator(String messageNumOperator) {
+        this.messageNumOperator = messageNumOperator;
+    }
+
+    public String getBrowseNum() {
+        return browseNum;
+    }
+
+    public void setBrowseNum(String browseNum) {
+        this.browseNum = browseNum;
+    }
+
+    public String getBrowseNumOperator() {
+        return browseNumOperator;
+    }
+
+    public void setBrowseNumOperator(String browseNumOperator) {
+        this.browseNumOperator = browseNumOperator;
+    }
 }

@@ -17,8 +17,8 @@ public class FileDownLoad {
     public static void fileResponseDown(HttpServletResponse response, File file)throws Exception {
         //清除响应缓存信息
         response.reset();
-        response.setHeader("Content-Disposition", "attachment; filename=" + new String(file.getName().getBytes(),"utf-8"));
-        response.setContentType("image/*");
+        response.setHeader("Content-Disposition", "inline; filename=" + new String(file.getName().getBytes(),"utf-8"));
+        response.setContentType("image/png");
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
         BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());
         int len = 0;

@@ -33,4 +33,27 @@ public class NoticeEOService extends BaseService<NoticeEO, String> {
         return dao;
     }
 
+    /**
+     * 一键已读
+     * @return
+     */
+    @Transactional
+    public int readAll() {
+        return dao.readAll();
+    }
+
+    /**
+     * 删除已读
+     * @return
+     */
+    @Transactional
+    public int readDel(){
+        return dao.readDel();
+    }
+
+    @Transactional
+    public boolean delReadById(String id, String is) {
+        return dao.delReadById(id, is) == 1;
+    }
+
 }

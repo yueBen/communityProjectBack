@@ -57,7 +57,7 @@
         SELECT SEQ_relation.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into relation(<include refid="Base_Column_List" />)
-    values (#{id, jdbcType=${po.jdbcType}}, #{uId1, jdbcType=${po.jdbcType}}, #{uId2, jdbcType=${po.jdbcType}}, #{note, jdbcType=${po.jdbcType}}, #{createTime, jdbcType=${po.jdbcType}}, #{type, jdbcType=${po.jdbcType}}, #{status, jdbcType=${po.jdbcType}})
+    values (#{id}, #{uId1}, #{uId2}, #{note}, #{createTime}, #{type}, #{status})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -76,13 +76,13 @@
                 <if test="status != null" >status,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
-                <if test="uId1 != null" >#{uId1, jdbcType=${po.jdbcType}},</if>
-                <if test="uId2 != null" >#{uId2, jdbcType=${po.jdbcType}},</if>
-                <if test="note != null" >#{note, jdbcType=${po.jdbcType}},</if>
-                <if test="createTime != null" >#{createTime, jdbcType=${po.jdbcType}},</if>
-                <if test="type != null" >#{type, jdbcType=${po.jdbcType}},</if>
-                <if test="status != null" >#{status, jdbcType=${po.jdbcType}},</if>
+                <if test="id != null" >#{id},</if>
+                <if test="uId1 != null" >#{uId1},</if>
+                <if test="uId2 != null" >#{uId2},</if>
+                <if test="note != null" >#{note},</if>
+                <if test="createTime != null" >#{createTime},</if>
+                <if test="type != null" >#{type},</if>
+                <if test="status != null" >#{status},</if>
             </trim>
   </insert>
 

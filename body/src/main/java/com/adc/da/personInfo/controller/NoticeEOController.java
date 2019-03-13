@@ -32,51 +32,56 @@ public class NoticeEOController extends BaseController<NoticeEO>{
     @Autowired
     private NoticeEOService noticeEOService;
 
+    /**
+     *      type:
+     *          0-用户
+     *              status：0-已申请，1-已同意，2-拒绝
+     *          1-评论
+     *              status：0-文章新评论，1-评论新评论，2-赞，3-踩
+     *          2-文章类通知
+     *              status：0-收藏，1-赞，2-踩
+     *          3-关注
+     *              status：0-我关注了谁，1-谁关注了我
+     *          4-留言
+     *              status：默认"-"
+     *      isRead：0-未读，1-已读，2-删除
+     */
+
+    /**
+    * @Description:   分页条件查询
+    * @Author:         yueben
+    * @CreateDate:     2019/3/13 20:01
+    */
 	@ApiOperation(value = "|NoticeEO|分页查询")
     @GetMapping("/page")
     @RequiresPermissions("personInfo:notice:page")
-    public ResponseMessage<PageInfo<NoticeEO>> page(NoticeEOPage page) throws Exception {
-        List<NoticeEO> rows = noticeEOService.queryByPage(page);
-        return Result.success(getPageInfo(page.getPager(), rows));
+    public ResponseMessage<List<NoticeEO>> page(NoticeEOPage page) throws Exception {
+        return Result.success(noticeEOService.queryByPage(page));
     }
 
-	@ApiOperation(value = "|NoticeEO|查询")
-    @GetMapping("")
-    @RequiresPermissions("personInfo:notice:list")
-    public ResponseMessage<List<NoticeEO>> list(NoticeEOPage page) throws Exception {
-        return Result.success(noticeEOService.queryByList(page));
-	}
-
-    @ApiOperation(value = "|NoticeEO|详情")
-    @GetMapping("/{id}")
-    @RequiresPermissions("personInfo:notice:get")
-    public ResponseMessage<NoticeEO> find(@PathVariable String id) throws Exception {
-        return Result.success(noticeEOService.selectByPrimaryKey(id));
+    @ApiOperation(value = "|NoticeEO|一键已读")
+    @GetMapping("/readAll")
+    @RequiresPermissions("personInfo:notice:page")
+    public ResponseMessage readAll() {
+	    return Result.success(noticeEOService.readAll());
     }
 
-    @ApiOperation(value = "|NoticeEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("personInfo:notice:save")
-    public ResponseMessage<NoticeEO> create(@RequestBody NoticeEO noticeEO) throws Exception {
-        noticeEOService.insertSelective(noticeEO);
-        return Result.success(noticeEO);
+    @ApiOperation(value = "|NoticeEO|删除已读")
+    @GetMapping("/readDel")
+    @RequiresPermissions("personInfo:notice:page")
+    public ResponseMessage readDel() {
+        return Result.success(noticeEOService.readDel());
     }
 
-    @ApiOperation(value = "|NoticeEO|修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("personInfo:notice:update")
-    public ResponseMessage<NoticeEO> update(@RequestBody NoticeEO noticeEO) throws Exception {
-        noticeEOService.updateByPrimaryKeySelective(noticeEO);
-        return Result.success(noticeEO);
-    }
-
-    @ApiOperation(value = "|NoticeEO|删除")
-    @DeleteMapping("/{id}")
-    @RequiresPermissions("personInfo:notice:delete")
-    public ResponseMessage delete(@PathVariable String id) throws Exception {
-        noticeEOService.deleteByPrimaryKey(id);
-        logger.info("delete from notice where id = {}", id);
-        return Result.success();
+    @ApiOperation(value = "|NoticeEO|删除已读")
+    @GetMapping("/updateItem")
+    @RequiresPermissions("personInfo:notice:page")
+    public ResponseMessage delReadById(String id, String isRead) {
+	    if (noticeEOService.delReadById(id, isRead)) {
+	        return Result.success();
+        } else {
+	        return Result.error();
+        }
     }
 
 }

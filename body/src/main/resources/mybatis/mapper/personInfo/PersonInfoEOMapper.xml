@@ -13,12 +13,15 @@
     <result column="introduce"  jdbcType="VARCHAR"      property="introduce" />
     <result column="ranking"    jdbcType="INTEGER"      property="ranking" />
     <result column="praise_num" jdbcType="INTEGER"      property="praiseNum" />
+    <result column="comment_num" jdbcType="INTEGER"      property="commentNum" />
+    <result column="message_num" jdbcType="INTEGER"      property="messageNum" />
+    <result column="browse_num" jdbcType="INTEGER"      property="browseNum" />
     <result column="photo_path" jdbcType="VARCHAR"      property="photoPath" />
   </resultMap>
 
   <!-- person_info table all fields -->
   <sql id="Base_Column_List" >
-     id, u_id, name, phone, birthday, address, gender, introduce, ranking, praise_num, photo_path
+     id, u_id, name, phone, birthday, address, gender, introduce, ranking, praise_num, comment_num, message_num, browse_num, photo_path
   </sql>
 
   <!-- 查询条件 -->
@@ -61,6 +64,15 @@
       <if test="praiseNum != null" >
         and praise_num ${praiseNumOperator} #{praiseNum}
       </if>
+      <if test="commentNum != null" >
+        and comment_num ${commentNumOperator} #{commentNum}
+      </if>
+      <if test="messageNum != null" >
+        and message_num ${messageNumOperator} #{messageNum}
+      </if>
+      <if test="browseNum != null" >
+        and browse_num ${browseNumOperator} #{browseNum}
+      </if>
       <if test="photoPath != null" >
         and photo_path ${photoPathOperator} #{photoPath}
       </if>
@@ -93,6 +105,9 @@
                 <if test="introduce != null" >introduce,</if>
                 <if test="ranking != null" >ranking,</if>
                 <if test="praiseNum != null" >praise_num,</if>
+        <if test="commentNum != null" >comment_num,</if>
+        <if test="messageNum != null" >message_num,</if>
+        <if test="browseNum != null" >browse_num,</if>
                 <if test="photoPath != null" >photo_path,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -106,33 +121,33 @@
                 <if test="introduce != null" >#{introduce},</if>
                 <if test="ranking != null" >#{ranking},</if>
                 <if test="praiseNum != null" >#{praiseNum},</if>
+        <if test="commentNum != null" >#{commentNum},</if>
+        <if test="messageNum != null" >#{messageNum},</if>
+        <if test="browseNum != null" >#{browseNum},</if>
                 <if test="photoPath != null" >#{photoPath},</if>
             </trim>
   </insert>
 
   <!-- 根据pk，修改记录-->
-  <update id="updateByPrimaryKey" parameterType="com.adc.da.personInfo.entity.PersonInfoEO" >
-    update person_info
-       set  u_id = #{uId},
-            name = #{name},
-            phone = #{phone},
-            birthday = #{birthday},
-            address = #{address},
-            gender = #{gender},
-            introduce = #{introduce},
-            ranking = #{ranking},
-            praise_num = #{praiseNum},
-            photo_path = #{photoPath}
-     where  id = #{id}
-  </update>
+  <!--<update id="updateByPrimaryKey" parameterType="com.adc.da.personInfo.entity.PersonInfoEO" >-->
+    <!--update person_info-->
+       <!--set  u_id = #{uId},-->
+            <!--name = #{name},-->
+            <!--phone = #{phone},-->
+            <!--birthday = #{birthday},-->
+            <!--address = #{address},-->
+            <!--gender = #{gender},-->
+            <!--introduce = #{introduce},-->
+            <!--ranking = #{ranking},-->
+            <!--praise_num = #{praiseNum},-->
+            <!--photo_path = #{photoPath}-->
+     <!--where  id = #{id}-->
+  <!--</update>-->
 
   <!-- 修改记录，只修改只不为空的字段 -->
   <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.personInfo.entity.PersonInfoEO" >
     update person_info
     <set >
-      <if test="uId != null" >
-        u_id = #{uId},
-      </if>
       <if test="name != null" >
         name = #{name},
       </if>
@@ -157,11 +172,20 @@
       <if test="praiseNum != null" >
         praise_num = #{praiseNum},
       </if>
+      <if test="commentNum != null" >
+        comment_num = #{commentNum},
+      </if>
+      <if test="messageNum != null" >
+        message_num = #{messageNum},
+      </if>
+      <if test="browseNum != null" >
+        browse_num = #{browseNum},
+      </if>
       <if test="photoPath != null" >
         photo_path = #{photoPath},
       </if>
     </set>
-     where id = #{id}
+     where u_id = #{uId}
   </update>
 
   <!-- 根据id查询 person_info -->

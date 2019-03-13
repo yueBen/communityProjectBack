@@ -23,6 +23,9 @@ public class PersonInfoEO extends BaseEntity {
     private String introduce;
     private Integer ranking;
     private Integer praiseNum;
+    private Integer commentNum;
+    private Integer messageNum;
+    private Integer browseNum;
     private String photoPath;
 
     /**
@@ -53,6 +56,9 @@ public class PersonInfoEO extends BaseEntity {
             case "introduce": return "introduce";
             case "ranking": return "ranking";
             case "praiseNum": return "praise_num";
+            case "commentNum": return "comment_num";
+            case "messageNum": return "message_num";
+            case "browseNum": return "browse_num";
             case "photoPath": return "photo_path";
             default: return null;
         }
@@ -86,6 +92,9 @@ public class PersonInfoEO extends BaseEntity {
             case "introduce": return "introduce";
             case "ranking": return "ranking";
             case "praise_num": return "praiseNum";
+            case "comment_num": return "commentNum";
+            case "message_num": return "messageNum";
+            case "browse_num": return "browseNum";
             case "photo_path": return "photoPath";
             default: return null;
         }
@@ -201,4 +210,27 @@ public class PersonInfoEO extends BaseEntity {
         this.photoPath = photoPath;
     }
 
+    public Integer getCommentNum() {
+        return commentNum;
+    }
+
+    public void setCommentNum(Integer commentNum) {
+        this.commentNum = commentNum;
+    }
+
+    public Integer getMessageNum() {
+        return messageNum;
+    }
+
+    public void setMessageNum(Integer messageNum) {
+        this.messageNum = messageNum;
+    }
+
+    public Integer getBrowseNum() {
+        return browseNum;
+    }
+
+    public void setBrowseNum(Integer browseNum) {
+        this.browseNum = browseNum;
+    }
 }

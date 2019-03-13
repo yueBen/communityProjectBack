@@ -4,14 +4,14 @@
   <!-- Result Map-->
   <resultMap id="BaseResultMap" type="com.adc.da.personInfo.entity.NoticeEO" >
     <id column="id" property="id" />
-    <result column="u_id_1" property="uId1" />
-    <result column="u_id_2" property="uId2" />
-    <result column="to_id" property="toId" />
-    <result column="type" property="type" />
-    <result column="create_time" property="createTime" />
-    <result column="content" property="content" />
-    <result column="status" property="status" />
-    <result column="is_read" property="isRead" />
+    <result column="u_id_1"         jdbcType="VARCHAR"      property="uId1" />
+    <result column="u_id_2"         jdbcType="VARCHAR"      property="uId2" />
+    <result column="to_id"          jdbcType="VARCHAR"      property="toId" />
+    <result column="type"           jdbcType="INTEGER"      property="type" />
+    <result column="create_time"    jdbcType="TIMESTAMP"    property="createTime" />
+    <result column="content"        jdbcType="VARCHAR"      property="content" />
+    <result column="status"         jdbcType="INTEGER"      property="status" />
+    <result column="is_read"        jdbcType="INTEGER"      property="isRead" />
   </resultMap>
 
   <!-- notice table all fields -->
@@ -59,13 +59,34 @@
     </trim>
   </sql>
 
+    <!-- 查询列表条件查询 -->
+    <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select <include refid="Base_Column_List" /> from notice
+        <include refid="Base_Where_Clause"/>
+        order by  is_read asc,create_time DESC
+        limit ${pager.pageOffset},${pager.pageSize}
+    </select>
+
+    <update id="readAll">
+        UPDATE notice SET is_read = 1 WHERE is_read = 0
+    </update>
+
+    <update id="readDel">
+        UPDATE notice SET is_read = 2 WHERE is_read = 1
+    </update>
+
+    <update id="delReadById">
+        UPDATE notice SET is_read = #{is,jdbcType=VARCHAR} WHERE id = #{id,jdbcType=VARCHAR}
+    </update>
+
+
   <!-- 插入记录 -->
   <insert id="insert" parameterType="com.adc.da.personInfo.entity.NoticeEO" >
     <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
         SELECT SEQ_notice.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into notice(<include refid="Base_Column_List" />)
-    values (#{id, jdbcType=${po.jdbcType}}, #{uId1, jdbcType=${po.jdbcType}}, #{uId2, jdbcType=${po.jdbcType}}, #{toId, jdbcType=${po.jdbcType}}, #{type, jdbcType=${po.jdbcType}}, #{createTime, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}}, #{status, jdbcType=${po.jdbcType}}, #{isRead, jdbcType=${po.jdbcType}})
+    values (#{id}, #{uId1}, #{uId2}, #{toId}, #{type}, #{createTime}, #{content}, #{status}, #{isRead})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -86,15 +107,15 @@
                 <if test="isRead != null" >is_read,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
-                <if test="uId1 != null" >#{uId1, jdbcType=${po.jdbcType}},</if>
-                <if test="uId2 != null" >#{uId2, jdbcType=${po.jdbcType}},</if>
-                <if test="toId != null" >#{toId, jdbcType=${po.jdbcType}},</if>
-                <if test="type != null" >#{type, jdbcType=${po.jdbcType}},</if>
-                <if test="createTime != null" >#{createTime, jdbcType=${po.jdbcType}},</if>
-                <if test="content != null" >#{content, jdbcType=${po.jdbcType}},</if>
-                <if test="status != null" >#{status, jdbcType=${po.jdbcType}},</if>
-                <if test="isRead != null" >#{isRead, jdbcType=${po.jdbcType}},</if>
+                <if test="id != null" >#{id},</if>
+                <if test="uId1 != null" >#{uId1},</if>
+                <if test="uId2 != null" >#{uId2},</if>
+                <if test="toId != null" >#{toId},</if>
+                <if test="type != null" >#{type},</if>
+                <if test="createTime != null" >#{createTime},</if>
+                <if test="content != null" >#{content},</if>
+                <if test="status != null" >#{status},</if>
+                <if test="isRead != null" >#{isRead},</if>
             </trim>
   </insert>
 
@@ -163,16 +184,6 @@
   <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
     select count(1) from notice
     <include refid="Base_Where_Clause"/>
-  </select>
-
-  <!-- 查询notice列表 -->
-  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-		select <include refid="Base_Column_List" /> from notice
-			<include refid="Base_Where_Clause"/>
-			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
-				${pager.orderCondition}
-			</if>
-			limit ${pager.pageOffset},${pager.pageSize}
   </select>
 
   <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
