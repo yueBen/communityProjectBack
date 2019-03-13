@@ -7,15 +7,17 @@ import java.util.Date;
 /**
  * <b>功能：</b>notice NoticeEOPage<br>
  * <b>作者：</b>code generator<br>
- * <b>日期：</b> 2019-03-11 <br>
+ * <b>日期：</b> 2019-03-13 <br>
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
 public class NoticeEOPage extends BasePage {
 
     private String id;
     private String idOperator = "=";
-    private String uId;
-    private String uIdOperator = "=";
+    private String uId1;
+    private String uId1Operator = "=";
+    private String uId2;
+    private String uId2Operator = "=";
     private String toId;
     private String toIdOperator = "=";
     private String type;
@@ -26,8 +28,10 @@ public class NoticeEOPage extends BasePage {
     private String createTimeOperator = "=";
     private String content;
     private String contentOperator = "=";
-    private String satus;
-    private String satusOperator = "=";
+    private String status;
+    private String statusOperator = "=";
+    private String isRead;
+    private String isReadOperator = "=";
 
     public String getId() {
         return this.id;
@@ -45,20 +49,36 @@ public class NoticeEOPage extends BasePage {
         this.idOperator = idOperator;
     }
 
-    public String getUId() {
-        return this.uId;
+    public String getUId1() {
+        return this.uId1;
     }
 
-    public void setUId(String uId) {
-        this.uId = uId;
+    public void setUId1(String uId1) {
+        this.uId1 = uId1;
     }
 
-    public String getUIdOperator() {
-        return this.uIdOperator;
+    public String getUId1Operator() {
+        return this.uId1Operator;
     }
 
-    public void setUIdOperator(String uIdOperator) {
-        this.uIdOperator = uIdOperator;
+    public void setUId1Operator(String uId1Operator) {
+        this.uId1Operator = uId1Operator;
+    }
+
+    public String getUId2() {
+        return this.uId2;
+    }
+
+    public void setUId2(String uId2) {
+        this.uId2 = uId2;
+    }
+
+    public String getUId2Operator() {
+        return this.uId2Operator;
+    }
+
+    public void setUId2Operator(String uId2Operator) {
+        this.uId2Operator = uId2Operator;
     }
 
     public String getToId() {
@@ -141,20 +161,36 @@ public class NoticeEOPage extends BasePage {
         this.contentOperator = contentOperator;
     }
 
-    public String getSatus() {
-        return this.satus;
+    public String getStatus() {
+        return this.status;
     }
 
-    public void setSatus(String satus) {
-        this.satus = satus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public String getSatusOperator() {
-        return this.satusOperator;
+    public String getStatusOperator() {
+        return this.statusOperator;
     }
 
-    public void setSatusOperator(String satusOperator) {
-        this.satusOperator = satusOperator;
+    public void setStatusOperator(String statusOperator) {
+        this.statusOperator = statusOperator;
+    }
+
+    public String getIsRead() {
+        return this.isRead;
+    }
+
+    public void setIsRead(String isRead) {
+        this.isRead = isRead;
+    }
+
+    public String getIsReadOperator() {
+        return this.isReadOperator;
+    }
+
+    public void setIsReadOperator(String isReadOperator) {
+        this.isReadOperator = isReadOperator;
     }
 
 }

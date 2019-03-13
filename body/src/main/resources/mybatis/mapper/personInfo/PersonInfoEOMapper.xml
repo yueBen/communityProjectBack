@@ -203,4 +203,9 @@
     </if>
   </select>
 
+
+    <select id="getPersonByUid" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select <include refid="Base_Column_List"/> from person_info where u_id = #{id,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

@@ -4,17 +4,19 @@
   <!-- Result Map-->
   <resultMap id="BaseResultMap" type="com.adc.da.personInfo.entity.NoticeEO" >
     <id column="id" property="id" />
-    <result column="u_id" property="uId" />
+    <result column="u_id_1" property="uId1" />
+    <result column="u_id_2" property="uId2" />
     <result column="to_id" property="toId" />
     <result column="type" property="type" />
     <result column="create_time" property="createTime" />
     <result column="content" property="content" />
-    <result column="satus" property="satus" />
+    <result column="status" property="status" />
+    <result column="is_read" property="isRead" />
   </resultMap>
 
   <!-- notice table all fields -->
   <sql id="Base_Column_List" >
-     id, u_id, to_id, type, create_time, content, satus
+     id, u_id_1, u_id_2, to_id, type, create_time, content, status, is_read
   </sql>
 
   <!-- 查询条件 -->
@@ -24,8 +26,11 @@
       <if test="id != null" >
         and id ${idOperator} #{id}
       </if>
-      <if test="uId != null" >
-        and u_id ${uIdOperator} #{uId}
+      <if test="uId1 != null" >
+        and u_id_1 ${uId1Operator} #{uId1}
+      </if>
+      <if test="uId2 != null" >
+        and u_id_2 ${uId2Operator} #{uId2}
       </if>
       <if test="toId != null" >
         and to_id ${toIdOperator} #{toId}
@@ -45,8 +50,11 @@
       <if test="content != null" >
         and content ${contentOperator} #{content}
       </if>
-      <if test="satus != null" >
-        and satus ${satusOperator} #{satus}
+      <if test="status != null" >
+        and status ${statusOperator} #{status}
+      </if>
+      <if test="isRead != null" >
+        and is_read ${isReadOperator} #{isRead}
       </if>
     </trim>
   </sql>
@@ -57,7 +65,7 @@
         SELECT SEQ_notice.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into notice(<include refid="Base_Column_List" />)
-    values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{toId, jdbcType=${po.jdbcType}}, #{type, jdbcType=${po.jdbcType}}, #{createTime, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}}, #{satus, jdbcType=${po.jdbcType}})
+    values (#{id, jdbcType=${po.jdbcType}}, #{uId1, jdbcType=${po.jdbcType}}, #{uId2, jdbcType=${po.jdbcType}}, #{toId, jdbcType=${po.jdbcType}}, #{type, jdbcType=${po.jdbcType}}, #{createTime, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}}, #{status, jdbcType=${po.jdbcType}}, #{isRead, jdbcType=${po.jdbcType}})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -68,33 +76,39 @@
         insert into notice
     <trim prefix="(" suffix=")" suffixOverrides="," >
                 <if test="id != null" >id,</if>
-                <if test="uId != null" >u_id,</if>
+                <if test="uId1 != null" >u_id_1,</if>
+                <if test="uId2 != null" >u_id_2,</if>
                 <if test="toId != null" >to_id,</if>
                 <if test="type != null" >type,</if>
                 <if test="createTime != null" >create_time,</if>
                 <if test="content != null" >content,</if>
-                <if test="satus != null" >satus,</if>
+                <if test="status != null" >status,</if>
+                <if test="isRead != null" >is_read,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
                 <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
-                <if test="uId != null" >#{uId, jdbcType=${po.jdbcType}},</if>
+                <if test="uId1 != null" >#{uId1, jdbcType=${po.jdbcType}},</if>
+                <if test="uId2 != null" >#{uId2, jdbcType=${po.jdbcType}},</if>
                 <if test="toId != null" >#{toId, jdbcType=${po.jdbcType}},</if>
                 <if test="type != null" >#{type, jdbcType=${po.jdbcType}},</if>
                 <if test="createTime != null" >#{createTime, jdbcType=${po.jdbcType}},</if>
                 <if test="content != null" >#{content, jdbcType=${po.jdbcType}},</if>
-                <if test="satus != null" >#{satus, jdbcType=${po.jdbcType}},</if>
+                <if test="status != null" >#{status, jdbcType=${po.jdbcType}},</if>
+                <if test="isRead != null" >#{isRead, jdbcType=${po.jdbcType}},</if>
             </trim>
   </insert>
 
   <!-- 根据pk，修改记录-->
   <update id="updateByPrimaryKey" parameterType="com.adc.da.personInfo.entity.NoticeEO" >
     update notice
-       set  u_id = #{uId},
+       set  u_id_1 = #{uId1},
+            u_id_2 = #{uId2},
             to_id = #{toId},
             type = #{type},
             create_time = #{createTime},
             content = #{content},
-            satus = #{satus}
+            status = #{status},
+            is_read = #{isRead}
      where  id = #{id}
   </update>
 
@@ -102,8 +116,11 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.personInfo.entity.NoticeEO" >
     update notice
     <set >
-      <if test="uId != null" >
-        u_id = #{uId},
+      <if test="uId1 != null" >
+        u_id_1 = #{uId1},
+      </if>
+      <if test="uId2 != null" >
+        u_id_2 = #{uId2},
       </if>
       <if test="toId != null" >
         to_id = #{toId},
@@ -117,8 +134,11 @@
       <if test="content != null" >
         content = #{content},
       </if>
-      <if test="satus != null" >
-        satus = #{satus},
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="isRead != null" >
+        is_read = #{isRead},
       </if>
     </set>
      where id = #{id}

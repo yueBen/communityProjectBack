@@ -3,13 +3,13 @@
 <mapper namespace="com.adc.da.personInfo.dao.RelationEODao" >
   <!-- Result Map-->
   <resultMap id="BaseResultMap" type="com.adc.da.personInfo.entity.RelationEO" >
-    <id column="id" property="id" />
-    <result column="u_id_1" property="uId1" />
-    <result column="u_id_2" property="uId2" />
-    <result column="note" property="note" />
-    <result column="create_time" property="createTime" />
-    <result column="type" property="type" />
-    <result column="status" property="status" />
+    <id column="id"                 jdbcType="VARCHAR"      property="id" />
+    <result column="u_id_1"         jdbcType="VARCHAR"      property="uId1" />
+    <result column="u_id_2"         jdbcType="VARCHAR"      property="uId2" />
+    <result column="note"           jdbcType="VARCHAR"      property="note" />
+    <result column="create_time"    jdbcType="TIMESTAMP"    property="createTime" />
+    <result column="type"           jdbcType="INTEGER"      property="type" />
+    <result column="status"         jdbcType="INTEGER"      property="status" />
   </resultMap>
 
   <!-- relation table all fields -->

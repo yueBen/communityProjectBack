@@ -1,5 +1,6 @@
 package com.adc.da.personInfo.service;
 
+import com.adc.da.FileUpLoad;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import com.adc.da.personInfo.entity.PersonInfoEO;
 
 
 /**
- *
  * <br>
  * <b>功能：</b>person_info PersonInfoEOService<br>
  * <b>作者：</b>code generator<br>
@@ -31,6 +31,19 @@ public class PersonInfoEOService extends BaseService<PersonInfoEO, String> {
 
     public PersonInfoEODao getDao() {
         return dao;
+    }
+
+    /**
+     * 根据uid查询数据并将图片转成base64
+     *
+     * @param uid
+     * @return
+     * @author yueben
+     * 2019-03-13
+     **/
+    @Transactional(readOnly = true)
+    public PersonInfoEO getPersonByUid(String uid) {
+        return dao.getPersonByUid(uid);
     }
 
 }

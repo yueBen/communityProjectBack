@@ -2,6 +2,8 @@ package com.adc.da.personInfo.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.personInfo.entity.PersonInfoEO;
+import org.springframework.data.repository.query.Param;
+
 /**
  *
  * <br>
@@ -12,4 +14,5 @@ import com.adc.da.personInfo.entity.PersonInfoEO;
  */
 public interface PersonInfoEODao extends BaseDao<PersonInfoEO> {
 
+    PersonInfoEO getPersonByUid(@Param("id") String uid);
 }

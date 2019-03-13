@@ -17,9 +17,9 @@ public class CodeUtil {
 
 
 
-        entityPackage = "admin";
+        entityPackage = "personInfo";
 
-       DbCodeGenerateFactory.codeGenerate("lexicon", entityPackage);
+       DbCodeGenerateFactory.codeGenerate("notice", entityPackage);
 //        DbCodeGenerateFactory.codeGenerate("TS_ROLE", entityPackage);
 //        DbCodeGenerateFactory.codeGenerate("TS_MENU", entityPackage);
 

@@ -2,8 +2,10 @@ package com.adc.da;
 
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Encoder;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
@@ -16,8 +18,13 @@ import java.io.InputStream;
 public class FileUpLoad {
 
 
-
-    public static String getPathRoot() throws Exception{
+    /**  
+    * 生成项目根路径  
+    * @return   
+    * @author yueben  
+    * 2019-03-13  
+    **/
+    public static String getPathRoot() throws Exception {
         String classPath = ResourceUtils.getURL("classpath:").getPath();
         String path = classPath.substring(0, classPath.indexOf("communityProjectBack") + 20);
         return path;
@@ -31,32 +38,19 @@ public class FileUpLoad {
     * @author yueben
     * date 2019-02-27
     **/
-    public static String outFileUrl(MultipartFile mtf,File file) throws Exception{
+    public static String outFileUrl(MultipartFile mtf, File file) throws Exception {
 
         //判断存放文件的文件夹是否存在，不存在则创建一个
-        if(!file.getParentFile().exists()) file.getParentFile().mkdir();
+        if (!file.getParentFile().exists()) file.getParentFile().mkdir();
 
-        String massage = MulFileToFile(mtf,file);
+        String massage = MulFileToFile(mtf, file);
 
-        if (massage == "ok"){
+        if (massage.equals("ok")) {
             return massage;
 
-        }else{
+        } else {
             return massage;
         }
-    }
-    
-    /**  
-    * 
-     * @param mtf
-     * @param path  
-    * @return   
-    * @author yueben
-    * date 2019-02-27  
-    **/
-    public static String outFileUrl(MultipartFile mtf,String path){
-
-        return "";
     }
 
     /**
@@ -67,7 +61,7 @@ public class FileUpLoad {
     * @author yueben
     * date 2019-02-27
     **/
-    public static String MulFileToFile(MultipartFile mtf,File file) throws Exception {
+    public static String MulFileToFile(MultipartFile mtf, File file) throws Exception {
         int b;
         byte[] bytes = new byte[1024];
 
@@ -87,6 +81,27 @@ public class FileUpLoad {
             return "null";
         }
 
+    }
+
+    /**  
+    * 
+     * @param path  
+    * @return   
+    * @author yueben  
+    * 2019-03-13  
+    **/
+    public static String photoToBase64(String path)throws Exception {
+        File file = new File(path);
+        if (file.exists()) {
+            FileInputStream fis = new FileInputStream(file);
+            byte[] bytes = new byte[fis.available()];
+            fis.read(bytes);
+            fis.close();
+            BASE64Encoder encoder = new BASE64Encoder();
+            return "data:images/gif;base64," + encoder.encode(bytes);
+        } else {
+            return null;
+        }
     }
 
 }

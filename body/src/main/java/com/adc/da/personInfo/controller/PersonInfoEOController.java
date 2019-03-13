@@ -1,32 +1,29 @@
 package com.adc.da.personInfo.controller;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
+import com.adc.da.FileDownLoad;
 import com.adc.da.FileUpLoad;
-import com.adc.da.util.utils.DateUtils;
-import com.adc.da.util.utils.ObjectUtils;
-import com.adc.da.util.utils.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.adc.da.base.web.BaseController;
 import com.adc.da.personInfo.entity.PersonInfoEO;
-import com.adc.da.personInfo.page.PersonInfoEOPage;
 import com.adc.da.personInfo.service.PersonInfoEOService;
-
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
-import com.adc.da.util.http.PageInfo;
+import com.adc.da.util.utils.DateUtils;
+import com.adc.da.util.utils.UUID;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 
 @RestController
 @RequestMapping("/${restPath}/personInfo/personInfo")
@@ -38,14 +35,27 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO>{
     @Autowired
     private PersonInfoEOService personInfoEOService;
 
+    /**
+    * 用戶個人信息修改新增
+     * @param id
+     * @param uid
+     * @param name
+     * @param phone
+     * @param birthday
+     * @param address
+     * @param gender
+     * @param introduce
+     * @param photo
+    * @return
+    * @author yueben
+    * 2019-03-13
+    **/
     @ApiOperation(value = "|PersonInfoEO|个人信息新增修改")
     @PostMapping("/add")
     @RequiresPermissions("personInfo:personInfo:save")
     public ResponseMessage create(String id, String uid, String name, String phone, String birthday, String address,
                                   String gender, String introduce, MultipartFile photo) throws Exception {
 
-        PersonInfoEOPage page = new PersonInfoEOPage();
-        page.setUId(uid);
         PersonInfoEO personInfoEO = new PersonInfoEO();
         personInfoEO.setUId(uid);
         personInfoEO.setName(name);
@@ -63,7 +73,7 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO>{
             personInfoEO.setPhotoPath(path);
         }
 
-        if (personInfoEOService.queryByList(page).size() == 0) {
+        if (personInfoEOService.getPersonByUid(uid) == null) {
             personInfoEO.setId(UUID.randomUUID());
             personInfoEOService.insertSelective(personInfoEO);
             return Result.success("新增成功");
@@ -72,8 +82,6 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO>{
             personInfoEOService.updateByPrimaryKeySelective(personInfoEO);
             return Result.success("修改成功");
         }
-
-
     }
     
     /**  
@@ -96,35 +104,43 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO>{
         }
     }
 
-	@ApiOperation(value = "|PersonInfoEO|查询")
-    @GetMapping("")
-    @RequiresPermissions("personInfo:personInfo:list")
-    public ResponseMessage<List<PersonInfoEO>> list(PersonInfoEOPage page) throws Exception {
-        return Result.success(personInfoEOService.queryByList(page));
-	}
-
+    /**
+    * 根据uid查询个人信息
+     * @param uid
+    * @return
+    * @author yueben
+    * 2019-03-13
+    **/
     @ApiOperation(value = "|PersonInfoEO|详情")
-    @GetMapping("/{id}")
+    @GetMapping("/{uid}")
     @RequiresPermissions("personInfo:personInfo:get")
-    public ResponseMessage<PersonInfoEO> find(@PathVariable String id) throws Exception {
-        return Result.success(personInfoEOService.selectByPrimaryKey(id));
+    public ResponseMessage<PersonInfoEO> find(@PathVariable String uid) {
+        PersonInfoEO eo = personInfoEOService.getPersonByUid(uid);
+        if (eo != null) {
+            return Result.success(eo);
+        } else {
+            return null;
+        }
     }
 
-    @ApiOperation(value = "|PersonInfoEO|修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("personInfo:personInfo:update")
-    public ResponseMessage<PersonInfoEO> update(@RequestBody PersonInfoEO personInfoEO) throws Exception {
-        personInfoEOService.updateByPrimaryKeySelective(personInfoEO);
-        return Result.success(personInfoEO);
-    }
+    @ApiOperation(value = "|PersonInfoEO|头像显示")
+    @GetMapping("/{uid}/down")
+    @RequiresPermissions("personInfo:personInfo:get")
+    public void photoPath(@PathVariable String uid, HttpServletResponse response) {
 
-    @ApiOperation(value = "|PersonInfoEO|删除")
-    @DeleteMapping("/{id}")
-    @RequiresPermissions("personInfo:personInfo:delete")
-    public ResponseMessage delete(@PathVariable String id) throws Exception {
-        personInfoEOService.deleteByPrimaryKey(id);
-        logger.info("delete from person_info where id = {}", id);
-        return Result.success();
+        PersonInfoEO eo = personInfoEOService.getPersonByUid(uid);
+        if (eo != null) {
+            File file = new File(eo.getPhotoPath());
+
+            if (file.exists()) {
+                try {
+                    FileDownLoad.fileResponseDown(response, file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
 }
