@@ -14,5 +14,12 @@ import org.springframework.data.repository.query.Param;
  */
 public interface PersonInfoEODao extends BaseDao<PersonInfoEO> {
 
+    /**
+    * 通过uid获取详细信息
+     * @param uid
+    * @return
+    * @author yueben
+    * 2019-03-14
+    **/
     PersonInfoEO getPersonByUid(@Param("id") String uid);
 }

@@ -1,166 +1,184 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.adc.da.personInfo.dao.RelationEODao" >
-  <!-- Result Map-->
-  <resultMap id="BaseResultMap" type="com.adc.da.personInfo.entity.RelationEO" >
-    <id column="id"                 jdbcType="VARCHAR"      property="id" />
-    <result column="u_id_1"         jdbcType="VARCHAR"      property="uId1" />
-    <result column="u_id_2"         jdbcType="VARCHAR"      property="uId2" />
-    <result column="note"           jdbcType="VARCHAR"      property="note" />
-    <result column="create_time"    jdbcType="TIMESTAMP"    property="createTime" />
-    <result column="type"           jdbcType="INTEGER"      property="type" />
-    <result column="status"         jdbcType="INTEGER"      property="status" />
-  </resultMap>
+<mapper namespace="com.adc.da.personInfo.dao.RelationEODao">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.adc.da.personInfo.entity.RelationEO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="u_id_1" jdbcType="VARCHAR" property="uId1"/>
+        <result column="u_id_2" jdbcType="VARCHAR" property="uId2"/>
+        <result column="note" jdbcType="VARCHAR" property="note"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
 
-  <!-- relation table all fields -->
-  <sql id="Base_Column_List" >
+    <!-- relation table all fields -->
+    <sql id="Base_Column_List">
      id, u_id_1, u_id_2, note, create_time, type, status
   </sql>
 
-  <!-- 查询条件 -->
-  <sql id="Base_Where_Clause">
-    where 1=1
-    <trim suffixOverrides="," >
-      <if test="id != null" >
-        and id ${idOperator} #{id}
-      </if>
-      <if test="uId1 != null" >
-        and u_id_1 ${uId1Operator} #{uId1}
-      </if>
-      <if test="uId2 != null" >
-        and u_id_2 ${uId2Operator} #{uId2}
-      </if>
-      <if test="note != null" >
-        and note ${noteOperator} #{note}
-      </if>
-      <if test="createTime != null" >
-        and create_time ${createTimeOperator} #{createTime}
-      </if>
-      <if test="createTime1 != null" >
-        and create_time &gt;= #{createTime1}
-      </if>
-      <if test="createTime2 != null" >
-        and create_time &lt;= #{createTime2}
-      </if>
-      <if test="type != null" >
-        and type ${typeOperator} #{type}
-      </if>
-      <if test="status != null" >
-        and status ${statusOperator} #{status}
-      </if>
-    </trim>
-  </sql>
+    <!-- 查询条件 -->
+    <sql id="Base_Where_Clause">
+        where 1=1
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                and id ${idOperator} #{id}
+            </if>
+            <if test="uId1 != null">
+                and u_id_1 ${uId1Operator} #{uId1}
+            </if>
+            <if test="uId2 != null">
+                and u_id_2 ${uId2Operator} #{uId2}
+            </if>
+            <if test="note != null">
+                and note ${noteOperator} #{note}
+            </if>
+            <if test="createTime != null">
+                and create_time ${createTimeOperator} #{createTime}
+            </if>
+            <if test="createTime1 != null">
+                and create_time &gt;= #{createTime1}
+            </if>
+            <if test="createTime2 != null">
+                and create_time &lt;= #{createTime2}
+            </if>
+            <if test="type != null">
+                and type ${typeOperator} #{type}
+            </if>
+            <if test="status != null">
+                and status ${statusOperator} #{status}
+            </if>
+        </trim>
+    </sql>
 
-  <!-- 插入记录 -->
-  <insert id="insert" parameterType="com.adc.da.personInfo.entity.RelationEO" >
-    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
-        SELECT SEQ_relation.NEXTVAL FROM DUAL
-    </selectKey> -->
-    insert into relation(<include refid="Base_Column_List" />)
-    values (#{id}, #{uId1}, #{uId2}, #{note}, #{createTime}, #{type}, #{status})
-  </insert>
 
-  <!-- 动态插入记录 主键是序列 -->
-  <insert id="insertSelective" parameterType="com.adc.da.personInfo.entity.RelationEO" >
-        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
-        SELECT SEQ_relation.NEXTVAL FROM DUAL
-    </selectKey> -->
+    <!-- 通过拒绝好友请求，取消关注 -->
+    <insert id="insertSelective" parameterType="com.adc.da.personInfo.entity.RelationEO">
         insert into relation
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-                <if test="id != null" >id,</if>
-                <if test="uId1 != null" >u_id_1,</if>
-                <if test="uId2 != null" >u_id_2,</if>
-                <if test="note != null" >note,</if>
-                <if test="createTime != null" >create_time,</if>
-                <if test="type != null" >type,</if>
-                <if test="status != null" >status,</if>
-            </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="id != null" >#{id},</if>
-                <if test="uId1 != null" >#{uId1},</if>
-                <if test="uId2 != null" >#{uId2},</if>
-                <if test="note != null" >#{note},</if>
-                <if test="createTime != null" >#{createTime},</if>
-                <if test="type != null" >#{type},</if>
-                <if test="status != null" >#{status},</if>
-            </trim>
-  </insert>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="uId1 != null">u_id_1,</if>
+            <if test="uId2 != null">u_id_2,</if>
+            <if test="note != null">note,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="type != null">type,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="uId1 != null">#{uId1},</if>
+            <if test="uId2 != null">#{uId2},</if>
+            <if test="note != null">#{note},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="type != null">#{type},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
 
-  <!-- 根据pk，修改记录-->
-  <update id="updateByPrimaryKey" parameterType="com.adc.da.personInfo.entity.RelationEO" >
-    update relation
-       set  u_id_1 = #{uId1},
-            u_id_2 = #{uId2},
-            note = #{note},
-            create_time = #{createTime},
-            type = #{type},
-            status = #{status}
-     where  id = #{id}
-  </update>
+    <!-- 通过/拒绝好友请求，取消关注 -->
+    <update id="updateRelation" parameterType="com.adc.da.personInfo.entity.RelationEO">
+        update relation
+        <set>
+            <if test="note != null">
+                note = #{note},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where u_id_1 = #{uId1} and u_id_2 = #{uId2}
+    </update>
 
-  <!-- 修改记录，只修改只不为空的字段 -->
-  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.personInfo.entity.RelationEO" >
-    update relation
-    <set >
-      <if test="uId1 != null" >
-        u_id_1 = #{uId1},
-      </if>
-      <if test="uId2 != null" >
-        u_id_2 = #{uId2},
-      </if>
-      <if test="note != null" >
-        note = #{note},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime},
-      </if>
-      <if test="type != null" >
-        type = #{type},
-      </if>
-      <if test="status != null" >
-        status = #{status},
-      </if>
-    </set>
-     where id = #{id}
-  </update>
+    <!--好友查重-->
+    <select id="repeatFriend" parameterMap="com.adc.da.personInfo.entity.RelationEO">
+        select count(*) from relation
+        where u_id_1 = #{uId1}
+        and u_id_2 = #{uId2}
+        and type = 0
+        and status != 2
+        and status != 3
+    </select>
 
-  <!-- 根据id查询 relation -->
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select <include refid="Base_Column_List" /> 
-      from relation
-     where id = #{value}
+    <!--关注验重-->
+    <select id="repeatAtten" parameterMap="com.adc.da.personInfo.entity.RelationEO">
+        select count(*) from relation
+        where u_id_1 = #{uId1}
+        and u_id_2 = #{uId2}
+        and type = 1
+        and status != 1
+        and status != 3
+    </select>
 
-  </select>
 
-  <!-- 删除记录 -->
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-    delete from relation
-     where id = #{value}
+    <!--
+        <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+            select
+            <include refid="Base_Column_List"/>
+            from relation
+            <include refid="Base_Where_Clause"/>
+            <if test="pager.orderCondition != null and pager.orderCondition != ''">
+                ${pager.orderCondition}
+            </if>
+        </select>
 
-  </delete>
 
-  <!-- relation 列表总数-->
-  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
-    select count(1) from relation
-    <include refid="Base_Where_Clause"/>
-  </select>
+        <insert id="insert" parameterType="com.adc.da.personInfo.entity.RelationEO">
+            insert into relation(<include refid="Base_Column_List"/>)
+            values (#{id}, #{uId1}, #{uId2}, #{note}, #{createTime}, #{type}, #{status})
+        </insert>
 
-  <!-- 查询relation列表 -->
-  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-		select <include refid="Base_Column_List" /> from relation
-			<include refid="Base_Where_Clause"/>
-			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
-				${pager.orderCondition}
-			</if>
-			limit ${pager.pageOffset},${pager.pageSize}
-  </select>
 
-  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-    select <include refid="Base_Column_List"/> from relation
-    <include refid="Base_Where_Clause"/>
-    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
-		${pager.orderCondition}
-    </if>
-  </select>
+        <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+            select
+            <include refid="Base_Column_List"/>
+            from relation
+            where id = #{value}
+
+        </select>
+
+
+        <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from relation
+         where id = #{value}
+
+      </delete>
+
+
+        <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+            select count(1) from relation
+            <include refid="Base_Where_Clause"/>
+        </select>
+
+
+        <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+            select
+            <include refid="Base_Column_List"/>
+            from relation
+            <include refid="Base_Where_Clause"/>
+            <if test="pager.orderCondition != null and pager.orderCondition != ''">
+                ${pager.orderCondition}
+            </if>
+            limit ${pager.pageOffset},${pager.pageSize}
+        </select>
+
+        <update id="updateByPrimaryKey" parameterType="com.adc.da.personInfo.entity.RelationEO">
+        update relation
+           set  u_id_1 = #{uId1},
+                u_id_2 = #{uId2},
+                note = #{note},
+                create_time = #{createTime},
+                type = #{type},
+                status = #{status}
+         where  id = #{id}
+      </update>
+
+    -->
+
 
 </mapper>

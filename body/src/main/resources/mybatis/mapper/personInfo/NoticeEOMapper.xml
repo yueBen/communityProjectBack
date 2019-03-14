@@ -91,9 +91,6 @@
 
   <!-- 动态插入记录 主键是序列 -->
   <insert id="insertSelective" parameterType="com.adc.da.personInfo.entity.NoticeEO" >
-        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
-        SELECT SEQ_notice.NEXTVAL FROM DUAL
-    </selectKey> -->
         insert into notice
     <trim prefix="(" suffix=")" suffixOverrides="," >
                 <if test="id != null" >id,</if>

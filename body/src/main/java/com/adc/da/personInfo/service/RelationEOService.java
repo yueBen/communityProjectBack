@@ -11,9 +11,10 @@ import com.adc.da.base.service.BaseService;
 import com.adc.da.personInfo.dao.RelationEODao;
 import com.adc.da.personInfo.entity.RelationEO;
 
+import java.util.List;
+
 
 /**
- *
  * <br>
  * <b>功能：</b>relation RelationEOService<br>
  * <b>作者：</b>code generator<br>
@@ -31,6 +32,45 @@ public class RelationEOService extends BaseService<RelationEO, String> {
 
     public RelationEODao getDao() {
         return dao;
+    }
+
+
+    /**
+     * 通过/拒绝好友请求，取消关注
+     *
+     * @param relationEO
+     * @return
+     * @author yueben
+     * 2019-03-14
+     **/
+    @Transactional
+    public boolean updateRelation(RelationEO relationEO) {
+        return dao.updateRelation(relationEO) == 1;
+    }
+
+    /**
+     * 好友查重
+     *
+     * @param relationEO
+     * @return
+     * @author yueben
+     * 2019-03-14
+     **/
+    @Transactional
+    public boolean repeatFriend(RelationEO relationEO) {
+        return dao.repeatFriend(relationEO) == 0;
+    }
+
+    /**
+     * 关注查重
+     *
+     * @return
+     * @author yueben
+     * 2019-03-14
+     **/
+    @Transactional
+    public boolean repeatAtten(RelationEO relationEO) {
+        return dao.repeatAtten(relationEO) == 0;
     }
 
 }

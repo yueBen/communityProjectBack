@@ -37,7 +37,6 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO>{
 
     /**
     * 用戶個人信息修改新增
-     * @param id
      * @param uid
      * @param name
      * @param phone
