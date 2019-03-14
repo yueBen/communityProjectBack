@@ -94,16 +94,57 @@ public class NoticeEOService extends BaseService<NoticeEO, String> {
     }
 
     public List<NoticeEO> queryPage(NoticeEOPage page) throws Exception {
+        String uid = page.getId();
         Integer rowCount = this.queryByCount(page);
         page.getPager().setRowCount(rowCount);
         List<NoticeEO> noticeEOS = dao.queryByPage(page);
+        ArrayList<NoticeEO> list = new ArrayList<>();
         for (NoticeEO eo : noticeEOS) {
-            String name = pdao.getPersonByUid(eo.getUId2()).getName();
-            eo.setContent(name + "");
-
+            Integer status = eo.getStatus();
+            Integer type = eo.getType();
+            //主动通知，我怎么怎么了
+            if (eo.getUId1().equals(uid)) {
+                String name = pdao.getPersonByUid(eo.getUId2()).getName();
+                switch (type) {
+                    case 0:
+                        eo.setContent(status == 0?"已向&nbsp;&nbsp;"+name+"&nbsp;&nbsp;发出好友申请！":
+                                status == 1? "您与&nbsp;&nbsp;"+name+"&nbsp;&nbsp;已经是好友了！":
+                                status == 2? name+"&nbsp;&nbsp;拒绝了您的邀请！":
+                                status == 3? "您与&nbsp;&nbsp;"+name+"&nbsp;&nbsp;解除了好友关系！":"介是嘛？A");break;
+                    case 3:
+                        eo.setContent(status == 0?"您已关注了："+name:"您取消关注了："+name);break;
+                }
+            } else {
+                //被动通知，谁怎么怎么了我
+                String name = pdao.getPersonByUid(eo.getUId1()).getName();
+                switch (type) {
+                    case 0:
+                        eo.setContent(status == 0?name+"&nbsp;&nbsp;想和你成为好友。<div class='item-title-btn i-b-left'>详情</div>":
+                                status == 3?name+"与您解除了好友关系！":"介是嘛？B");break;
+                    case 1:
+                        eo.setContent(status == 0||status == 1?"您有了新的评论。<div class='item-title-btn i-b-left'>详情</div>":
+                                status == 2?name+"&nbsp;&nbsp;给您的评论点了赞。<div class='item-title-btn i-b-left'>详情</div>":
+                                status == 3?name+"&nbsp;&nbsp;不喜欢您的评论。<div class='item-title-btn i-b-left'>详情</div>":"介是嘛？C");
+                        break;
+                    case 2:
+                        eo.setContent(status == 0?name+"&nbsp;&nbsp;收藏了您的文章。<div class='item-title-btn i-b-left'>详情</div>":
+                                status == 1?name+"&nbsp;&nbsp;给您的文章点了赞。<div class='item-title-btn i-b-left'>详情</div>":
+                                status == 2?name+"&nbsp;&nbsp;不喜欢您的文章。<div class='item-title-btn i-b-left'>详情</div>":"介是嘛？D");
+                        break;
+                    case 3:
+                        eo.setContent(status == 0?name+"&nbsp;&nbsp;关注了您！":
+                                status == 1?name+"&nbsp;&nbsp;取消关注了您！":"介是嘛？E");
+                        break;
+                    case 4:
+                        eo.setContent(name+"&nbsp;&nbsp;给您留言了！");
+                }
+            }
+            list.add(eo);
         }
 
-        return noticeEOS;
+        return list;
     }
+
+
 
 }

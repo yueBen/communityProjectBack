@@ -2,9 +2,12 @@ package com.adc.da.personInfo.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.adc.da.personInfo.entity.NoticeEO;
+import com.adc.da.util.utils.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,13 @@ public class StickyNoteEOController extends BaseController<StickyNoteEO>{
     @Autowired
     private StickyNoteEOService stickyNoteEOService;
 
+    /**
+     *      status：0-未读，1-已读，2-删除
+     *      uid1-留言人id
+     *      uid2-我的id
+     */
+
+
 	@ApiOperation(value = "|StickyNoteEO|分页查询")
     @GetMapping("/page")
     @RequiresPermissions("personInfo:stickyNote:page")
@@ -40,26 +50,24 @@ public class StickyNoteEOController extends BaseController<StickyNoteEO>{
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 
-	@ApiOperation(value = "|StickyNoteEO|查询")
-    @GetMapping("")
-    @RequiresPermissions("personInfo:stickyNote:list")
-    public ResponseMessage<List<StickyNoteEO>> list(StickyNoteEOPage page) throws Exception {
-        return Result.success(stickyNoteEOService.queryByList(page));
-	}
-
-    @ApiOperation(value = "|StickyNoteEO|详情")
-    @GetMapping("/{id}")
-    @RequiresPermissions("personInfo:stickyNote:get")
-    public ResponseMessage<StickyNoteEO> find(@PathVariable String id) throws Exception {
-        return Result.success(stickyNoteEOService.selectByPrimaryKey(id));
-    }
-
     @ApiOperation(value = "|StickyNoteEO|新增")
     @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     @RequiresPermissions("personInfo:stickyNote:save")
-    public ResponseMessage<StickyNoteEO> create(@RequestBody StickyNoteEO stickyNoteEO) throws Exception {
-        stickyNoteEOService.insertSelective(stickyNoteEO);
-        return Result.success(stickyNoteEO);
+    public ResponseMessage create(@RequestBody StickyNoteEO stickyNoteEO) throws Exception {
+        stickyNoteEO.setId(UUID.randomUUID());
+        stickyNoteEO.setCreateTime(new Date());
+        stickyNoteEO.setStatus(0);
+
+        if (stickyNoteEOService.insertSelective(stickyNoteEO) == 1){
+            NoticeEO noticeEO = new NoticeEO();
+            noticeEO.setType(4);
+            noticeEO.setStatus(0);
+            noticeEO.setUId1(stickyNoteEO.getUId1());
+            noticeEO.setUId2(stickyNoteEO.getUId2());
+            noticeEO.setToId(stickyNoteEO.getId());
+            return Result.success();
+        }
+        return Result.error();
     }
 
     @ApiOperation(value = "|StickyNoteEO|修改")
@@ -70,13 +78,5 @@ public class StickyNoteEOController extends BaseController<StickyNoteEO>{
         return Result.success(stickyNoteEO);
     }
 
-    @ApiOperation(value = "|StickyNoteEO|删除")
-    @DeleteMapping("/{id}")
-    @RequiresPermissions("personInfo:stickyNote:delete")
-    public ResponseMessage delete(@PathVariable String id) throws Exception {
-        stickyNoteEOService.deleteByPrimaryKey(id);
-        logger.info("delete from sticky_note where id = {}", id);
-        return Result.success();
-    }
 
 }

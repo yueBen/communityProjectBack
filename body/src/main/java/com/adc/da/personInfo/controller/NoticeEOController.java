@@ -35,19 +35,20 @@ public class NoticeEOController extends BaseController<NoticeEO> {
     /**
      *      type:
      *          0-用户
-     *              status：0-已申请，1-已同意，2-已拒绝，3-已删除
+     *              status：0-申请，1-已同意，2-已拒绝，3-已删除
      *          1-评论
      *              status：0-文章新评论，1-评论新评论，2-赞，3-踩
      *          2-文章类通知
      *              status：0-收藏，1-赞，2-踩
      *          3-关注
-     *              status：0-已关注，1-已取消, 2-已删除
+     *              status：0-已关注，1-已取消
      *          4-留言
-     *              status：默认"-"
+     *              status：0
      *      isRead：0-未读，1-已读，2-删除
      */
 
     /**
+     * id存放用户uid
      * @Description: 分页条件查询
      * @Author: yueben
      * @CreateDate: 2019/3/13 20:01

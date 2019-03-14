@@ -38,7 +38,7 @@ public class RelationEOController extends BaseController<RelationEO> {
      * #   1、添加好友              -----新增数据       type：0 - status：0-已申请，1-已同意，2-已拒绝，3-已删除
      * #   2、同意/拒绝好友请求     -----修改
      * #   3、删除好友              -----物理删除
-     * #   4、关注                  -----新增数据       type：3 - status：0-已关注，1-已取消, 2-已删除
+     * #   4、关注                  -----新增数据       type：3 - status：0-已关注，1-已取消
      * #   5、取消关注              -----物理删除
      * #   6、好友查重（查询是否为好友）
      * #   7、关注查重（查询是否关注）
@@ -67,6 +67,7 @@ public class RelationEOController extends BaseController<RelationEO> {
                 NoticeEO noticeEO = new NoticeEO();
                 noticeEO.setUId1(relationEO.getUId1());
                 noticeEO.setUId2(relationEO.getUId2());
+                noticeEO.setToId(relationEO.getId());
                 noticeEO.setType(0);
                 noticeEO.setStatus(0);
                 noticeEOService.insertSelective(noticeEO);
@@ -77,6 +78,7 @@ public class RelationEOController extends BaseController<RelationEO> {
                 NoticeEO noticeEO = new NoticeEO();
                 noticeEO.setUId1(relationEO.getUId1());
                 noticeEO.setUId2(relationEO.getUId2());
+                noticeEO.setToId(relationEO.getId());
                 noticeEO.setType(3);
                 noticeEO.setStatus(0);
                 noticeEOService.insertSelective(noticeEO);
@@ -87,7 +89,7 @@ public class RelationEOController extends BaseController<RelationEO> {
     }
 
     /**
-     * 通过、拒绝、取消关注
+     * 通过、拒绝、取消关注、删除
      * uid1，uid2, type, status
      *
      * @param relationEO

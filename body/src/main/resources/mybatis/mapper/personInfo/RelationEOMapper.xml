@@ -96,7 +96,7 @@
     </update>
 
     <!--好友查重-->
-    <select id="repeatFriend" parameterMap="com.adc.da.personInfo.entity.RelationEO">
+    <select id="repeatFriend" parameterType="com.adc.da.personInfo.entity.RelationEO">
         select count(*) from relation
         where u_id_1 = #{uId1}
         and u_id_2 = #{uId2}
@@ -106,7 +106,7 @@
     </select>
 
     <!--关注验重-->
-    <select id="repeatAtten" parameterMap="com.adc.da.personInfo.entity.RelationEO">
+    <select id="repeatAtten" parameterType="com.adc.da.personInfo.entity.RelationEO">
         select count(*) from relation
         where u_id_1 = #{uId1}
         and u_id_2 = #{uId2}
