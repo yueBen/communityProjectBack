@@ -33,4 +33,9 @@ public class CommentEOService extends BaseService<CommentEO, String> {
         return dao;
     }
 
+    @Transactional
+    public boolean setCommCount(String id, Integer count) {
+        return dao.setCommCount(id, count) == 1;
+    }
+
 }

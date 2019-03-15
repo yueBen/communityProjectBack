@@ -2,6 +2,8 @@ package com.adc.da.article.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.article.entity.CommentEO;
+import org.springframework.data.repository.query.Param;
+
 /**
  *
  * <br>
@@ -12,4 +14,12 @@ import com.adc.da.article.entity.CommentEO;
  */
 public interface CommentEODao extends BaseDao<CommentEO> {
 
+
+    /**
+     * 设置子评论数
+     * @param id
+     * @param count
+     * @return
+     */
+    int setCommCount(@Param("id") String id, @Param("count") Integer count);
 }

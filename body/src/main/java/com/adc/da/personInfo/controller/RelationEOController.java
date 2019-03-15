@@ -70,6 +70,10 @@ public class RelationEOController extends BaseController<RelationEO> {
                 noticeEO.setToId(relationEO.getId());
                 noticeEO.setType(0);
                 noticeEO.setStatus(0);
+                String note = relationEO.getNote();
+                if (note != null && note.length() >0) {
+                    noticeEO.setContent(note);
+                }
                 noticeEOService.insertSelective(noticeEO);
                 return Result.success("邀请已发送！");
             }

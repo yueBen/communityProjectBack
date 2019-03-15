@@ -1,78 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.adc.da.personInfo.dao.NoticeEODao" >
-  <!-- Result Map-->
-  <resultMap id="BaseResultMap" type="com.adc.da.personInfo.entity.NoticeEO" >
-    <id column="id" property="id" />
-    <result column="u_id_1"         jdbcType="VARCHAR"      property="uId1" />
-    <result column="u_id_2"         jdbcType="VARCHAR"      property="uId2" />
-    <result column="to_id"          jdbcType="VARCHAR"      property="toId" />
-    <result column="type"           jdbcType="INTEGER"      property="type" />
-    <result column="create_time"    jdbcType="TIMESTAMP"    property="createTime" />
-    <result column="content"        jdbcType="VARCHAR"      property="content" />
-    <result column="status"         jdbcType="INTEGER"      property="status" />
-    <result column="is_read"        jdbcType="INTEGER"      property="isRead" />
-  </resultMap>
+<mapper namespace="com.adc.da.personInfo.dao.NoticeEODao">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.adc.da.personInfo.entity.NoticeEO">
+        <id column="id" property="id"/>
+        <result column="u_id_1" jdbcType="VARCHAR" property="uId1"/>
+        <result column="u_id_2" jdbcType="VARCHAR" property="uId2"/>
+        <result column="to_id" jdbcType="VARCHAR" property="toId"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="is_read" jdbcType="INTEGER" property="isRead"/>
+    </resultMap>
 
-  <!-- notice table all fields -->
-  <sql id="Base_Column_List" >
+    <!-- notice table all fields -->
+    <sql id="Base_Column_List">
      id, u_id_1, u_id_2, to_id, type, create_time, content, status, is_read
   </sql>
 
-  <!-- 查询条件 -->
-  <sql id="Base_Where_Clause">
-    where 1=1
-    <trim suffixOverrides="," >
-      <if test="id != null" >
-        and id ${idOperator} #{id}
-      </if>
-      <if test="uId1 != null" >
-        and u_id_1 ${uId1Operator} #{uId1}
-      </if>
-      <if test="uId2 != null" >
-        and u_id_2 ${uId2Operator} #{uId2}
-      </if>
-      <if test="toId != null" >
-        and to_id ${toIdOperator} #{toId}
-      </if>
-      <if test="type != null" >
-        and type ${typeOperator} #{type}
-      </if>
-      <if test="createTime != null" >
-        and create_time ${createTimeOperator} #{createTime}
-      </if>
-      <if test="createTime1 != null" >
-        and create_time &gt;= #{createTime1}
-      </if>
-      <if test="createTime2 != null" >
-        and create_time &lt;= #{createTime2}
-      </if>
-      <if test="content != null" >
-        and content ${contentOperator} #{content}
-      </if>
-      <if test="status != null" >
-        and status ${statusOperator} #{status}
-      </if>
-      <if test="isRead != null" >
-        and is_read ${isReadOperator} #{isRead}
-      </if>
-    </trim>
-  </sql>
+    <!-- 查询条件 -->
+    <sql id="Base_Where_Clause">
+        where 1=1
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                and id ${idOperator} #{id}
+            </if>
+            <if test="uId1 != null">
+                and u_id_1 ${uId1Operator} #{uId1}
+            </if>
+            <if test="uId2 != null">
+                and u_id_2 ${uId2Operator} #{uId2}
+            </if>
+            <if test="toId != null">
+                and to_id ${toIdOperator} #{toId}
+            </if>
+            <if test="type != null">
+                and type ${typeOperator} #{type}
+            </if>
+            <if test="createTime != null">
+                and create_time ${createTimeOperator} #{createTime}
+            </if>
+            <if test="createTime1 != null">
+                and create_time &gt;= #{createTime1}
+            </if>
+            <if test="createTime2 != null">
+                and create_time &lt;= #{createTime2}
+            </if>
+            <if test="content != null">
+                and content ${contentOperator} #{content}
+            </if>
+            <if test="status != null">
+                and status ${statusOperator} #{status}
+            </if>
+            <if test="isRead != null">
+                and is_read ${isReadOperator} #{isRead}
+            </if>
+        </trim>
+    </sql>
 
     <!-- 查询列表条件查询 -->
     <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-        select <include refid="Base_Column_List" /> from notice
+        select
+        <include refid="Base_Column_List"/>
+        from notice
         where 1=1
-        <if test="createTime != null" >
+        <if test="createTime != null">
             and create_time ${createTimeOperator} #{createTime}
         </if>
-        <if test="createTime1 != null" >
+        <if test="createTime1 != null">
             and create_time &gt;= #{createTime1}
         </if>
-        <if test="createTime2 != null" >
+        <if test="createTime2 != null">
             and create_time &lt;= #{createTime2}
         </if>
-        <if test="isRead != null" >
+        <if test="isRead != null">
             and is_read ${isReadOperator} #{isRead}
         </if>
         and is_read != 2
@@ -96,44 +98,44 @@
     </update>
 
 
-  <!-- 插入记录 -->
-  <insert id="insert" parameterType="com.adc.da.personInfo.entity.NoticeEO" >
-    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
-        SELECT SEQ_notice.NEXTVAL FROM DUAL
-    </selectKey> -->
-    insert into notice(<include refid="Base_Column_List" />)
-    values (#{id}, #{uId1}, #{uId2}, #{toId}, #{type}, #{createTime}, #{content}, #{status}, #{isRead})
-  </insert>
+    <!-- 插入记录 -->
+    <insert id="insert" parameterType="com.adc.da.personInfo.entity.NoticeEO">
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+            SELECT SEQ_notice.NEXTVAL FROM DUAL
+        </selectKey> -->
+        insert into notice(<include refid="Base_Column_List"/>)
+        values (#{id}, #{uId1}, #{uId2}, #{toId}, #{type}, #{createTime}, #{content}, #{status}, #{isRead})
+    </insert>
 
-  <!-- 动态插入记录 主键是序列 -->
-  <insert id="insertSelective" parameterType="com.adc.da.personInfo.entity.NoticeEO" >
+    <!-- 动态插入记录 主键是序列 -->
+    <insert id="insertSelective" parameterType="com.adc.da.personInfo.entity.NoticeEO">
         insert into notice
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-                <if test="id != null" >id,</if>
-                <if test="uId1 != null" >u_id_1,</if>
-                <if test="uId2 != null" >u_id_2,</if>
-                <if test="toId != null" >to_id,</if>
-                <if test="type != null" >type,</if>
-                <if test="createTime != null" >create_time,</if>
-                <if test="content != null" >content,</if>
-                <if test="status != null" >status,</if>
-                <if test="isRead != null" >is_read,</if>
-            </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="id != null" >#{id},</if>
-                <if test="uId1 != null" >#{uId1},</if>
-                <if test="uId2 != null" >#{uId2},</if>
-                <if test="toId != null" >#{toId},</if>
-                <if test="type != null" >#{type},</if>
-                <if test="createTime != null" >#{createTime},</if>
-                <if test="content != null" >#{content},</if>
-                <if test="status != null" >#{status},</if>
-                <if test="isRead != null" >#{isRead},</if>
-            </trim>
-  </insert>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="uId1 != null">u_id_1,</if>
+            <if test="uId2 != null">u_id_2,</if>
+            <if test="toId != null">to_id,</if>
+            <if test="type != null">type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="content != null">content,</if>
+            <if test="status != null">status,</if>
+            <if test="isRead != null">is_read,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="uId1 != null">#{uId1},</if>
+            <if test="uId2 != null">#{uId2},</if>
+            <if test="toId != null">#{toId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="content != null">#{content},</if>
+            <if test="status != null">#{status},</if>
+            <if test="isRead != null">#{isRead},</if>
+        </trim>
+    </insert>
 
-  <!-- 根据pk，修改记录-->
-  <update id="updateByPrimaryKey" parameterType="com.adc.da.personInfo.entity.NoticeEO" >
+    <!-- 根据pk，修改记录-->
+    <update id="updateByPrimaryKey" parameterType="com.adc.da.personInfo.entity.NoticeEO">
     update notice
        set  u_id_1 = #{uId1},
             u_id_2 = #{uId2},
@@ -146,65 +148,68 @@
      where  id = #{id}
   </update>
 
-  <!-- 修改记录，只修改只不为空的字段 -->
-  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.personInfo.entity.NoticeEO" >
-    update notice
-    <set >
-      <if test="uId1 != null" >
-        u_id_1 = #{uId1},
-      </if>
-      <if test="uId2 != null" >
-        u_id_2 = #{uId2},
-      </if>
-      <if test="toId != null" >
-        to_id = #{toId},
-      </if>
-      <if test="type != null" >
-        type = #{type},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime},
-      </if>
-      <if test="content != null" >
-        content = #{content},
-      </if>
-      <if test="status != null" >
-        status = #{status},
-      </if>
-      <if test="isRead != null" >
-        is_read = #{isRead},
-      </if>
-    </set>
-     where id = #{id}
-  </update>
+    <!-- 修改记录，只修改只不为空的字段 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.personInfo.entity.NoticeEO">
+        update notice
+        <set>
+            <if test="uId1 != null">
+                u_id_1 = #{uId1},
+            </if>
+            <if test="uId2 != null">
+                u_id_2 = #{uId2},
+            </if>
+            <if test="toId != null">
+                to_id = #{toId},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="isRead != null">
+                is_read = #{isRead},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 
-  <!-- 根据id查询 notice -->
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select <include refid="Base_Column_List" /> 
-      from notice
-     where id = #{value}
+    <!-- 根据id查询 notice -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from notice
+        where id = #{value}
 
-  </select>
+    </select>
 
-  <!-- 删除记录 -->
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!-- 删除记录 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from notice
      where id = #{value}
 
   </delete>
 
-  <!-- notice 列表总数-->
-  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
-    select count(1) from notice
-    <include refid="Base_Where_Clause"/>
-  </select>
+    <!-- notice 列表总数-->
+    <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+        select count(1) from notice
+        <include refid="Base_Where_Clause"/>
+    </select>
 
-  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-    select <include refid="Base_Column_List"/> from notice
-    <include refid="Base_Where_Clause"/>
-    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
-		${pager.orderCondition}
-    </if>
-  </select>
+    <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select
+        <include refid="Base_Column_List"/>
+        from notice
+        <include refid="Base_Where_Clause"/>
+        <if test="pager.orderCondition != null and pager.orderCondition != ''">
+            ${pager.orderCondition}
+        </if>
+    </select>
 
 </mapper>

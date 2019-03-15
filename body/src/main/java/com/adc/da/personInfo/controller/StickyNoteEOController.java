@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.adc.da.personInfo.entity.NoticeEO;
+import com.adc.da.personInfo.service.NoticeEOService;
 import com.adc.da.util.utils.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +29,15 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 @RestController
 @RequestMapping("/${restPath}/personInfo/stickyNote")
 @Api(description = "|StickyNoteEO|")
-public class StickyNoteEOController extends BaseController<StickyNoteEO>{
+public class StickyNoteEOController extends BaseController<StickyNoteEO> {
 
     private static final Logger logger = LoggerFactory.getLogger(StickyNoteEOController.class);
 
     @Autowired
     private StickyNoteEOService stickyNoteEOService;
+
+    @Autowired
+    private NoticeEOService noticeEOService;
 
     /**
      *      status：0-未读，1-已读，2-删除
@@ -46,31 +50,39 @@ public class StickyNoteEOController extends BaseController<StickyNoteEO>{
     @GetMapping("/page")
     @RequiresPermissions("personInfo:stickyNote:page")
     public ResponseMessage<PageInfo<StickyNoteEO>> page(StickyNoteEOPage page) throws Exception {
-        List<StickyNoteEO> rows = stickyNoteEOService.queryByPage(page);
+        List<StickyNoteEO> rows = stickyNoteEOService.queryList(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 
     @ApiOperation(value = "|StickyNoteEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping("/add")
     @RequiresPermissions("personInfo:stickyNote:save")
     public ResponseMessage create(@RequestBody StickyNoteEO stickyNoteEO) throws Exception {
         stickyNoteEO.setId(UUID.randomUUID());
         stickyNoteEO.setCreateTime(new Date());
         stickyNoteEO.setStatus(0);
 
-        if (stickyNoteEOService.insertSelective(stickyNoteEO) == 1){
+        if (stickyNoteEOService.insertSelective(stickyNoteEO) == 1) {
             NoticeEO noticeEO = new NoticeEO();
             noticeEO.setType(4);
             noticeEO.setStatus(0);
             noticeEO.setUId1(stickyNoteEO.getUId1());
             noticeEO.setUId2(stickyNoteEO.getUId2());
             noticeEO.setToId(stickyNoteEO.getId());
+            noticeEOService.insertSelect(noticeEO);
             return Result.success();
         }
         return Result.error();
     }
 
-    @ApiOperation(value = "|StickyNoteEO|修改")
+    /**
+     * 已读，删除操作
+     * 通过id修改status
+     * @param stickyNoteEO
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation("/update")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     @RequiresPermissions("personInfo:stickyNote:update")
     public ResponseMessage<StickyNoteEO> update(@RequestBody StickyNoteEO stickyNoteEO) throws Exception {

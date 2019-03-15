@@ -1,111 +1,150 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.adc.da.article.dao.CommentEODao" >
-  <!-- Result Map-->
-  <resultMap id="BaseResultMap" type="com.adc.da.article.entity.CommentEO" >
-    <id column="id" property="id" />
-    <result column="u_id" property="uId" />
-    <result column="on_id" property="onId" />
-    <result column="p_id" property="pId" />
-    <result column="type" property="type" />
-    <result column="like_num" property="likeNum" />
-    <result column="dislike_num" property="dislikeNum" />
-    <result column="comment_num" property="commentNum" />
-    <result column="create_time" property="createTime" />
-    <result column="content" property="content" />
-  </resultMap>
+<mapper namespace="com.adc.da.article.dao.CommentEODao">
+    <!-- Result Map-->
+    <resultMap id="BaseResultMap" type="com.adc.da.article.entity.CommentEO">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="u_id" jdbcType="VARCHAR" property="uId"/>
+        <result column="on_id" jdbcType="VARCHAR" property="onId"/>
+        <result column="p_id" jdbcType="VARCHAR" property="pId"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="like_num" jdbcType="INTEGER" property="likeNum"/>
+        <result column="dislike_num" jdbcType="INTEGER" property="dislikeNum"/>
+        <result column="comment_num" jdbcType="TIMESTAMP" property="commentNum"/>
+        <result column="create_time" jdbcType="VARCHAR" property="createTime"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
 
-  <!-- comment table all fields -->
-  <sql id="Base_Column_List" >
-     id, u_id, on_id, p_id, type, like_num, dislike_num, comment_num, create_time, content
+    <!-- comment table all fields -->
+    <sql id="Base_Column_List">
+     id, u_id, on_id, p_id, type, like_num, dislike_num, comment_num, create_time, content, status
   </sql>
 
-  <!-- 查询条件 -->
-  <sql id="Base_Where_Clause">
-    where 1=1
-    <trim suffixOverrides="," >
-      <if test="id != null" >
-        and id ${idOperator} #{id}
-      </if>
-      <if test="uId != null" >
-        and u_id ${uIdOperator} #{uId}
-      </if>
-      <if test="onId != null" >
-        and on_id ${onIdOperator} #{onId}
-      </if>
-      <if test="pId != null" >
-        and p_id ${pIdOperator} #{pId}
-      </if>
-      <if test="type != null" >
-        and type ${typeOperator} #{type}
-      </if>
-      <if test="likeNum != null" >
-        and like_num ${likeNumOperator} #{likeNum}
-      </if>
-      <if test="dislikeNum != null" >
-        and dislike_num ${dislikeNumOperator} #{dislikeNum}
-      </if>
-      <if test="commentNum != null" >
-        and comment_num ${commentNumOperator} #{commentNum}
-      </if>
-      <if test="createTime != null" >
-        and create_time ${createTimeOperator} #{createTime}
-      </if>
-      <if test="createTime1 != null" >
-        and create_time &gt;= #{createTime1}
-      </if>
-      <if test="createTime2 != null" >
-        and create_time &lt;= #{createTime2}
-      </if>
-      <if test="content != null" >
-        and content ${contentOperator} #{content}
-      </if>
-    </trim>
-  </sql>
+    <!-- 查询条件 -->
+    <sql id="Base_Where_Clause">
+        where 1=1
+        <trim suffixOverrides=",">
+            <if test="id != null">
+                and id ${idOperator} #{id}
+            </if>
+            <if test="uId != null">
+                and u_id ${uIdOperator} #{uId}
+            </if>
+            <if test="onId != null">
+                and on_id ${onIdOperator} #{onId}
+            </if>
+            <if test="pId != null">
+                and p_id ${pIdOperator} #{pId}
+            </if>
+            <if test="type != null">
+                and type ${typeOperator} #{type}
+            </if>
+            <if test="likeNum != null">
+                and like_num ${likeNumOperator} #{likeNum}
+            </if>
+            <if test="dislikeNum != null">
+                and dislike_num ${dislikeNumOperator} #{dislikeNum}
+            </if>
+            <if test="commentNum != null">
+                and comment_num ${commentNumOperator} #{commentNum}
+            </if>
+            <if test="createTime != null">
+                and create_time ${createTimeOperator} #{createTime}
+            </if>
+            <if test="createTime1 != null">
+                and create_time &gt;= #{createTime1}
+            </if>
+            <if test="createTime2 != null">
+                and create_time &lt;= #{createTime2}
+            </if>
+            <if test="content != null">
+                and content ${contentOperator} #{content}
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </trim>
+    </sql>
 
-  <!-- 插入记录 -->
-  <insert id="insert" parameterType="com.adc.da.article.entity.CommentEO" >
-    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
-        SELECT SEQ_comment.NEXTVAL FROM DUAL
-    </selectKey> -->
-    insert into comment(<include refid="Base_Column_List" />)
-    values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{onId, jdbcType=${po.jdbcType}}, #{pId, jdbcType=${po.jdbcType}}, #{type, jdbcType=${po.jdbcType}}, #{likeNum, jdbcType=${po.jdbcType}}, #{dislikeNum, jdbcType=${po.jdbcType}}, #{commentNum, jdbcType=${po.jdbcType}}, #{createTime, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}})
-  </insert>
+    <!-- 修改记录，只修改只不为空的字段 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.article.entity.CommentEO">
+        update comment
+        <set>
+            <if test="likeNum != null">
+                like_num = like_num + #{likeNum},
+            </if>
+            <if test="dislikeNum != null">
+                dislike_num = like_num + #{dislikeNum},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 
-  <!-- 动态插入记录 主键是序列 -->
-  <insert id="insertSelective" parameterType="com.adc.da.article.entity.CommentEO" >
+    <!--加载子评论-->
+    <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select
+        <include refid="Base_Column_List"/>
+        from comment
+        where status != 2
+        and p_id = #{pId}
+        order by create_time desc
+    </select>
+
+    <!--设置子评论数-->
+    <update id="setCommCount">
+        update comment set comment_num = comment_num + #{count,jdbcType=INTEGER} where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 插入记录 -->
+    <insert id="insert" parameterType="com.adc.da.article.entity.CommentEO">
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+            SELECT SEQ_comment.NEXTVAL FROM DUAL
+        </selectKey> -->
+        insert into comment(<include refid="Base_Column_List"/>)
+        values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{onId, jdbcType=${po.jdbcType}},
+        #{pId, jdbcType=${po.jdbcType}}, #{type, jdbcType=${po.jdbcType}}, #{likeNum, jdbcType=${po.jdbcType}},
+        #{dislikeNum, jdbcType=${po.jdbcType}}, #{commentNum, jdbcType=${po.jdbcType}},
+        #{createTime, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}})
+    </insert>
+
+    <!-- 动态插入记录 主键是序列 -->
+    <insert id="insertSelective" parameterType="com.adc.da.article.entity.CommentEO">
         <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
         SELECT SEQ_comment.NEXTVAL FROM DUAL
     </selectKey> -->
         insert into comment
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-                <if test="id != null" >id,</if>
-                <if test="uId != null" >u_id,</if>
-                <if test="onId != null" >on_id,</if>
-                <if test="pId != null" >p_id,</if>
-                <if test="type != null" >type,</if>
-                <if test="likeNum != null" >like_num,</if>
-                <if test="dislikeNum != null" >dislike_num,</if>
-                <if test="commentNum != null" >comment_num,</if>
-                <if test="createTime != null" >create_time,</if>
-                <if test="content != null" >content,</if>
-            </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
-                <if test="uId != null" >#{uId, jdbcType=${po.jdbcType}},</if>
-                <if test="onId != null" >#{onId, jdbcType=${po.jdbcType}},</if>
-                <if test="pId != null" >#{pId, jdbcType=${po.jdbcType}},</if>
-                <if test="type != null" >#{type, jdbcType=${po.jdbcType}},</if>
-                <if test="likeNum != null" >#{likeNum, jdbcType=${po.jdbcType}},</if>
-                <if test="dislikeNum != null" >#{dislikeNum, jdbcType=${po.jdbcType}},</if>
-                <if test="commentNum != null" >#{commentNum, jdbcType=${po.jdbcType}},</if>
-                <if test="createTime != null" >#{createTime, jdbcType=${po.jdbcType}},</if>
-                <if test="content != null" >#{content, jdbcType=${po.jdbcType}},</if>
-            </trim>
-  </insert>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="uId != null">u_id,</if>
+            <if test="onId != null">on_id,</if>
+            <if test="pId != null">p_id,</if>
+            <if test="type != null">type,</if>
+            <if test="likeNum != null">like_num,</if>
+            <if test="dislikeNum != null">dislike_num,</if>
+            <if test="commentNum != null">comment_num,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="content != null">content,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id, jdbcType=${po.jdbcType}},</if>
+            <if test="uId != null">#{uId, jdbcType=${po.jdbcType}},</if>
+            <if test="onId != null">#{onId, jdbcType=${po.jdbcType}},</if>
+            <if test="pId != null">#{pId, jdbcType=${po.jdbcType}},</if>
+            <if test="type != null">#{type, jdbcType=${po.jdbcType}},</if>
+            <if test="likeNum != null">#{likeNum, jdbcType=${po.jdbcType}},</if>
+            <if test="dislikeNum != null">#{dislikeNum, jdbcType=${po.jdbcType}},</if>
+            <if test="commentNum != null">#{commentNum, jdbcType=${po.jdbcType}},</if>
+            <if test="createTime != null">#{createTime, jdbcType=${po.jdbcType}},</if>
+            <if test="content != null">#{content, jdbcType=${po.jdbcType}},</if>
+        </trim>
+    </insert>
 
-  <!-- 根据pk，修改记录-->
-  <update id="updateByPrimaryKey" parameterType="com.adc.da.article.entity.CommentEO" >
+    <!-- 根据pk，修改记录-->
+    <update id="updateByPrimaryKey" parameterType="com.adc.da.article.entity.CommentEO">
     update comment
        set  u_id = #{uId},
             on_id = #{onId},
@@ -119,78 +158,38 @@
      where  id = #{id}
   </update>
 
-  <!-- 修改记录，只修改只不为空的字段 -->
-  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.article.entity.CommentEO" >
-    update comment
-    <set >
-      <if test="uId != null" >
-        u_id = #{uId},
-      </if>
-      <if test="onId != null" >
-        on_id = #{onId},
-      </if>
-      <if test="pId != null" >
-        p_id = #{pId},
-      </if>
-      <if test="type != null" >
-        type = #{type},
-      </if>
-      <if test="likeNum != null" >
-        like_num = #{likeNum},
-      </if>
-      <if test="dislikeNum != null" >
-        dislike_num = #{dislikeNum},
-      </if>
-      <if test="commentNum != null" >
-        comment_num = #{commentNum},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime},
-      </if>
-      <if test="content != null" >
-        content = #{content},
-      </if>
-    </set>
-     where id = #{id}
-  </update>
+    <!-- 根据id查询 comment -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from comment
+        where id = #{value}
 
-  <!-- 根据id查询 comment -->
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select <include refid="Base_Column_List" /> 
-      from comment
-     where id = #{value}
+    </select>
 
-  </select>
-
-  <!-- 删除记录 -->
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <!-- 删除记录 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from comment
      where id = #{value}
 
   </delete>
 
-  <!-- comment 列表总数-->
-  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
-    select count(1) from comment
-    <include refid="Base_Where_Clause"/>
-  </select>
+    <!-- comment 列表总数-->
+    <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+        select count(1) from comment
+        <include refid="Base_Where_Clause"/>
+    </select>
 
-  <!-- 查询comment列表 -->
-  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-		select <include refid="Base_Column_List" /> from comment
-			<include refid="Base_Where_Clause"/>
-			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
-				${pager.orderCondition}
-			</if>
-			limit ${pager.pageOffset},${pager.pageSize}
-  </select>
-
-  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-    select <include refid="Base_Column_List"/> from comment
-    <include refid="Base_Where_Clause"/>
-    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
-		${pager.orderCondition}
-    </if>
-  </select>
+    <!-- 查询comment列表 -->
+    <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select
+        <include refid="Base_Column_List"/>
+        from comment
+        <include refid="Base_Where_Clause"/>
+        <if test="pager.orderCondition != null and pager.orderCondition != ''">
+            ${pager.orderCondition}
+        </if>
+        limit ${pager.pageOffset},${pager.pageSize}
+    </select>
 
 </mapper>

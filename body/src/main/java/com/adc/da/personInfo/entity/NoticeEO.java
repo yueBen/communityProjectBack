@@ -23,6 +23,18 @@ public class NoticeEO extends BaseEntity {
     private Integer status;
     private Integer isRead;
 
+    public NoticeEO(String uId1, String uId2, String toId, Integer type, String content, Integer status) {
+        this.uId1 = uId1;
+        this.uId2 = uId2;
+        this.toId = toId;
+        this.type = type;
+        this.content = content;
+        this.status = status;
+    }
+
+    public NoticeEO() {
+    }
+
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
      * <p>字段列表：</p>
@@ -36,6 +48,9 @@ public class NoticeEO extends BaseEntity {
      * <li>status -> status</li>
      * <li>isRead -> is_read</li>
      */
+
+
+
     public static String fieldToColumn(String fieldName) {
         if (fieldName == null) return null;
         switch (fieldName) {

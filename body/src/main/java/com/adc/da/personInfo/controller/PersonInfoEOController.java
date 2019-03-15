@@ -28,7 +28,7 @@ import java.io.File;
 @RestController
 @RequestMapping("/${restPath}/personInfo/personInfo")
 @Api(description = "|PersonInfoEO|")
-public class PersonInfoEOController extends BaseController<PersonInfoEO>{
+public class PersonInfoEOController extends BaseController<PersonInfoEO> {
 
     private static final Logger logger = LoggerFactory.getLogger(PersonInfoEOController.class);
 
@@ -36,7 +36,8 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO>{
     private PersonInfoEOService personInfoEOService;
 
     /**
-    * 用戶個人信息修改新增
+     * 用戶個人信息修改新增
+     *
      * @param uid
      * @param name
      * @param phone
@@ -45,10 +46,10 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO>{
      * @param gender
      * @param introduce
      * @param photo
-    * @return
-    * @author yueben
-    * 2019-03-13
-    **/
+     * @return
+     * @author yueben
+     * 2019-03-13
+     **/
     @ApiOperation(value = "|PersonInfoEO|个人信息新增修改")
     @PostMapping("/add")
     @RequiresPermissions("personInfo:personInfo:save")
@@ -81,18 +82,19 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO>{
             return Result.success("修改成功");
         }
     }
-    
-    /**  
-    * 用户头像保存
+
+    /**
+     * 用户头像保存
+     *
      * @param mft
-     * @param path  
-    * @return   
-    * @author yueben  
-    * 2019-03-12  
-    **/
+     * @param path
+     * @return
+     * @author yueben
+     * 2019-03-12
+     **/
     private String saveUserPhoto(MultipartFile mft, String path) throws Exception {
         File file = new File(path + "/" + mft.getOriginalFilename());
-        if(!file.getParentFile().exists()) {
+        if (!file.getParentFile().exists()) {
             file.getParentFile().mkdir();
         }
         if (FileUpLoad.MulFileToFile(mft, file).equals("ok")) {
@@ -103,12 +105,13 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO>{
     }
 
     /**
-    * 根据uid查询个人信息
+     * 根据uid查询个人信息
+     *
      * @param uid
-    * @return
-    * @author yueben
-    * 2019-03-13
-    **/
+     * @return
+     * @author yueben
+     * 2019-03-13
+     **/
     @ApiOperation(value = "|PersonInfoEO|详情")
     @GetMapping("/{uid}")
     @RequiresPermissions("personInfo:personInfo:get")

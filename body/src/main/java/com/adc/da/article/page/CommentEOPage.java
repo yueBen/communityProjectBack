@@ -34,6 +34,8 @@ public class CommentEOPage extends BasePage {
     private String createTimeOperator = "=";
     private String content;
     private String contentOperator = "=";
+    private String status;
+    private String statusOperator = "=";
 
     public String getId() {
         return this.id;
@@ -211,4 +213,19 @@ public class CommentEOPage extends BasePage {
         this.contentOperator = contentOperator;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatusOperator() {
+        return statusOperator;
+    }
+
+    public void setStatusOperator(String statusOperator) {
+        this.statusOperator = statusOperator;
+    }
 }

@@ -23,6 +23,7 @@ public class CommentEO extends BaseEntity {
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     private String content;
+    private Integer status;
 
     /**
      * java字段名转换为原始数据库列名。<b>如果不存在则返回null</b><br>
@@ -51,6 +52,7 @@ public class CommentEO extends BaseEntity {
             case "commentNum": return "comment_num";
             case "createTime": return "create_time";
             case "content": return "content";
+            case "status": return "status";
             default: return null;
         }
     }
@@ -82,6 +84,7 @@ public class CommentEO extends BaseEntity {
             case "comment_num": return "commentNum";
             case "create_time": return "createTime";
             case "content": return "content";
+            case "status": return "status";
             default: return null;
         }
     }
@@ -186,4 +189,11 @@ public class CommentEO extends BaseEntity {
         this.content = content;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 }

@@ -116,7 +116,7 @@
     </select>
 
 
-    <!--
+
         <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
             select
             <include refid="Base_Column_List"/>
@@ -178,7 +178,7 @@
          where  id = #{id}
       </update>
 
-    -->
+
 
 
 </mapper>

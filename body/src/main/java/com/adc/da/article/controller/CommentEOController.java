@@ -2,9 +2,13 @@ package com.adc.da.article.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.adc.da.personInfo.entity.NoticeEO;
+import com.adc.da.personInfo.service.NoticeEOService;
+import com.adc.da.util.utils.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,27 +29,40 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 @RestController
 @RequestMapping("/${restPath}/article/comment")
 @Api(description = "|CommentEO|")
-public class CommentEOController extends BaseController<CommentEO>{
+public class CommentEOController extends BaseController<CommentEO> {
 
     private static final Logger logger = LoggerFactory.getLogger(CommentEOController.class);
 
     @Autowired
     private CommentEOService commentEOService;
 
-	@ApiOperation(value = "|CommentEO|分页查询")
-    @GetMapping("/page")
-    @RequiresPermissions("article:comment:page")
-    public ResponseMessage<PageInfo<CommentEO>> page(CommentEOPage page) throws Exception {
-        List<CommentEO> rows = commentEOService.queryByPage(page);
-        return Result.success(getPageInfo(page.getPager(), rows));
-    }
+    @Autowired
+    private NoticeEOService noticeEOService;
 
-	@ApiOperation(value = "|CommentEO|查询")
-    @GetMapping("")
+    /**
+     *      uid - 评论创建人的id
+     *      on_id - 被评论人的id
+     *      pid - 评论的父级id，可能是type：0-文章子评论、1-评论子评论、2-留言子评论
+     *
+     *      status: 0-未读，1-已读， 2-删除
+     */
+
+
+    /**
+     *
+     *  通过pid查询评论，时间倒序排列
+     *
+     * @param page
+     * @return
+     * @author yueben
+     * 2019-03-15
+     **/
+    @ApiOperation(value = "|CommentEO|查询")
+    @GetMapping("/list")
     @RequiresPermissions("article:comment:list")
     public ResponseMessage<List<CommentEO>> list(CommentEOPage page) throws Exception {
         return Result.success(commentEOService.queryByList(page));
-	}
+    }
 
     @ApiOperation(value = "|CommentEO|详情")
     @GetMapping("/{id}")
@@ -54,18 +71,56 @@ public class CommentEOController extends BaseController<CommentEO>{
         return Result.success(commentEOService.selectByPrimaryKey(id));
     }
 
+    /**
+     *
+     *      新增传入：uid，onid，pid，type，content
+     *
+     * @param commentEO
+     * @return
+     * @throws Exception
+     */
     @ApiOperation(value = "|CommentEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping("/add")
     @RequiresPermissions("article:comment:save")
     public ResponseMessage<CommentEO> create(@RequestBody CommentEO commentEO) throws Exception {
-        commentEOService.insertSelective(commentEO);
-        return Result.success(commentEO);
+        commentEO.setId(UUID.randomUUID());
+        commentEO.setCreateTime(new Date());
+        commentEO.setStatus(0);
+        if (commentEOService.insertSelective(commentEO) == 1) {
+            //父评论计数
+            commentEOService.setCommCount(commentEO.getPId(), 1);
+            //生成通知
+            NoticeEO noticeEO = new NoticeEO();
+            noticeEO.setUId1(commentEO.getUId());
+            noticeEO.setUId2(commentEO.getOnId());
+            noticeEO.setToId(commentEO.getId());
+            noticeEO.setType(1);
+            noticeEO.setStatus(commentEO.getType() != 2 ? commentEO.getType() : null);
+            noticeEOService.insertSelect(noticeEO);
+            return Result.success(commentEO);
+        } else {
+            return Result.error();
+        }
     }
 
+    /**
+    *  操作评论的 赞、踩、删除
+     *      传入id，status（用作判断操作）：0-新赞，1-新踩，2-取消赞，3-取消踩，4-赞转踩，5-踩转赞，6-删除，onid（操作人id，若不是评论人则不能删除）,uid（当前评论的用户ID）
+     * @param commentEO
+    * @return
+    * @author yueben
+    * 2019-03-15
+    **/
     @ApiOperation(value = "|CommentEO|修改")
     @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     @RequiresPermissions("article:comment:update")
     public ResponseMessage<CommentEO> update(@RequestBody CommentEO commentEO) throws Exception {
+        Integer status = commentEO.getStatus();
+        commentEO.setStatus(null);
+        switch (status) {
+            case 0:
+                commentEO.setLikeNum(1);
+        }
         commentEOService.updateByPrimaryKeySelective(commentEO);
         return Result.success(commentEO);
     }
