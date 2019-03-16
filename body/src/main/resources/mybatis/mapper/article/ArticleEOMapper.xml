@@ -3,27 +3,44 @@
 <mapper namespace="com.adc.da.article.dao.ArticleEODao" >
   <!-- Result Map-->
   <resultMap id="BaseResultMap" type="com.adc.da.article.entity.ArticleEO" >
-    <id column="id" property="id" />
-    <result column="u_id" property="uId" />
-    <result column="create_time" property="createTime" />
-    <result column="release_time" property="releaseTime" />
-    <result column="update_time" property="updateTime" />
-    <result column="status" property="status" />
-    <result column="title" property="title" />
-    <result column="content" property="content" />
-    <result column="browse_num" property="browseNum" />
-    <result column="collection_num" property="collectionNum" />
-    <result column="comment_num" property="commentNum" />
-    <result column="like_num" property="likeNum" />
-    <result column="dislike_num" property="dislikeNum" />
-    <result column="label_id" property="labelId" />
-    <result column="type" property="type" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="u_id" jdbcType="VARCHAR" property="uId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="browse_num" jdbcType="INTEGER" property="browseNum" />
+    <result column="collection_num" jdbcType="INTEGER" property="collectionNum" />
+    <result column="comment_num" jdbcType="INTEGER" property="commentNum" />
+    <result column="like_num" jdbcType="INTEGER" property="likeNum" />
+    <result column="dislike_num" jdbcType="INTEGER" property="dislikeNum" />
+    <result column="label_id" jdbcType="VARCHAR" property="labelId" />
+    <result column="type" jdbcType="INTEGER" property="type" />
   </resultMap>
 
-  <!-- article table all fields -->
-  <sql id="Base_Column_List" >
-     id, u_id, create_time, release_time, update_time, status, title, content, browse_num, collection_num, comment_num, like_num, dislike_num, label_id, type
-  </sql>
+    <resultMap id="hisVoMap" type="com.adc.da.article.entity.vo.HistoryVo" >
+        <id column="id"                 jdbcType="VARCHAR" property="id" />
+        <result column="u_id"           jdbcType="VARCHAR" property="uId" />
+        <result column="a_id"           jdbcType="VARCHAR" property="aId" />
+        <result column="browse_time"    jdbcType="TIMESTAMP" property="browseTime" />
+        <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
+        <result column="title"          jdbcType="VARCHAR" property="title" />
+        <result column="content"        jdbcType="VARCHAR" property="content" />
+        <result column="browse_num"     jdbcType="INTEGER" property="browseNum" />
+        <result column="collection_num" jdbcType="INTEGER" property="collectionNum" />
+        <result column="comment_num"    jdbcType="INTEGER" property="commentNum" />
+        <result column="type"           jdbcType="INTEGER" property="type" />
+        <result column="author_photo" jdbcType="VARCHAR" property="authorPhoto" />
+        <result column="article_img" jdbcType="VARCHAR" property="articleImg" />
+        <result column="author_name" jdbcType="VARCHAR" property="authorName" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List" >
+        id, u_id, create_time, release_time, update_time, status, title, content, browse_num, collection_num, comment_num, like_num, dislike_num, label_id, type
+    </sql>
 
   <!-- 查询条件 -->
   <sql id="Base_Where_Clause">
@@ -95,13 +112,75 @@
     </trim>
   </sql>
 
+    <!--加载历史记录-->
+    <select id="queryHisList" resultMap="hisVoMap" parameterType="com.adc.da.article.entity.vo.HistoryVo">
+        SELECT
+        h.ID, h.U_ID, h.A_ID, h.BROWSE_TIME, a.TITLE, a.CONTENT, a.BROWSE_NUM, a.COLLECTION_NUM, a.COMMENT_NUM, a.TYPE,
+        h.AUTHOR_PHOTO, h.ARTICLE_IMG, h.AUTHOR_NAME FROM history h LEFT JOIN article a ON h.A_ID = a.ID
+        where BROWSE_TIME &gt;= #{browseTime}
+        and h.u_id = #{uId}
+        and a.status = 0
+        and a.RELEASE_TIME &lt;= #{releaseTime}
+        <if test="title != null">
+            and title like "%"#{title}"%"
+        </if>
+        <if test="type != null">
+            and a.type = #{type}
+        </if>
+        <if test="authorName != null">
+            and h.author_name like "%"#{authorName}"%"
+        </if>
+        <if test="browseTimeStart != null">
+            and h.BROWSE_TIME &lt;= #{browseTimeStart}
+        </if>
+        <if test="browseTimeEnd != null">
+            and h.BROWSE_TIME &gt;= #{browseTimeEnd}
+        </if>
+        order by h.BROWSE_TIME desc
+    </select>
+
+    <!--文章条件查询-->
+    <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select <include refid="Base_Column_List" /> from article
+        where 1=1
+        <if test="uId != null" >
+            and u_id ${uIdOperator} #{uId}
+        </if>
+        <if test="releaseTime != null" >
+            and release_time &lt;= #{releaseTime1}
+        </if>
+        <if test="updateTime != null" >
+            and update_time ${updateTimeOperator} #{updateTime}
+        </if>
+        <if test="updateTime1 != null" >
+            and update_time &gt;= #{updateTime1}
+        </if>
+        <if test="updateTime2 != null" >
+            and update_time &lt;= #{updateTime2}
+        </if>
+        <if test="status != null" >
+            and status ${statusOperator} #{status}
+        </if>
+        <if test="title != null" >
+            and title = "%"#{title}"%"
+        </if>
+        <if test="labelId != null" >
+            and label_id ${labelIdOperator} #{labelId}
+        </if>
+        <if test="type != null" >
+            and type ${typeOperator} #{type}
+        </if>
+        order by release_time desc, update_time desc, create_time desc
+        limit ${pager.pageOffset},${pager.pageSize}
+    </select>
+
   <!-- 插入记录 -->
   <insert id="insert" parameterType="com.adc.da.article.entity.ArticleEO" >
     <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
         SELECT SEQ_article.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into article(<include refid="Base_Column_List" />)
-    values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{createTime, jdbcType=${po.jdbcType}}, #{releaseTime, jdbcType=${po.jdbcType}}, #{updateTime, jdbcType=${po.jdbcType}}, #{status, jdbcType=${po.jdbcType}}, #{title, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}}, #{browseNum, jdbcType=${po.jdbcType}}, #{collectionNum, jdbcType=${po.jdbcType}}, #{commentNum, jdbcType=${po.jdbcType}}, #{likeNum, jdbcType=${po.jdbcType}}, #{dislikeNum, jdbcType=${po.jdbcType}}, #{labelId, jdbcType=${po.jdbcType}}, #{type, jdbcType=${po.jdbcType}})
+    values (#{id}, #{uId}, #{createTime}, #{releaseTime}, #{updateTime}, #{status}, #{title}, #{content}, #{browseNum}, #{collectionNum}, #{commentNum}, #{likeNum}, #{dislikeNum}, #{labelId}, #{type})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -128,21 +207,21 @@
                 <if test="type != null" >type,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
-                <if test="uId != null" >#{uId, jdbcType=${po.jdbcType}},</if>
-                <if test="createTime != null" >#{createTime, jdbcType=${po.jdbcType}},</if>
-                <if test="releaseTime != null" >#{releaseTime, jdbcType=${po.jdbcType}},</if>
-                <if test="updateTime != null" >#{updateTime, jdbcType=${po.jdbcType}},</if>
-                <if test="status != null" >#{status, jdbcType=${po.jdbcType}},</if>
-                <if test="title != null" >#{title, jdbcType=${po.jdbcType}},</if>
-                <if test="content != null" >#{content, jdbcType=${po.jdbcType}},</if>
-                <if test="browseNum != null" >#{browseNum, jdbcType=${po.jdbcType}},</if>
-                <if test="collectionNum != null" >#{collectionNum, jdbcType=${po.jdbcType}},</if>
-                <if test="commentNum != null" >#{commentNum, jdbcType=${po.jdbcType}},</if>
-                <if test="likeNum != null" >#{likeNum, jdbcType=${po.jdbcType}},</if>
-                <if test="dislikeNum != null" >#{dislikeNum, jdbcType=${po.jdbcType}},</if>
-                <if test="labelId != null" >#{labelId, jdbcType=${po.jdbcType}},</if>
-                <if test="type != null" >#{type, jdbcType=${po.jdbcType}},</if>
+                <if test="id != null" >#{id},</if>
+                <if test="uId != null" >#{uId},</if>
+                <if test="createTime != null" >#{createTime},</if>
+                <if test="releaseTime != null" >#{releaseTime},</if>
+                <if test="updateTime != null" >#{updateTime},</if>
+                <if test="status != null" >#{status},</if>
+                <if test="title != null" >#{title},</if>
+                <if test="content != null" >#{content},</if>
+                <if test="browseNum != null" >#{browseNum},</if>
+                <if test="collectionNum != null" >#{collectionNum},</if>
+                <if test="commentNum != null" >#{commentNum},</if>
+                <if test="likeNum != null" >#{likeNum},</if>
+                <if test="dislikeNum != null" >#{dislikeNum},</if>
+                <if test="labelId != null" >#{labelId},</if>
+                <if test="type != null" >#{type},</if>
             </trim>
   </insert>
 
@@ -237,15 +316,6 @@
     <include refid="Base_Where_Clause"/>
   </select>
 
-  <!-- 查询article列表 -->
-  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-		select <include refid="Base_Column_List" /> from article
-			<include refid="Base_Where_Clause"/>
-			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
-				${pager.orderCondition}
-			</if>
-			limit ${pager.pageOffset},${pager.pageSize}
-  </select>
 
   <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
     select <include refid="Base_Column_List"/> from article

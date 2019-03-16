@@ -3,13 +3,13 @@
 <mapper namespace="com.adc.da.admin.dao.AfficheEODao" >
   <!-- Result Map-->
   <resultMap id="BaseResultMap" type="com.adc.da.admin.entity.AfficheEO" >
-    <id column="id" property="id" />
-    <result column="u_id" property="uId" />
-    <result column="create_time" property="createTime" />
-    <result column="type" property="type" />
-    <result column="title" property="title" />
-    <result column="content" property="content" />
-    <result column="phont_path" property="phontPath" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="u_id" jdbcType="VARCHAR" property="uId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="phont_path" jdbcType="VARCHAR" property="phontPath" />
   </resultMap>
 
   <!-- affiche table all fields -->
@@ -57,8 +57,31 @@
         SELECT SEQ_affiche.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into affiche(<include refid="Base_Column_List" />)
-    values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{createTime, jdbcType=${po.jdbcType}}, #{type, jdbcType=${po.jdbcType}}, #{title, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}}, #{phontPath, jdbcType=${po.jdbcType}})
+    values (#{id}, #{uId}, #{createTime}, #{type}, #{title}, #{content}, #{phontPath})
   </insert>
+
+    <!-- 查询affiche列表 -->
+    <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select <include refid="Base_Column_List" /> from affiche
+        where 1=1
+        <if test="title != null">
+            and title like "%"#{title}"%"
+        </if>
+        <if test="createTime != null" >
+            and create_time = #{createTime}
+        </if>
+        <if test="createTime1 != null" >
+            and create_time &gt;= #{createTime1}
+        </if>
+        <if test="createTime2 != null" >
+            and create_time &lt;= #{createTime2}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        order by create_time desc
+        limit ${pager.pageOffset},${pager.pageSize}
+    </select>
 
   <!-- 动态插入记录 主键是序列 -->
   <insert id="insertSelective" parameterType="com.adc.da.admin.entity.AfficheEO" >
@@ -76,13 +99,13 @@
                 <if test="phontPath != null" >phont_path,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
-                <if test="uId != null" >#{uId, jdbcType=${po.jdbcType}},</if>
-                <if test="createTime != null" >#{createTime, jdbcType=${po.jdbcType}},</if>
-                <if test="type != null" >#{type, jdbcType=${po.jdbcType}},</if>
-                <if test="title != null" >#{title, jdbcType=${po.jdbcType}},</if>
-                <if test="content != null" >#{content, jdbcType=${po.jdbcType}},</if>
-                <if test="phontPath != null" >#{phontPath, jdbcType=${po.jdbcType}},</if>
+                <if test="id != null" >#{id},</if>
+                <if test="uId != null" >#{uId},</if>
+                <if test="createTime != null" >#{createTime},</if>
+                <if test="type != null" >#{type},</if>
+                <if test="title != null" >#{title},</if>
+                <if test="content != null" >#{content},</if>
+                <if test="phontPath != null" >#{phontPath},</if>
             </trim>
   </insert>
 
@@ -145,15 +168,7 @@
     <include refid="Base_Where_Clause"/>
   </select>
 
-  <!-- 查询affiche列表 -->
-  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-		select <include refid="Base_Column_List" /> from affiche
-			<include refid="Base_Where_Clause"/>
-			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
-				${pager.orderCondition}
-			</if>
-			limit ${pager.pageOffset},${pager.pageSize}
-  </select>
+
 
   <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
     select <include refid="Base_Column_List"/> from affiche

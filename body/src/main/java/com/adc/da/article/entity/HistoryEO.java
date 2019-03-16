@@ -1,6 +1,7 @@
 package com.adc.da.article.entity;
 
 import com.adc.da.base.entity.BaseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -15,7 +16,7 @@ public class HistoryEO extends BaseEntity {
     private String id;
     private String uId;
     private String aId;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date browseTime;
     private String authorPhoto;
     private String articleImg;

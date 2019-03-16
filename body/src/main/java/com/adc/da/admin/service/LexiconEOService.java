@@ -11,6 +11,8 @@ import com.adc.da.base.service.BaseService;
 import com.adc.da.admin.dao.LexiconEODao;
 import com.adc.da.admin.entity.LexiconEO;
 
+import java.util.List;
+
 
 /**
  *
@@ -31,6 +33,16 @@ public class LexiconEOService extends BaseService<LexiconEO, String> {
 
     public LexiconEODao getDao() {
         return dao;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean repeat(String name) {
+        return dao.repeat(name) == 0;
+    }
+
+    @Transactional(readOnly = true)
+    public int checkContent(String content) {
+        return 0;
     }
 
 }

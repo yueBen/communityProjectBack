@@ -186,12 +186,6 @@
 
         <dependency>
             <groupId>com.adc</groupId>
-            <artifactId>adc-da-file</artifactId>
-            <version>2.2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.adc</groupId>
             <artifactId>myutil</artifactId>
             <version>1.0.0</version>
         </dependency>

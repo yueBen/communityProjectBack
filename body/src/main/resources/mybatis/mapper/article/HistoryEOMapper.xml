@@ -3,17 +3,17 @@
 <mapper namespace="com.adc.da.article.dao.HistoryEODao" >
   <!-- Result Map-->
   <resultMap id="BaseResultMap" type="com.adc.da.article.entity.HistoryEO" >
-    <id column="id" property="id" />
-    <result column="u_id" property="uId" />
-    <result column="a_id" property="aId" />
-    <result column="browse_time" property="browseTime" />
-    <result column="author_photo" property="authorPhoto" />
-    <result column="article_img" property="articleImg" />
-    <result column="author_name" property="authorName" />
-    <result column="content" property="content" />
-    <result column="browse_num" property="browseNum" />
-    <result column="collection_num" property="collectionNum" />
-    <result column="comment_num" property="commentNum" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="u_id" jdbcType="VARCHAR" property="uId" />
+    <result column="a_id" jdbcType="VARCHAR" property="aId" />
+    <result column="browse_time" jdbcType="TIMESTAMP" property="browseTime" />
+    <result column="author_photo" jdbcType="VARCHAR" property="authorPhoto" />
+    <result column="article_img" jdbcType="VARCHAR" property="articleImg" />
+    <result column="author_name" jdbcType="VARCHAR" property="authorName" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="browse_num" jdbcType="INTEGER" property="browseNum" />
+    <result column="collection_num" jdbcType="INTEGER" property="collectionNum" />
+    <result column="comment_num" jdbcType="INTEGER" property="commentNum" />
   </resultMap>
 
   <!-- history table all fields -->
@@ -67,13 +67,18 @@
     </trim>
   </sql>
 
+    <!--验重-->
+    <select id="repeat">
+        select count(*) from history where u_id = #{uid} and a_id = #{aid}
+    </select>
+    
   <!-- 插入记录 -->
   <insert id="insert" parameterType="com.adc.da.article.entity.HistoryEO" >
     <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
         SELECT SEQ_history.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into history(<include refid="Base_Column_List" />)
-    values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{aId, jdbcType=${po.jdbcType}}, #{browseTime, jdbcType=${po.jdbcType}}, #{authorPhoto, jdbcType=${po.jdbcType}}, #{articleImg, jdbcType=${po.jdbcType}}, #{authorName, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}}, #{browseNum, jdbcType=${po.jdbcType}}, #{collectionNum, jdbcType=${po.jdbcType}}, #{commentNum, jdbcType=${po.jdbcType}})
+    values (#{id}, #{uId}, #{aId}, #{browseTime}, #{authorPhoto}, #{articleImg}, #{authorName}, #{content}, #{browseNum}, #{collectionNum}, #{commentNum})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -96,17 +101,17 @@
                 <if test="commentNum != null" >comment_num,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
-                <if test="uId != null" >#{uId, jdbcType=${po.jdbcType}},</if>
-                <if test="aId != null" >#{aId, jdbcType=${po.jdbcType}},</if>
-                <if test="browseTime != null" >#{browseTime, jdbcType=${po.jdbcType}},</if>
-                <if test="authorPhoto != null" >#{authorPhoto, jdbcType=${po.jdbcType}},</if>
-                <if test="articleImg != null" >#{articleImg, jdbcType=${po.jdbcType}},</if>
-                <if test="authorName != null" >#{authorName, jdbcType=${po.jdbcType}},</if>
-                <if test="content != null" >#{content, jdbcType=${po.jdbcType}},</if>
-                <if test="browseNum != null" >#{browseNum, jdbcType=${po.jdbcType}},</if>
-                <if test="collectionNum != null" >#{collectionNum, jdbcType=${po.jdbcType}},</if>
-                <if test="commentNum != null" >#{commentNum, jdbcType=${po.jdbcType}},</if>
+                <if test="id != null" >#{id},</if>
+                <if test="uId != null" >#{uId},</if>
+                <if test="aId != null" >#{aId},</if>
+                <if test="browseTime != null" >#{browseTime},</if>
+                <if test="authorPhoto != null" >#{authorPhoto},</if>
+                <if test="articleImg != null" >#{articleImg},</if>
+                <if test="authorName != null" >#{authorName},</if>
+                <if test="content != null" >#{content},</if>
+                <if test="browseNum != null" >#{browseNum},</if>
+                <if test="collectionNum != null" >#{collectionNum},</if>
+                <if test="commentNum != null" >#{commentNum},</if>
             </trim>
   </insert>
 

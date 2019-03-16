@@ -57,7 +57,6 @@
         limit ${pager.pageOffset},${pager.pageSize}
     </select>
 
-
     <!-- 插入记录 -->
     <insert id="insert" parameterType="com.adc.da.personInfo.entity.StickyNoteEO">
         <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
@@ -136,15 +135,7 @@
         <include refid="Base_Where_Clause"/>
     </select>
 
-    <!-- 查询sticky_note列表 -->
-    <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-        select
-        <include refid="Base_Column_List"/>
-        from sticky_note
-        where status != 2
-        order by status asc, create_time desc
-        limit ${pager.pageOffset},${pager.pageSize}
-    </select>
+
 
     <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
         select

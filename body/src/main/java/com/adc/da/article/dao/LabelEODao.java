@@ -2,6 +2,8 @@ package com.adc.da.article.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.article.entity.LabelEO;
+import org.apache.ibatis.annotations.Param;
+
 /**
  *
  * <br>
@@ -12,4 +14,5 @@ import com.adc.da.article.entity.LabelEO;
  */
 public interface LabelEODao extends BaseDao<LabelEO> {
 
+    int setLabelNum(@Param("uid") String uId, @Param("id") String id);
 }

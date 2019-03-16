@@ -67,7 +67,7 @@
         </trim>
     </sql>
 
-    <!-- 修改记录，只修改只不为空的字段 -->
+    <!-- 评论的赞踩删除操作 -->
     <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.article.entity.CommentEO">
         update comment
         <set>
@@ -105,10 +105,10 @@
             SELECT SEQ_comment.NEXTVAL FROM DUAL
         </selectKey> -->
         insert into comment(<include refid="Base_Column_List"/>)
-        values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{onId, jdbcType=${po.jdbcType}},
-        #{pId, jdbcType=${po.jdbcType}}, #{type, jdbcType=${po.jdbcType}}, #{likeNum, jdbcType=${po.jdbcType}},
-        #{dislikeNum, jdbcType=${po.jdbcType}}, #{commentNum, jdbcType=${po.jdbcType}},
-        #{createTime, jdbcType=${po.jdbcType}}, #{content, jdbcType=${po.jdbcType}})
+        values (#{id}, #{uId}, #{onId},
+        #{pId}, #{type}, #{likeNum},
+        #{dislikeNum}, #{commentNum},
+        #{createTime}, #{content})
     </insert>
 
     <!-- 动态插入记录 主键是序列 -->
@@ -130,16 +130,16 @@
             <if test="content != null">content,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id, jdbcType=${po.jdbcType}},</if>
-            <if test="uId != null">#{uId, jdbcType=${po.jdbcType}},</if>
-            <if test="onId != null">#{onId, jdbcType=${po.jdbcType}},</if>
-            <if test="pId != null">#{pId, jdbcType=${po.jdbcType}},</if>
-            <if test="type != null">#{type, jdbcType=${po.jdbcType}},</if>
-            <if test="likeNum != null">#{likeNum, jdbcType=${po.jdbcType}},</if>
-            <if test="dislikeNum != null">#{dislikeNum, jdbcType=${po.jdbcType}},</if>
-            <if test="commentNum != null">#{commentNum, jdbcType=${po.jdbcType}},</if>
-            <if test="createTime != null">#{createTime, jdbcType=${po.jdbcType}},</if>
-            <if test="content != null">#{content, jdbcType=${po.jdbcType}},</if>
+            <if test="id != null">#{id},</if>
+            <if test="uId != null">#{uId},</if>
+            <if test="onId != null">#{onId},</if>
+            <if test="pId != null">#{pId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="likeNum != null">#{likeNum},</if>
+            <if test="dislikeNum != null">#{dislikeNum},</if>
+            <if test="commentNum != null">#{commentNum},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="content != null">#{content},</if>
         </trim>
     </insert>
 

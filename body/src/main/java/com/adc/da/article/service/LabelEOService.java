@@ -33,4 +33,9 @@ public class LabelEOService extends BaseService<LabelEO, String> {
         return dao;
     }
 
+    @Transactional
+    public int setLabelNum(String uid, String id) {
+        return dao.setLabelNum(uid, id);
+    }
+
 }

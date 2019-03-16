@@ -86,6 +86,9 @@ public class CommentEOController extends BaseController<CommentEO> {
         commentEO.setId(UUID.randomUUID());
         commentEO.setCreateTime(new Date());
         commentEO.setStatus(0);
+
+        /* 评论内容过滤返回 */
+
         if (commentEOService.insertSelective(commentEO) == 1) {
             //父评论计数
             commentEOService.setCommCount(commentEO.getPId(), 1);
@@ -105,7 +108,8 @@ public class CommentEOController extends BaseController<CommentEO> {
 
     /**
     *  操作评论的 赞、踩、删除
-     *      传入id，status（用作判断操作）：0-新赞，1-新踩，2-取消赞，3-取消踩，4-赞转踩，5-踩转赞，6-删除，onid（操作人id，若不是评论人则不能删除）,uid（当前评论的用户ID）
+     *      传入id，status（用作判断操作）：0-新赞，1-新踩，2-取消赞，3-取消踩，4-赞转踩，5-踩转赞，6-删除，
+     *      onid（操作人id，若不是评论人则不能删除）,uid（当前评论的用户ID）
      * @param commentEO
     * @return
     * @author yueben
@@ -119,19 +123,50 @@ public class CommentEOController extends BaseController<CommentEO> {
         commentEO.setStatus(null);
         switch (status) {
             case 0:
+                //新获得的赞
                 commentEO.setLikeNum(1);
+                if (commentEOService.updateByPrimaryKeySelective(commentEO) == 1) {
+                    NoticeEO noticeEO = new NoticeEO(commentEO.getOnId(), commentEO.getUId(), commentEO.getId(),1,2,null);
+                    noticeEOService.insertSelect(noticeEO);
+                }
+                break;
+            case 1:
+                //新获得的踩
+                commentEO.setDislikeNum(1);
+                if (commentEOService.updateByPrimaryKeySelective(commentEO) == 1) {
+                    NoticeEO noticeEO = new NoticeEO(commentEO.getOnId(), commentEO.getUId(), commentEO.getId(),1,3, null);
+                    noticeEOService.insertSelect(noticeEO);
+                }
+                break;
+            case 2:
+                //取消的赞
+                commentEO.setLikeNum(-1);
+                commentEOService.updateByPrimaryKeySelective(commentEO);
+                break;
+            case 3:
+                //取消的踩
+                commentEO.setDislikeNum(-1);
+                commentEOService.updateByPrimaryKeySelective(commentEO);
+                break;
+            case 4:
+                //赞转踩
+                commentEO.setLikeNum(-1);
+                commentEO.setDislikeNum(1);
+                commentEOService.updateByPrimaryKeySelective(commentEO);
+                break;
+            case 5:
+                //踩转赞
+                commentEO.setLikeNum(1);
+                commentEO.setDislikeNum(-1);
+                commentEOService.updateByPrimaryKeySelective(commentEO);
+                break;
+            case 6:
+                //删除
+                commentEO.setStatus(2);
+                commentEOService.updateByPrimaryKeySelective(commentEO);
+                break;
         }
-        commentEOService.updateByPrimaryKeySelective(commentEO);
         return Result.success(commentEO);
-    }
-
-    @ApiOperation(value = "|CommentEO|删除")
-    @DeleteMapping("/{id}")
-    @RequiresPermissions("article:comment:delete")
-    public ResponseMessage delete(@PathVariable String id) throws Exception {
-        commentEOService.deleteByPrimaryKey(id);
-        logger.info("delete from comment where id = {}", id);
-        return Result.success();
     }
 
 }

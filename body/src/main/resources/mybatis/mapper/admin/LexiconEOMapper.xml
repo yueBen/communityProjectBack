@@ -29,13 +29,18 @@
     </trim>
   </sql>
 
+
+    <select id="repeat" parameterType="java.lang.String">
+        select count(*) from lexicon where word = #{name,jdbcType=VARCHAR}
+    </select>
+
   <!-- 插入记录 -->
   <insert id="insert" parameterType="com.adc.da.admin.entity.LexiconEO" >
     <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
         SELECT SEQ_lexicon.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into lexicon(<include refid="Base_Column_List" />)
-    values (#{id, jdbcType=${po.jdbcType}}, #{word, jdbcType=${po.jdbcType}}, #{level, jdbcType=${po.jdbcType}})
+    values (#{id}, #{word}, #{level})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -50,9 +55,9 @@
                 <if test="level != null" >level,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
-                <if test="word != null" >#{word, jdbcType=${po.jdbcType}},</if>
-                <if test="level != null" >#{level, jdbcType=${po.jdbcType}},</if>
+                <if test="id != null" >#{id},</if>
+                <if test="word != null" >#{word},</if>
+                <if test="level != null" >#{level},</if>
             </trim>
   </insert>
 

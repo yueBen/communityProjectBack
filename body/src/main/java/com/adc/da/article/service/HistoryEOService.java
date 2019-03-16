@@ -33,4 +33,9 @@ public class HistoryEOService extends BaseService<HistoryEO, String> {
         return dao;
     }
 
+    @Transactional(readOnly = true)
+    public boolean repeat(String uid, String aid) {
+        return dao.repeat(uid, aid) == 0;
+    }
+
 }

@@ -33,13 +33,31 @@
     </trim>
   </sql>
 
+    <update id="setLabelNum">
+        update label
+        set num = (select count(*) from article where u_id = #{uid,jdbcType=VARCHAR} and label_id = #{id,jdbcType=VARCHAR} and status != 4)
+        where id = #{id}
+    </update>
+
+    <!-- 根据id查询 label -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select <include refid="Base_Column_List" />
+        from label
+        where id = #{value}
+    </select>
+    
+    <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select <include refid="Base_Column_List"/> from label
+        where u_id = #{uId}
+    </select>
+
   <!-- 插入记录 -->
   <insert id="insert" parameterType="com.adc.da.article.entity.LabelEO" >
     <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
         SELECT SEQ_label.NEXTVAL FROM DUAL
     </selectKey> -->
     insert into label(<include refid="Base_Column_List" />)
-    values (#{id, jdbcType=${po.jdbcType}}, #{uId, jdbcType=${po.jdbcType}}, #{num, jdbcType=${po.jdbcType}}, #{labelName, jdbcType=${po.jdbcType}})
+    values (#{id}, #{uId}, #{num}, #{labelName})
   </insert>
 
   <!-- 动态插入记录 主键是序列 -->
@@ -55,10 +73,10 @@
                 <if test="labelName != null" >label_name,</if>
             </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-                <if test="id != null" >#{id, jdbcType=${po.jdbcType}},</if>
-                <if test="uId != null" >#{uId, jdbcType=${po.jdbcType}},</if>
-                <if test="num != null" >#{num, jdbcType=${po.jdbcType}},</if>
-                <if test="labelName != null" >#{labelName, jdbcType=${po.jdbcType}},</if>
+                <if test="id != null" >#{id},</if>
+                <if test="uId != null" >#{uId},</if>
+                <if test="num != null" >#{num},</if>
+                <if test="labelName != null" >#{labelName},</if>
             </trim>
   </insert>
 
@@ -88,14 +106,6 @@
      where id = #{id}
   </update>
 
-  <!-- 根据id查询 label -->
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select <include refid="Base_Column_List" /> 
-      from label
-     where id = #{value}
-
-  </select>
-
   <!-- 删除记录 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from label
@@ -119,12 +129,5 @@
 			limit ${pager.pageOffset},${pager.pageSize}
   </select>
 
-  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-    select <include refid="Base_Column_List"/> from label
-    <include refid="Base_Where_Clause"/>
-    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
-		${pager.orderCondition}
-    </if>
-  </select>
 
 </mapper>

@@ -23,13 +23,13 @@ public class NoticeEO extends BaseEntity {
     private Integer status;
     private Integer isRead;
 
-    public NoticeEO(String uId1, String uId2, String toId, Integer type, String content, Integer status) {
+    public NoticeEO(String uId1, String uId2, String toId, Integer type, Integer status, String content) {
         this.uId1 = uId1;
         this.uId2 = uId2;
         this.toId = toId;
         this.type = type;
-        this.content = content;
         this.status = status;
+        this.content = content;
     }
 
     public NoticeEO() {

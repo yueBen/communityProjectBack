@@ -1,7 +1,11 @@
 package com.adc.da.article.dao;
 
+import com.adc.da.article.entity.vo.HistoryVo;
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.article.entity.ArticleEO;
+
+import java.util.List;
+
 /**
  *
  * <br>
@@ -11,5 +15,12 @@ import com.adc.da.article.entity.ArticleEO;
  * <b>版权所有：<b>版权归北京卡达克数据技术中心所有。<br>
  */
 public interface ArticleEODao extends BaseDao<ArticleEO> {
+
+    /**
+     * 历史记录
+     * @param historyVo
+     * @return
+     */
+    List<HistoryVo> queryHisList(HistoryVo historyVo);
 
 }

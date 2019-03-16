@@ -1,6 +1,7 @@
 package com.adc.da.article.entity;
 
 import com.adc.da.base.entity.BaseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -14,20 +15,20 @@ public class ArticleEO extends BaseEntity {
 
     private String id;
     private String uId;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date createTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date releaseTime;
-    @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
     private Integer status;
     private String title;
     private String content;
-    private Integer browseNum;
-    private Integer collectionNum;
-    private Integer commentNum;
-    private Integer likeNum;
-    private Integer dislikeNum;
+    private Integer browseNum = Integer.valueOf(0);
+    private Integer collectionNum = Integer.valueOf(0);
+    private Integer commentNum = Integer.valueOf(0);
+    private Integer likeNum = Integer.valueOf(0);
+    private Integer dislikeNum = Integer.valueOf(0);
     private String labelId;
     private Integer type;
 

@@ -1,26 +1,22 @@
 package com.adc.da.article.controller;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-
-import java.util.List;
-import java.util.Map;
-
+import com.adc.da.article.entity.HistoryEO;
+import com.adc.da.article.service.HistoryEOService;
+import com.adc.da.base.web.BaseController;
+import com.adc.da.util.http.ResponseMessage;
+import com.adc.da.util.http.Result;
+import com.adc.da.util.utils.UUID;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.adc.da.base.web.BaseController;
-import com.adc.da.article.entity.HistoryEO;
-import com.adc.da.article.page.HistoryEOPage;
-import com.adc.da.article.service.HistoryEOService;
+import java.util.Date;
 
-import com.adc.da.util.http.ResponseMessage;
-import com.adc.da.util.http.Result;
-import com.adc.da.util.http.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @RestController
 @RequestMapping("/${restPath}/article/history")
@@ -32,42 +28,35 @@ public class HistoryEOController extends BaseController<HistoryEO>{
     @Autowired
     private HistoryEOService historyEOService;
 
-	@ApiOperation(value = "|HistoryEO|分页查询")
-    @GetMapping("/page")
-    @RequiresPermissions("article:history:page")
-    public ResponseMessage<PageInfo<HistoryEO>> page(HistoryEOPage page) throws Exception {
-        List<HistoryEO> rows = historyEOService.queryByPage(page);
-        return Result.success(getPageInfo(page.getPager(), rows));
-    }
+    /**
+     *      一、历史记录内容在article里面加载
+     *      二、新增
+     *      三、删除
+     *
+     */
 
-	@ApiOperation(value = "|HistoryEO|查询")
-    @GetMapping("")
-    @RequiresPermissions("article:history:list")
-    public ResponseMessage<List<HistoryEO>> list(HistoryEOPage page) throws Exception {
-        return Result.success(historyEOService.queryByList(page));
-	}
 
-    @ApiOperation(value = "|HistoryEO|详情")
-    @GetMapping("/{id}")
-    @RequiresPermissions("article:history:get")
-    public ResponseMessage<HistoryEO> find(@PathVariable String id) throws Exception {
-        return Result.success(historyEOService.selectByPrimaryKey(id));
-    }
+    /**
+     * 新增传参：
+     *      1、uid
+     *      2、aid
+     *      3、用户头像
+     *      4、文章图片
 
+     * @param historyEO
+     * @return
+     * @throws Exception
+     */
     @ApiOperation(value = "|HistoryEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping("/add")
     @RequiresPermissions("article:history:save")
-    public ResponseMessage<HistoryEO> create(@RequestBody HistoryEO historyEO) throws Exception {
-        historyEOService.insertSelective(historyEO);
-        return Result.success(historyEO);
-    }
-
-    @ApiOperation(value = "|HistoryEO|修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
-    @RequiresPermissions("article:history:update")
-    public ResponseMessage<HistoryEO> update(@RequestBody HistoryEO historyEO) throws Exception {
-        historyEOService.updateByPrimaryKeySelective(historyEO);
-        return Result.success(historyEO);
+    public ResponseMessage create(@RequestBody HistoryEO historyEO) throws Exception {
+        historyEO.setBrowseTime(new Date());
+        historyEO.setId(UUID.randomUUID());
+        if (historyEOService.insertSelective(historyEO) == 1) {
+            return Result.success("新增成功");
+        }
+        return Result.error("新增失败");
     }
 
     @ApiOperation(value = "|HistoryEO|删除")

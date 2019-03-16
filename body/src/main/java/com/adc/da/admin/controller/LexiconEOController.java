@@ -1,26 +1,24 @@
 package com.adc.da.admin.controller;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-
-import java.util.List;
-import java.util.Map;
-
+import com.adc.da.admin.entity.LexiconEO;
+import com.adc.da.admin.page.LexiconEOPage;
+import com.adc.da.admin.service.LexiconEOService;
+import com.adc.da.base.web.BaseController;
+import com.adc.da.util.http.PageInfo;
+import com.adc.da.util.http.ResponseMessage;
+import com.adc.da.util.http.Result;
+import com.adc.da.util.utils.UUID;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.adc.da.base.web.BaseController;
-import com.adc.da.admin.entity.LexiconEO;
-import com.adc.da.admin.page.LexiconEOPage;
-import com.adc.da.admin.service.LexiconEOService;
+import java.util.List;
 
-import com.adc.da.util.http.ResponseMessage;
-import com.adc.da.util.http.Result;
-import com.adc.da.util.http.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @RestController
 @RequestMapping("/${restPath}/admin/lexicon")
@@ -40,30 +38,17 @@ public class LexiconEOController extends BaseController<LexiconEO>{
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 
-	@ApiOperation(value = "|LexiconEO|查询")
-    @GetMapping("")
-    @RequiresPermissions("admin:lexicon:list")
-    public ResponseMessage<List<LexiconEO>> list(LexiconEOPage page) throws Exception {
-        return Result.success(lexiconEOService.queryByList(page));
-	}
-
-    @ApiOperation(value = "|LexiconEO|详情")
-    @GetMapping("/{id}")
-    @RequiresPermissions("admin:lexicon:get")
-    public ResponseMessage<LexiconEO> find(@PathVariable String id) throws Exception {
-        return Result.success(lexiconEOService.selectByPrimaryKey(id));
-    }
-
     @ApiOperation(value = "|LexiconEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping("/add")
     @RequiresPermissions("admin:lexicon:save")
     public ResponseMessage<LexiconEO> create(@RequestBody LexiconEO lexiconEO) throws Exception {
+	    lexiconEO.setId(UUID.randomUUID());
         lexiconEOService.insertSelective(lexiconEO);
         return Result.success(lexiconEO);
     }
 
     @ApiOperation(value = "|LexiconEO|修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
     @RequiresPermissions("admin:lexicon:update")
     public ResponseMessage<LexiconEO> update(@RequestBody LexiconEO lexiconEO) throws Exception {
         lexiconEOService.updateByPrimaryKeySelective(lexiconEO);
@@ -71,11 +56,10 @@ public class LexiconEOController extends BaseController<LexiconEO>{
     }
 
     @ApiOperation(value = "|LexiconEO|删除")
-    @DeleteMapping("/{id}")
+    @GetMapping("/{id}")
     @RequiresPermissions("admin:lexicon:delete")
     public ResponseMessage delete(@PathVariable String id) throws Exception {
         lexiconEOService.deleteByPrimaryKey(id);
-        logger.info("delete from lexicon where id = {}", id);
         return Result.success();
     }
 

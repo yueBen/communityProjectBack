@@ -2,9 +2,11 @@ package com.adc.da.admin.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.adc.da.util.utils.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,11 @@ public class AfficheEOController extends BaseController<AfficheEO>{
 
     private static final Logger logger = LoggerFactory.getLogger(AfficheEOController.class);
 
+    /**
+     *      type: 0-管理员发布的公告，1-用户申请的公告，2-管理员公告上线，3-用户公告上线
+     *              4-用户公告驳回
+     */
+
     @Autowired
     private AfficheEOService afficheEOService;
 
@@ -40,13 +47,6 @@ public class AfficheEOController extends BaseController<AfficheEO>{
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 
-	@ApiOperation(value = "|AfficheEO|查询")
-    @GetMapping("")
-    @RequiresPermissions("admin:affiche:list")
-    public ResponseMessage<List<AfficheEO>> list(AfficheEOPage page) throws Exception {
-        return Result.success(afficheEOService.queryByList(page));
-	}
-
     @ApiOperation(value = "|AfficheEO|详情")
     @GetMapping("/{id}")
     @RequiresPermissions("admin:affiche:get")
@@ -55,15 +55,17 @@ public class AfficheEOController extends BaseController<AfficheEO>{
     }
 
     @ApiOperation(value = "|AfficheEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping("/add")
     @RequiresPermissions("admin:affiche:save")
     public ResponseMessage<AfficheEO> create(@RequestBody AfficheEO afficheEO) throws Exception {
+        afficheEO.setId(UUID.randomUUID());
+        afficheEO.setCreateTime(new Date());
         afficheEOService.insertSelective(afficheEO);
         return Result.success(afficheEO);
     }
 
     @ApiOperation(value = "|AfficheEO|修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping("/update")
     @RequiresPermissions("admin:affiche:update")
     public ResponseMessage<AfficheEO> update(@RequestBody AfficheEO afficheEO) throws Exception {
         afficheEOService.updateByPrimaryKeySelective(afficheEO);
@@ -71,11 +73,10 @@ public class AfficheEOController extends BaseController<AfficheEO>{
     }
 
     @ApiOperation(value = "|AfficheEO|删除")
-    @DeleteMapping("/{id}")
+    @GetMapping("/delete/{id}")
     @RequiresPermissions("admin:affiche:delete")
     public ResponseMessage delete(@PathVariable String id) throws Exception {
         afficheEOService.deleteByPrimaryKey(id);
-        logger.info("delete from affiche where id = {}", id);
         return Result.success();
     }
 
