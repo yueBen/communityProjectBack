@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.adc.da.admin.service.LexiconEOService;
 import com.adc.da.personInfo.entity.NoticeEO;
 import com.adc.da.personInfo.service.NoticeEOService;
 import com.adc.da.util.utils.UUID;
@@ -38,6 +39,9 @@ public class CommentEOController extends BaseController<CommentEO> {
 
     @Autowired
     private NoticeEOService noticeEOService;
+
+    @Autowired
+    private LexiconEOService lexiconEOService;
 
     /**
      *      uid - 评论创建人的id
@@ -82,12 +86,18 @@ public class CommentEOController extends BaseController<CommentEO> {
     @ApiOperation(value = "|CommentEO|新增")
     @PostMapping("/add")
     @RequiresPermissions("article:comment:save")
-    public ResponseMessage<CommentEO> create(@RequestBody CommentEO commentEO) throws Exception {
+    public ResponseMessage create(@RequestBody CommentEO commentEO) throws Exception {
         commentEO.setId(UUID.randomUUID());
         commentEO.setCreateTime(new Date());
         commentEO.setStatus(0);
 
         /* 评论内容过滤返回 */
+        String checkContent = lexiconEOService.checkContent(commentEO.getContent(), 1);
+        if (checkContent == null) {
+            return Result.error("0");
+        } else {
+            commentEO.setContent(checkContent);
+        }
 
         if (commentEOService.insertSelective(commentEO) == 1) {
             //父评论计数
@@ -100,7 +110,7 @@ public class CommentEOController extends BaseController<CommentEO> {
             noticeEO.setType(1);
             noticeEO.setStatus(commentEO.getType() != 2 ? commentEO.getType() : null);
             noticeEOService.insertSelect(noticeEO);
-            return Result.success(commentEO);
+            return Result.success();
         } else {
             return Result.error();
         }

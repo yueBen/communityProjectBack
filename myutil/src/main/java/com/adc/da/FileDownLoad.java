@@ -20,7 +20,6 @@ public class FileDownLoad {
         response.setHeader("Content-Disposition", "inline; filename=" + new String(file.getName().getBytes(),"utf-8"));
         String fileName = file.getName();
         String suffix = fileName.substring(fileName.indexOf('.') + 1, fileName.length());
-        System.err.println(suffix);
         response.setContentType("image/" + suffix);
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
         BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream());

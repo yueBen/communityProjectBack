@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.adc.da.article.dao.ImgPathEODao" >
+  <!-- Result Map-->
+  <resultMap id="BaseResultMap" type="com.adc.da.article.entity.ImgPathEO" >
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="imgName" jdbcType="VARCHAR" property="imgName" />
+    <result column="suffix" jdbcType="VARCHAR" property="suffix" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+  </resultMap>
+
+  <!-- img_path table all fields -->
+  <sql id="Base_Column_List" >
+     id, imgName, suffix, path
+  </sql>
+
+  <!-- 查询条件 -->
+  <sql id="Base_Where_Clause">
+    where 1=1
+    <trim suffixOverrides="," >
+      <if test="id != null" >
+        and id ${idOperator} #{id}
+      </if>
+      <if test="imgName != null" >
+        and imgName ${imgNameOperator} #{imgName}
+      </if>
+      <if test="suffix != null" >
+        and suffix ${suffixOperator} #{suffix}
+      </if>
+      <if test="path != null" >
+        and path ${pathOperator} #{path}
+      </if>
+    </trim>
+  </sql>
+
+  <!-- 插入记录 -->
+  <insert id="insert" parameterType="com.adc.da.article.entity.ImgPathEO" >
+    <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_img_path.NEXTVAL FROM DUAL
+    </selectKey> -->
+    insert into img_path(<include refid="Base_Column_List" />)
+    values (#{id}, #{imgName}, #{suffix}, #{path})
+  </insert>
+
+  <!-- 动态插入记录 主键是序列 -->
+  <insert id="insertSelective" parameterType="com.adc.da.article.entity.ImgPathEO" >
+        <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+        SELECT SEQ_img_path.NEXTVAL FROM DUAL
+    </selectKey> -->
+        insert into img_path
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+                <if test="id != null" >id,</if>
+                <if test="imgName != null" >imgName,</if>
+                <if test="suffix != null" >suffix,</if>
+                <if test="path != null" >path,</if>
+            </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+                <if test="id != null" >#{id},</if>
+                <if test="imgName != null" >#{imgName},</if>
+                <if test="suffix != null" >#{suffix},</if>
+                <if test="path != null" >#{path},</if>
+            </trim>
+  </insert>
+
+  <!-- 根据pk，修改记录-->
+  <update id="updateByPrimaryKey" parameterType="com.adc.da.article.entity.ImgPathEO" >
+    update img_path
+       set  imgName = #{imgName},
+            suffix = #{suffix},
+            path = #{path}
+     where  id = #{id}
+  </update>
+
+  <!-- 修改记录，只修改只不为空的字段 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.adc.da.article.entity.ImgPathEO" >
+    update img_path
+    <set >
+      <if test="imgName != null" >
+        imgName = #{imgName},
+      </if>
+      <if test="suffix != null" >
+        suffix = #{suffix},
+      </if>
+      <if test="path != null" >
+        path = #{path},
+      </if>
+    </set>
+     where id = #{id}
+  </update>
+
+  <!-- 根据id查询 img_path -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> 
+      from img_path
+     where id = #{value}
+
+  </select>
+
+  <!-- 删除记录 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from img_path
+     where id = #{value}
+
+  </delete>
+
+  <!-- img_path 列表总数-->
+  <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
+    select count(1) from img_path
+    <include refid="Base_Where_Clause"/>
+  </select>
+
+  <!-- 查询img_path列表 -->
+  <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+		select <include refid="Base_Column_List" /> from img_path
+			<include refid="Base_Where_Clause"/>
+			<if test="pager.orderCondition != null and pager.orderCondition != ''" >
+				${pager.orderCondition}
+			</if>
+			limit ${pager.pageOffset},${pager.pageSize}
+  </select>
+
+  <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+    select <include refid="Base_Column_List"/> from img_path
+    <include refid="Base_Where_Clause"/>
+    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
+		${pager.orderCondition}
+    </if>
+  </select>
+
+</mapper>

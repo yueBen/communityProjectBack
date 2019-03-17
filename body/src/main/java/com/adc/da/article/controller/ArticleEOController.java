@@ -2,13 +2,22 @@ package com.adc.da.article.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.adc.da.FileDownLoad;
+import com.adc.da.FileUpLoad;
+import com.adc.da.admin.service.LexiconEOService;
+import com.adc.da.article.entity.ImgPathEO;
 import com.adc.da.article.entity.vo.HistoryVo;
+import com.adc.da.article.service.ImgPathEOService;
 import com.adc.da.article.service.LabelEOService;
+import com.adc.da.personInfo.entity.PersonInfoEO;
 import com.adc.da.util.utils.UUID;
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +34,9 @@ import com.adc.da.util.http.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/${restPath}/article/article")
@@ -38,6 +50,12 @@ public class ArticleEOController extends BaseController<ArticleEO>{
 
     @Autowired
     private LabelEOService labelEOService;
+
+    @Autowired
+    private LexiconEOService lexiconEOService;
+
+    @Autowired
+    private ImgPathEOService imgPathEOService;
 
     /**
      *      1、主页查询条件有：修改时间，标题模糊查询，类型，发布状态（已发布）
@@ -86,22 +104,35 @@ public class ArticleEOController extends BaseController<ArticleEO>{
     }
 
     /**
-     *      类型，标签，发布时间，状态：保存-已完成、存草稿箱-未完成，发布-获取发布时间，若为空则立即发布
+     *      类型，标签，发布时间，状态：保存-已完成、存草稿箱-未完成，发布-获取发布时间
      *      标题，正文,uid
      * @param articleEO
      * @return
      * @throws Exception
      */
     @ApiOperation(value = "|ArticleEO|新增")
-    @PostMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping("/add")
     @RequiresPermissions("article:article:save")
-    public ResponseMessage<ArticleEO> create(@RequestBody ArticleEO articleEO) throws Exception {
+    public ResponseMessage create(@RequestBody ArticleEO articleEO) throws Exception {
         articleEO.setId(UUID.randomUUID());
         Date now = new Date();
         articleEO.setCreateTime(now);
         articleEO.setUpdateTime(now);
 
         /* 内容检查功能 */
+        String checkContent = lexiconEOService.checkContent(articleEO.getContent(), 0);
+        String level = checkContent.substring(0,5);
+        if (level.equals("$del$")) {
+            return Result.error("0", checkContent.substring(5,checkContent.length()));
+        } else if (level.equals("$aut$")) {
+            //移送管理员审核
+            articleEO.setStatus(2);
+            articleEOService.insertSelective(articleEO);
+            labelEOService.setLabelNum(articleEO.getUId(), articleEO.getLabelId());
+            return Result.success("1",null);
+        } else if (level.equals("$che$")) {
+            return Result.error("2", checkContent.substring(5,checkContent.length()));
+        }
 
         articleEOService.insertSelective(articleEO);
         labelEOService.setLabelNum(articleEO.getUId(), articleEO.getLabelId());
@@ -115,16 +146,84 @@ public class ArticleEOController extends BaseController<ArticleEO>{
      * @throws Exception
      */
     @ApiOperation(value = "|ArticleEO|修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping("/update")
     @RequiresPermissions("article:article:update")
     public ResponseMessage<ArticleEO> update(@RequestBody ArticleEO articleEO) throws Exception {
         articleEO.setUpdateTime(new Date());
 
         /* 内容检查 */
+        String checkContent = lexiconEOService.checkContent(articleEO.getContent(), 0);
+        String level = checkContent.substring(0,5);
+        if (level.equals("$del$")) {
+            return Result.error("0", checkContent.substring(5,checkContent.length()));
+        } else if (level.equals("$aut$")) {
+            //移送管理员审核
+            articleEO.setStatus(2);
+            articleEOService.updateByPrimaryKeySelective(articleEO);
+            labelEOService.setLabelNum(articleEO.getUId(), articleEO.getLabelId());
+            return Result.success("1",null);
+        } else if (level.equals("$che$")) {
+            return Result.error("2", checkContent.substring(5,checkContent.length()));
+        }
 
         articleEOService.updateByPrimaryKeySelective(articleEO);
         labelEOService.setLabelNum(articleEO.getUId(), articleEO.getLabelId());
         return Result.success(articleEO);
+    }
+
+    @ApiOperation(value = "|Img|上传")
+    @PostMapping("/imgUpLoad")
+    @ResponseBody
+    public ResponseMessage articleImgUpLoad(MultipartFile articleImg) throws Exception {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String nowPath = format.format(new Date());
+        if (articleImg != null && !articleImg.isEmpty()) {
+            File imgPath = saveImg(articleImg, FileUpLoad.getPathRoot() + "/articleImg/" + nowPath);
+            if (imgPath == null) {
+                return Result.error("图片上传失败");
+            } else {
+                ImgPathEO eo = new ImgPathEO();
+                eo.setId(UUID.randomUUID());
+                eo.setImgName(imgPath.getName());
+                eo.setSuffix(FileUpLoad.getSuffixName(imgPath.getName()));
+                eo.setPath(imgPath.getPath());
+                imgPathEOService.insertSelective(eo);
+                return Result.success(eo.getId());
+            }
+        }
+        return Result.error("上传图片不存在");
+    }
+
+    @ApiOperation(value = "|ImgPath|图片显示")
+    @GetMapping("/{id}/down")
+    @RequiresPermissions("ImgPath:ImgPath:get")
+    public void photoPath(@PathVariable String id, HttpServletResponse response) throws Exception {
+
+        ImgPathEO eo = imgPathEOService.selectByPrimaryKey(id);
+        if (eo != null) {
+            File file = new File(eo.getPath());
+
+            if (file.exists()) {
+                try {
+                    FileDownLoad.fileResponseDown(response, file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    private File saveImg(MultipartFile mft, String path) throws Exception {
+        File file = new File(path + "/" + System.currentTimeMillis() + "." + FileUpLoad.getSuffixName(mft.getOriginalFilename()));
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdir();
+        }
+        if (FileUpLoad.MulFileToFile(mft, file).equals("ok")) {
+            return file;
+        } else {
+            return null;
+        }
     }
 
 }

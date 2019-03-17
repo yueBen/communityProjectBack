@@ -83,13 +83,28 @@ public class FileUpLoad {
 
     }
 
-    /**  
-    * 
-     * @param path  
-    * @return   
-    * @author yueben  
-    * 2019-03-13  
-    **/
+    /**
+     * 获取文件后缀
+     * @param filename
+     * @return
+     */
+    public static String getSuffixName(String filename) {
+        if ((filename != null) && (filename.length() > 0)) {
+            int dot = filename.lastIndexOf('.');
+            if ((dot > -1) && (dot < (filename.length() - 1))) {
+                return filename.substring(dot + 1);
+            }
+        }
+        return filename;
+    }
+
+        /**
+        *
+         * @param path
+        * @return
+        * @author yueben
+        * 2019-03-13
+        **/
     public static String photoToBase64(String path)throws Exception {
         File file = new File(path);
         if (file.exists()) {

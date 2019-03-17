@@ -15,11 +15,9 @@ public class CodeUtil {
 
         String entityPackage;
 
+        entityPackage = "article";
 
-
-        entityPackage = "personInfo";
-
-       DbCodeGenerateFactory.codeGenerate("notice", entityPackage);
+       DbCodeGenerateFactory.codeGenerate("img_path", entityPackage);
 //        DbCodeGenerateFactory.codeGenerate("TS_ROLE", entityPackage);
 //        DbCodeGenerateFactory.codeGenerate("TS_MENU", entityPackage);
 
