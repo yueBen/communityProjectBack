@@ -4,8 +4,11 @@ import com.adc.da.base.web.BaseController;
 import com.adc.da.login.entity.UserEO;
 import com.adc.da.login.page.UserEOPage;
 import com.adc.da.login.service.UserEOService;
+import com.adc.da.personInfo.entity.PersonInfoEO;
+import com.adc.da.personInfo.service.PersonInfoEOService;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
+import com.adc.da.util.utils.GsonUtil;
 import com.adc.da.util.utils.UUID;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,12 +16,12 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -29,8 +32,15 @@ public class UserEOController extends BaseController<UserEO>{
 
     private static final Logger logger = LoggerFactory.getLogger(UserEOController.class);
 
+    /**
+     *      status: 0-待审批，1-审批通过，2-禁言，3-删除
+     */
+
     @Autowired
     private UserEOService userEOService;
+
+    @Autowired
+    private PersonInfoEOService personInfoEOService;
 
 
     /**
@@ -70,7 +80,7 @@ public class UserEOController extends BaseController<UserEO>{
         if (userEOService.insertSelective(userEO) == 1) {
             return Result.success();
         } else {
-            return Result.error("登录失败!");
+            return Result.error("注册成功!");
         }
 
     }
@@ -100,13 +110,19 @@ public class UserEOController extends BaseController<UserEO>{
     @ApiOperation(value = "|UserEO|登录")
     @PostMapping("/login")
     @RequiresPermissions("login:user:page")
-    public ResponseMessage<UserEO> userLogin(@RequestBody UserEO userEO) {
+    @ResponseBody
+    public ResponseMessage<PersonInfoEO> userLogin(@RequestBody UserEO userEO) {
         UserEO user = userEOService.userLogin(userEO);
         try {
             if (user != null) {
                 user.setOnlineTime(new Date());
                 if (userEOService.updateByPrimaryKeySelective(user) == 1) {
-                    return Result.success(user);
+                    PersonInfoEO person = personInfoEOService.getPersonByUid(user.getId());
+                    long start = user.getCreateTime().getTime();
+                    long end = new Date().getTime();
+                    long format = (end-start)/(1000*24*60*60);
+                    person.setPhotoPath(""+format);
+                    return Result.success(person);
                 }
                 return Result.error();
             } else {
@@ -117,7 +133,4 @@ public class UserEOController extends BaseController<UserEO>{
             return Result.error();
         }
     }
-
-
-
 }

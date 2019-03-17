@@ -53,7 +53,7 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO> {
     @ApiOperation(value = "|PersonInfoEO|个人信息新增修改")
     @PostMapping("/add")
     @RequiresPermissions("personInfo:personInfo:save")
-    public ResponseMessage create(String uid, String name, String phone, String birthday, String address,
+    public ResponseMessage<PersonInfoEO> create(String uid, String name, String phone, String birthday, String address,
                                   String gender, String introduce, MultipartFile photo) throws Exception {
 
         PersonInfoEO personInfoEO = new PersonInfoEO();
@@ -76,10 +76,10 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO> {
         if (personInfoEOService.getPersonByUid(uid) == null) {
             personInfoEO.setId(UUID.randomUUID());
             personInfoEOService.insertSelective(personInfoEO);
-            return Result.success("新增成功");
+            return Result.success("","新增成功",personInfoEOService.getPersonByUid(personInfoEO.getUId()));
         } else {
             personInfoEOService.updateByPrimaryKeySelective(personInfoEO);
-            return Result.success("修改成功");
+            return Result.success("","修改成功",personInfoEOService.getPersonByUid(personInfoEO.getUId()));
         }
     }
 
