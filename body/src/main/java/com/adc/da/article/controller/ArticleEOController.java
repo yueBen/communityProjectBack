@@ -74,11 +74,26 @@ public class ArticleEOController extends BaseController<ArticleEO>{
      *      status：0-已完成，1-已下线，2-待审批，3-未完成，4-删除
      */
 
+
+    /**
+     *      返回数据时status存放姓名
+     * @param page
+     * @return
+     * @throws Exception
+     */
 	@ApiOperation(value = "|ArticleEO|分页查询")
     @GetMapping("/page")
     @RequiresPermissions("article:article:page")
     public ResponseMessage<PageInfo<ArticleEO>> page(ArticleEOPage page) throws Exception {
         List<ArticleEO> rows = articleEOService.queryByPage(page);
+        return Result.success(getPageInfo(page.getPager(), rows));
+    }
+
+    @ApiOperation(value = "|ArticleEO|好友文章")
+    @GetMapping("/friPage")
+    @RequiresPermissions("article:article:page")
+    public ResponseMessage<PageInfo<ArticleEO>> getFriItem(ArticleEOPage page) throws Exception {
+        List<ArticleEO> rows = articleEOService.getFriItems(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }
 

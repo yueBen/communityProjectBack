@@ -149,6 +149,12 @@
         <if test="releaseTime != null" >
             and release_time &lt;= #{releaseTime1}
         </if>
+        <if test="releaseTime1 != null" >
+            and release_time &gt;= #{releaseTime1}
+        </if>
+        <if test="releaseTime2 != null" >
+            and release_time &lt;= #{releaseTime2}
+        </if>
         <if test="updateTime != null" >
             and update_time ${updateTimeOperator} #{updateTime}
         </if>
@@ -169,6 +175,32 @@
         </if>
         <if test="type != null" >
             and type ${typeOperator} #{type}
+        </if>
+        order by release_time desc, update_time desc, create_time desc
+        limit ${pager.pageOffset},${pager.pageSize}
+    </select>
+
+    <select id="getFriItems" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select <include refid="Base_Column_List" /> from article
+        where 1=1
+        <if test="uId != null" >
+            and u_id = ANY(select u_id_2 from relation where u_id_1 = #{uId} and type = 0 and status = 1)
+            or u_id = ANY(select u_id_1 from relation where u_id_2 = #{uId} and type = 0 and status = 1)
+        </if>
+        <if test="releaseTime != null" >
+            and release_time = #{releaseTime}
+        </if>
+        <if test="releaseTime1 != null" >
+            and release_time &gt;= #{releaseTime1}
+        </if>
+        <if test="releaseTime2 != null" >
+            and release_time &lt;= #{releaseTime2}
+        </if>
+        <if test="title != null" >
+            and title = "%"#{title}"%"
+        </if>
+        <if test="type != null" >
+            and type = #{type}
         </if>
         order by release_time desc, update_time desc, create_time desc
         limit ${pager.pageOffset},${pager.pageSize}

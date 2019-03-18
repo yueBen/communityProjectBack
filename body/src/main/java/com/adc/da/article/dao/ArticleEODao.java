@@ -1,6 +1,7 @@
 package com.adc.da.article.dao;
 
 import com.adc.da.article.entity.vo.HistoryVo;
+import com.adc.da.article.page.ArticleEOPage;
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.article.entity.ArticleEO;
 
@@ -22,5 +23,12 @@ public interface ArticleEODao extends BaseDao<ArticleEO> {
      * @return
      */
     List<HistoryVo> queryHisList(HistoryVo historyVo);
+
+    /**
+     *  好友文章加载
+     * @param page
+     * @return
+     */
+    List<ArticleEO> getFriItems(ArticleEOPage page);
 
 }

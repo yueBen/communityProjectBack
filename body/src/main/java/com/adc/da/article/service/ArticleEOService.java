@@ -1,6 +1,8 @@
 package com.adc.da.article.service;
 
 import com.adc.da.article.entity.vo.HistoryVo;
+import com.adc.da.article.page.ArticleEOPage;
+import com.adc.da.base.page.BasePage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,13 @@ public class ArticleEOService extends BaseService<ArticleEO, String> {
     @Transactional(readOnly = true)
     public List<HistoryVo> queryHisList(HistoryVo historyVo) {
         return dao.queryHisList(historyVo);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ArticleEO> getFriItems(ArticleEOPage page) throws Exception {
+        Integer rowCount = this.queryByCount(page);
+        page.getPager().setRowCount(rowCount.intValue());
+        return dao.getFriItems(page);
     }
 
 }
