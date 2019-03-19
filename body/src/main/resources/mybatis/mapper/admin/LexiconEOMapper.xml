@@ -3,9 +3,9 @@
 <mapper namespace="com.adc.da.admin.dao.LexiconEODao" >
   <!-- Result Map-->
   <resultMap id="BaseResultMap" type="com.adc.da.admin.entity.LexiconEO" >
-    <id column="id" property="id" />
-    <result column="word" property="word" />
-    <result column="level" property="level" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="word" jdbcType="VARCHAR" property="word" />
+    <result column="level" jdbcType="INTEGER" property="level" />
   </resultMap>
 
   <!-- lexicon table all fields -->
@@ -117,9 +117,6 @@
   <select id="queryByList" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
     select <include refid="Base_Column_List"/> from lexicon
     <include refid="Base_Where_Clause"/>
-    <if test="pager.orderCondition != null and pager.orderCondition != ''" >
-		${pager.orderCondition}
-    </if>
   </select>
 
 </mapper>

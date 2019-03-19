@@ -129,10 +129,15 @@ public class ArticleEOController extends BaseController<ArticleEO>{
     @PostMapping("/add")
     @RequiresPermissions("article:article:save")
     public ResponseMessage create(@RequestBody ArticleEO articleEO) throws Exception {
-        articleEO.setId(UUID.randomUUID());
         Date now = new Date();
         articleEO.setCreateTime(now);
         articleEO.setUpdateTime(now);
+        if (articleEO.getId() != null) {
+            articleEO.setId(UUID.randomUUID());
+            articleEOService.insertSelective(articleEO);
+            labelEOService.setLabelNum(articleEO.getUId(), articleEO.getLabelId());
+        }
+        articleEO.setId(UUID.randomUUID());
 
         /* 内容检查功能 */
         String checkContent = lexiconEOService.checkContent(articleEO.getContent(), 0);
@@ -144,7 +149,7 @@ public class ArticleEOController extends BaseController<ArticleEO>{
             articleEO.setStatus(2);
             articleEOService.insertSelective(articleEO);
             labelEOService.setLabelNum(articleEO.getUId(), articleEO.getLabelId());
-            return Result.success("1",null);
+            return Result.error("1",null);
         } else if (level.equals("$che$")) {
             return Result.error("2", checkContent.substring(5,checkContent.length()));
         }

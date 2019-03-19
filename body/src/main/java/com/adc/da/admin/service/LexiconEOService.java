@@ -59,7 +59,7 @@ public class LexiconEOService extends BaseService<LexiconEO, String> {
             Integer level = eo.getLevel();
             int start = 0;
             int end = 0;
-            while ((start = content.indexOf(word.charAt(0),end)) > 0) {
+            while ((start = content.indexOf(word.charAt(0),end)) >= 0) {
                 end = content.indexOf(word.charAt(word.length()-1),start);
                 String str = content.substring(start, end+1);
                 str = str.replaceAll("&nbsp;","");
@@ -84,23 +84,25 @@ public class LexiconEOService extends BaseService<LexiconEO, String> {
                 }
             }
         }
-        double level = levelAll/count;
+        double level = count == 0?0:levelAll/count;
         if (type == 0) {
-            if (count > 30 && level > 4) {
+            if (count > 30 || level > 4) {
                 return "$del$" + buffer.toString();
-            } else if (count > 20 && level > 3) {
+            } else if (count > 20 || level > 3) {
                 return "$aut$" + buffer.toString();
-            } else if (count < 12 && level < 2.5){
+            } else if (count < 12 || level < 2.5){
                 return content;
             } else {
                 return "$che$" + buffer.toString();
             }
         } else {
-            if (count > 15 && level > 3.5) {
+            if (count > 15 || level > 3.5) {
                 return null;
             } else {
                 return buffer.toString();
             }
         }
     }
+
+
 }
