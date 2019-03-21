@@ -4,6 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import com.adc.da.article.entity.vo.HistoryVo;
 import com.adc.da.article.service.ImgPathEOService;
 import com.adc.da.article.service.LabelEOService;
 import com.adc.da.personInfo.entity.PersonInfoEO;
+import com.adc.da.personInfo.service.PersonInfoEOService;
 import com.adc.da.util.utils.UUID;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
@@ -57,6 +59,9 @@ public class ArticleEOController extends BaseController<ArticleEO>{
     @Autowired
     private ImgPathEOService imgPathEOService;
 
+    @Autowired
+    private PersonInfoEOService personInfoEOService;
+
     /**
      *      1、主页查询条件有：修改时间，标题模糊查询，类型，发布状态（已发布）
      *      2、我的文章查询条件有：uid，修改时间，标题模糊查询，标签，类型，发布状态（已发布，待发布，已完成）
@@ -71,12 +76,12 @@ public class ArticleEOController extends BaseController<ArticleEO>{
      *          4、浏览时间查询
      *
      *      type：0-学习，1-生活，2-兴趣，3-提问
-     *      status：0-已完成，1-已下线，2-待审批，3-未完成，4-删除
+     *      status：0-未发布，1-已下线，2-待审批，3-未完成，4-删除，5-已发布
      */
 
 
     /**
-     *      返回数据时status存放姓名
+     *      返回数据时labelId存放姓名
      * @param page
      * @return
      * @throws Exception
@@ -86,7 +91,14 @@ public class ArticleEOController extends BaseController<ArticleEO>{
     @RequiresPermissions("article:article:page")
     public ResponseMessage<PageInfo<ArticleEO>> page(ArticleEOPage page) throws Exception {
         List<ArticleEO> rows = articleEOService.queryByPage(page);
-        return Result.success(getPageInfo(page.getPager(), rows));
+        List<ArticleEO> list = new ArrayList<ArticleEO>();
+        for(ArticleEO eo : rows) {
+            PersonInfoEO person = personInfoEOService.getPersonByUid(eo.getUId());
+            eo.setLabelId(person.getName());
+            System.err.println(eo.getLabelId());
+            list.add(eo);
+        }
+        return Result.success(getPageInfo(page.getPager(), list));
     }
 
     @ApiOperation(value = "|ArticleEO|好友文章")
@@ -126,9 +138,9 @@ public class ArticleEOController extends BaseController<ArticleEO>{
      * @throws Exception
      */
     @ApiOperation(value = "|ArticleEO|新增")
-    @PostMapping("/add")
+    @GetMapping("/add")
     @RequiresPermissions("article:article:save")
-    public ResponseMessage create(@RequestBody ArticleEO articleEO) throws Exception {
+    public ResponseMessage create(ArticleEO articleEO) throws Exception {
         Date now = new Date();
         articleEO.setCreateTime(now);
         articleEO.setUpdateTime(now);
@@ -166,9 +178,9 @@ public class ArticleEOController extends BaseController<ArticleEO>{
      * @throws Exception
      */
     @ApiOperation(value = "|ArticleEO|修改")
-    @PostMapping("/update")
+    @GetMapping("/update")
     @RequiresPermissions("article:article:update")
-    public ResponseMessage<ArticleEO> update(@RequestBody ArticleEO articleEO) throws Exception {
+    public ResponseMessage<ArticleEO> update(ArticleEO articleEO) throws Exception {
         articleEO.setUpdateTime(new Date());
 
         /* 内容检查 */

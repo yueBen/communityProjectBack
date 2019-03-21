@@ -167,6 +167,9 @@
         <if test="status != null" >
             and status ${statusOperator} #{status}
         </if>
+        <if test="id == 1">
+            and status != 3 and status != 4
+        </if>
         <if test="title != null" >
             and title = "%"#{title}"%"
         </if>
