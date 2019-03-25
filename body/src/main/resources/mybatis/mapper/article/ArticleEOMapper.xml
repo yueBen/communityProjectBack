@@ -122,7 +122,7 @@
         and a.status = 0
         and a.RELEASE_TIME &lt;= #{releaseTime}
         <if test="title != null">
-            and title like "%"#{title}"%"
+            and title like concat('%',#{title},'%')
         </if>
         <if test="type != null">
             and a.type = #{type}
@@ -171,7 +171,7 @@
             and status != 3 and status != 4
         </if>
         <if test="title != null" >
-            and title = "%"#{title}"%"
+            and title like concat('%',#{title},'%')
         </if>
         <if test="labelId != null" >
             and label_id ${labelIdOperator} #{labelId}
@@ -200,7 +200,7 @@
             and release_time &lt;= #{releaseTime2}
         </if>
         <if test="title != null" >
-            and title = "%"#{title}"%"
+            and title like concat('%',#{title},'%')
         </if>
         <if test="type != null" >
             and type = #{type}

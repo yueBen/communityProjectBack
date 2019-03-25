@@ -21,15 +21,15 @@ public class WebConfig {
 	/**
 	 * xss过滤器（高标准）
 	 */
-	@Bean
-	public FilterRegistrationBean xssFilter() {
-		FilterRegistrationBean registration = new FilterRegistrationBean();
-		registration.setFilter(new XssFilter());
-		registration.addUrlPatterns("/*");
-		registration.setName("xssFilter");
-		registration.setOrder(10);
-		return registration;
-	}
+//	@Bean
+//	public FilterRegistrationBean xssFilter() {
+//		FilterRegistrationBean registration = new FilterRegistrationBean();
+//		registration.setFilter(new XssFilter());
+//		registration.addUrlPatterns("/*");
+//		registration.setName("xssFilter");
+//		registration.setOrder(10);
+//		return registration;
+//	}
 
 	/**
 	 * xss过滤器（低标准）
