@@ -138,9 +138,9 @@ public class ArticleEOController extends BaseController<ArticleEO>{
      * @throws Exception
      */
     @ApiOperation(value = "|ArticleEO|新增")
-    @GetMapping("/add")
+    @PostMapping("/add")
     @RequiresPermissions("article:article:save")
-    public ResponseMessage create(ArticleEO articleEO) throws Exception {
+    public ResponseMessage create(@RequestBody ArticleEO articleEO) throws Exception {
         Date now = new Date();
         articleEO.setCreateTime(now);
         articleEO.setUpdateTime(now);
@@ -178,9 +178,9 @@ public class ArticleEOController extends BaseController<ArticleEO>{
      * @throws Exception
      */
     @ApiOperation(value = "|ArticleEO|修改")
-    @GetMapping("/update")
+    @PostMapping("/update")
     @RequiresPermissions("article:article:update")
-    public ResponseMessage<ArticleEO> update(ArticleEO articleEO) throws Exception {
+    public ResponseMessage<ArticleEO> update(@RequestBody ArticleEO articleEO) throws Exception {
         articleEO.setUpdateTime(new Date());
 
         /* 内容检查 */
