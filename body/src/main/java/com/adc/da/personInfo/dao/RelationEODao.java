@@ -2,9 +2,6 @@ package com.adc.da.personInfo.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.personInfo.entity.RelationEO;
-import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 /**
  *

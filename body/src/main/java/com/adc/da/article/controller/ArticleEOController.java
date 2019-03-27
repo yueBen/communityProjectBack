@@ -91,14 +91,7 @@ public class ArticleEOController extends BaseController<ArticleEO>{
     @RequiresPermissions("article:article:page")
     public ResponseMessage<PageInfo<ArticleEO>> page(ArticleEOPage page) throws Exception {
         List<ArticleEO> rows = articleEOService.queryByPage(page);
-        List<ArticleEO> list = new ArrayList<ArticleEO>();
-        for(ArticleEO eo : rows) {
-            PersonInfoEO person = personInfoEOService.getPersonByUid(eo.getUId());
-            eo.setLabelId(person.getName());
-            System.err.println(eo.getLabelId());
-            list.add(eo);
-        }
-        return Result.success(getPageInfo(page.getPager(), list));
+        return Result.success(getPageInfo(page.getPager(), addAuthorName(rows)));
     }
 
     @ApiOperation(value = "|ArticleEO|好友文章")
@@ -106,7 +99,19 @@ public class ArticleEOController extends BaseController<ArticleEO>{
     @RequiresPermissions("article:article:page")
     public ResponseMessage<PageInfo<ArticleEO>> getFriItem(ArticleEOPage page) throws Exception {
         List<ArticleEO> rows = articleEOService.getFriItems(page);
-        return Result.success(getPageInfo(page.getPager(), rows));
+
+        return Result.success(getPageInfo(page.getPager(), addAuthorName(rows)));
+    }
+
+    private List<ArticleEO> addAuthorName(List<ArticleEO> rows) {
+        List<ArticleEO> list = new ArrayList<ArticleEO>();
+        for(ArticleEO eo : rows) {
+            PersonInfoEO person = personInfoEOService.getPersonByUid(eo.getUId());
+            eo.setLabelId(person.getName());
+            System.err.println(eo.getLabelId());
+            list.add(eo);
+        }
+        return list;
     }
 
     @ApiOperation(value = "|ArticleEO|历史记录")
@@ -257,5 +262,6 @@ public class ArticleEOController extends BaseController<ArticleEO>{
             return null;
         }
     }
+
 
 }

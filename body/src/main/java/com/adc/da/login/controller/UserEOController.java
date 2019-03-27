@@ -78,9 +78,9 @@ public class UserEOController extends BaseController<UserEO>{
             return Result.error("用户名重复!");
         }
         if (userEOService.insertSelective(userEO) == 1) {
-            return Result.success();
+            return Result.success("注册成功!");
         } else {
-            return Result.error("注册成功!");
+            return Result.error();
         }
 
     }
@@ -115,18 +115,22 @@ public class UserEOController extends BaseController<UserEO>{
         UserEO user = userEOService.userLogin(userEO);
         try {
             if (user != null) {
-                user.setOnlineTime(new Date());
-                if (userEOService.updateByPrimaryKeySelective(user) == 1) {
-                    PersonInfoEO person = personInfoEOService.getPersonByUid(user.getId());
-                    long start = user.getCreateTime().getTime();
-                    long end = new Date().getTime();
-                    long format = (end-start)/(1000*24*60*60);
-                    person.setPhotoPath(""+format);
-                    return Result.success(person);
+                if (user.getStatus() == 0) {
+                    return Result.error("等待管理员审核！");
                 }
-                return Result.error();
+                if (user.getStatus() == 4) {
+                    return Result.error("当前账户已失效！");
+                }
+                user.setOnlineTime(new Date());
+                userEOService.updateByPrimaryKeySelective(user);
+                PersonInfoEO person = personInfoEOService.getPersonByUid(user.getId());
+                long start = user.getCreateTime().getTime();
+                long end = new Date().getTime();
+                long format = (end-start)/(1000*24*60*60);
+                person.setPhotoPath(" "+format);
+                return Result.success(person);
             } else {
-                return Result.error();
+                return Result.error("用户名或密码错误！！");
             }
         } catch (Exception e) {
             e.printStackTrace();

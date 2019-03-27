@@ -62,7 +62,6 @@
     <select id="userLogin" resultMap="BaseResultMap" parameterType="com.adc.da.login.entity.UserEO">
         select <include refid="Base_Column_List" /> from user where
         user_name = #{userName,jdbcType=VARCHAR} and user_pwd = #{userPwd, jdbcType=VARCHAR}
-        and status != 0 and status != 3
     </select>
 
     <!-- 注册 -->
