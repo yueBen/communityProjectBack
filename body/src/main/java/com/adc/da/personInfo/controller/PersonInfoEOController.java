@@ -130,15 +130,26 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO> {
     public void photoPath(@PathVariable String uid, HttpServletResponse response) {
 
         PersonInfoEO eo = personInfoEOService.getPersonByUid(uid);
-        if (eo != null) {
-            File file = new File(eo.getPhotoPath());
+        if (eo == null) {
+            try {
+                FileDownLoad.fileResponseDown(response, new File(FileUpLoad.getPathRoot() + "/userPhoto/default/defaultPhoto.jpg"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        File file = new File(eo.getPhotoPath());
 
-            if (file.exists()) {
-                try {
-                    FileDownLoad.fileResponseDown(response, file);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        if (file.exists()) {
+            try {
+                FileDownLoad.fileResponseDown(response, file);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                FileDownLoad.fileResponseDown(response, new File(FileUpLoad.getPathRoot() + "/userPhoto/default/defaultPhoto.jpg"));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 

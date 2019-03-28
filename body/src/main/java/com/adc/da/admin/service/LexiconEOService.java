@@ -61,6 +61,9 @@ public class LexiconEOService extends BaseService<LexiconEO, String> {
             int end = 0;
             while ((start = content.indexOf(word.charAt(0),end)) >= 0) {
                 end = content.indexOf(word.charAt(word.length()-1),start);
+                if (end < 0) {
+                    break;
+                }
                 String str = content.substring(start, end+1);
                 str = str.replaceAll("&nbsp;","");
                 if (str.equals(word)) {

@@ -62,7 +62,7 @@
         and create_time &lt;= #{createTime2}
       </if>
       <if test="releaseTime != null" >
-        and release_time ${releaseTimeOperator} #{releaseTime}
+        and release_time &gt;= #{releaseTime}
       </if>
       <if test="releaseTime1 != null" >
         and release_time &gt;= #{releaseTime1}
@@ -147,7 +147,7 @@
             and u_id ${uIdOperator} #{uId}
         </if>
         <if test="releaseTime != null" >
-            and release_time &lt;= #{releaseTime1}
+            and release_time &lt;= #{releaseTime}
         </if>
         <if test="releaseTime1 != null" >
             and release_time &gt;= #{releaseTime1}

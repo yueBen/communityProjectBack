@@ -13,19 +13,19 @@ import java.util.Date;
 public class PersonInfoEO extends BaseEntity {
 
     private String id;
-    private String uId;
-    private String name;
-    private String phone;
+    private String uId = "XXXXXXXXXXX";
+    private String name = "XXX";
+    private String phone = "XXXXXXXXXXX";
     @org.springframework.format.annotation.DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private Date birthday;
-    private String address;
-    private String gender;
-    private String introduce;
-    private Integer ranking;
-    private Integer praiseNum;
-    private Integer commentNum;
-    private Integer messageNum;
-    private Integer browseNum;
+    private Date birthday = new Date();
+    private String address = "XXXXXXXXXXX";
+    private String gender = "X";
+    private String introduce = "XXXXXXXXXXXXXXXXXXXXXX";
+    private Integer ranking = 0;
+    private Integer praiseNum = 0;
+    private Integer commentNum = 0;
+    private Integer messageNum = 0;
+    private Integer browseNum = 0;
     private String photoPath;
 
     /**

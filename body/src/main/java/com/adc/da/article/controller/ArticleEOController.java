@@ -76,7 +76,7 @@ public class ArticleEOController extends BaseController<ArticleEO>{
      *          4、浏览时间查询
      *
      *      type：0-学习，1-生活，2-兴趣，3-提问
-     *      status：0-未发布，1-已下线，2-待审批，3-未完成，4-删除，5-已发布
+     *      status：0-未发布，1-已下线，2-待审批，3-未完成，4-删除，5-已发布, 6-待发布
      */
 
 
@@ -90,6 +90,9 @@ public class ArticleEOController extends BaseController<ArticleEO>{
     @GetMapping("/page")
     @RequiresPermissions("article:article:page")
     public ResponseMessage<PageInfo<ArticleEO>> page(ArticleEOPage page) throws Exception {
+	    if (page.getType() != null && page.getType().equals("*")) {
+	        page.setType(null);
+        }
         List<ArticleEO> rows = articleEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), addAuthorName(rows)));
     }
@@ -108,7 +111,6 @@ public class ArticleEOController extends BaseController<ArticleEO>{
         for(ArticleEO eo : rows) {
             PersonInfoEO person = personInfoEOService.getPersonByUid(eo.getUId());
             eo.setLabelId(person.getName());
-            System.err.println(eo.getLabelId());
             list.add(eo);
         }
         return list;
@@ -149,6 +151,9 @@ public class ArticleEOController extends BaseController<ArticleEO>{
         Date now = new Date();
         articleEO.setCreateTime(now);
         articleEO.setUpdateTime(now);
+        if (articleEO.getReleaseTime() != null && articleEO.getReleaseTime().getTime() > now.getTime()) {
+            articleEO.setStatus(6);
+        }
         if (articleEO.getId() != null) {
             articleEO.setId(UUID.randomUUID());
             articleEOService.insertSelective(articleEO);

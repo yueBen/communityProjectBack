@@ -9,6 +9,7 @@ import com.adc.da.personInfo.service.PersonInfoEOService;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
 import com.adc.da.util.utils.GsonUtil;
+import com.adc.da.util.utils.ObjectUtils;
 import com.adc.da.util.utils.UUID;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -124,10 +125,15 @@ public class UserEOController extends BaseController<UserEO>{
                 user.setOnlineTime(new Date());
                 userEOService.updateByPrimaryKeySelective(user);
                 PersonInfoEO person = personInfoEOService.getPersonByUid(user.getId());
+                if (person == null) {
+                    PersonInfoEO infoEO = new PersonInfoEO();
+                    infoEO.setUId(user.getId());
+                    return Result.success("001","请完善个人信息",infoEO);
+                }
                 long start = user.getCreateTime().getTime();
                 long end = new Date().getTime();
                 long format = (end-start)/(1000*24*60*60);
-                person.setPhotoPath(" "+format);
+                person.setPhotoPath(""+format);
                 return Result.success(person);
             } else {
                 return Result.error("用户名或密码错误！！");
