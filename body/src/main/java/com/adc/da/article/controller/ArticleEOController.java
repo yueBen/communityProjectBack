@@ -191,7 +191,11 @@ public class ArticleEOController extends BaseController<ArticleEO>{
     @PostMapping("/update")
     @RequiresPermissions("article:article:update")
     public ResponseMessage<ArticleEO> update(@RequestBody ArticleEO articleEO) throws Exception {
-        articleEO.setUpdateTime(new Date());
+        Date now = new Date();
+        articleEO.setUpdateTime(now);
+        if (articleEO.getReleaseTime() != null && articleEO.getReleaseTime().getTime() > now.getTime()) {
+            articleEO.setStatus(6);
+        }
 
         /* 内容检查 */
         String checkContent = lexiconEOService.checkContent(articleEO.getContent(), 0);
