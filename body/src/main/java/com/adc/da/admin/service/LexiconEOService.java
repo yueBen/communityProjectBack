@@ -85,6 +85,7 @@ public class LexiconEOService extends BaseService<LexiconEO, String> {
                     }
 
                 }
+                end++;
             }
         }
         double level = count == 0?0:levelAll/count;
@@ -106,6 +107,33 @@ public class LexiconEOService extends BaseService<LexiconEO, String> {
             }
         }
     }
+
+//    public static void main(String[] args){
+//        String str = "abcdcdfg";
+//        StringBuffer buffer = new StringBuffer(str);
+//        String s = "cd";
+//
+//        int start = 0;
+//        int end = 0;
+//        int bufferSta = 0;
+//        int bufferEnd = 0;
+//
+//        while ((start = str.indexOf(s.charAt(0),end)) >= 0) {
+//            end = str.indexOf(s.charAt(s.length()-1),start);
+//            String n = str.substring(start, end+1);
+//
+//            String m = "__";
+//            String b = "--";
+//
+//            buffer.insert(bufferSta,m);
+//
+//            System.err.println(buffer);
+//            buffer.insert(bufferEnd,b);
+//
+//            System.err.println(buffer);
+//            end++;
+//        }
+//    }
 
 
 }

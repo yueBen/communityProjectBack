@@ -165,7 +165,7 @@ public class ArticleEOController extends BaseController<ArticleEO>{
         String checkContent = lexiconEOService.checkContent(articleEO.getContent(), 0);
         String level = checkContent.substring(0,5);
         if (level.equals("$del$")) {
-            return Result.error("0", checkContent.substring(5,checkContent.length()));
+            return Result.error("0", "", checkContent.substring(5,checkContent.length()));
         } else if (level.equals("$aut$")) {
             //移送管理员审核
             articleEO.setStatus(2);
@@ -173,7 +173,7 @@ public class ArticleEOController extends BaseController<ArticleEO>{
             labelEOService.setLabelNum(articleEO.getUId(), articleEO.getLabelId());
             return Result.error("1",null);
         } else if (level.equals("$che$")) {
-            return Result.error("2", checkContent.substring(5,checkContent.length()));
+            return Result.error("2", "", checkContent.substring(5,checkContent.length()));
         }
 
         articleEOService.insertSelective(articleEO);
