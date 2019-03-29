@@ -59,19 +59,20 @@ public class LexiconEOService extends BaseService<LexiconEO, String> {
             Integer level = eo.getLevel();
             int start = 0;
             int end = 0;
-            while ((start = content.indexOf(word.charAt(0),end)) >= 0) {
-                end = content.indexOf(word.charAt(word.length()-1),start);
+            while ((start = buffer.indexOf(String.valueOf(word.charAt(0)),end)) >= 0) {
+                end = buffer.indexOf(String.valueOf(word.charAt(word.length()-1)),start);
                 if (end < 0) {
                     break;
                 }
-                String str = content.substring(start, end+1);
+                String str = buffer.substring(start, end+1);
                 str = str.replaceAll("&nbsp;","");
                 if (str.equals(word)) {
                     if (type == 0) {
                         String spanStart = "<span style=\"color: red;\">";
                         String spanEnd = "</span>";
                         buffer.insert(start,spanStart);
-                        buffer.insert(end+spanStart.length()+1,spanEnd);
+                        buffer.insert(start+spanStart.length()+word.length(),spanEnd);
+                        end += spanStart.length()+spanEnd.length();
                         count++;
                         levelAll += level;
                     } else {
@@ -85,7 +86,6 @@ public class LexiconEOService extends BaseService<LexiconEO, String> {
                     }
 
                 }
-                end++;
             }
         }
         double level = count == 0?0:levelAll/count;
@@ -115,8 +115,7 @@ public class LexiconEOService extends BaseService<LexiconEO, String> {
 //
 //        int start = 0;
 //        int end = 0;
-//        int bufferSta = 0;
-//        int bufferEnd = 0;
+//        int count = 0;
 //
 //        while ((start = str.indexOf(s.charAt(0),end)) >= 0) {
 //            end = str.indexOf(s.charAt(s.length()-1),start);
@@ -125,12 +124,19 @@ public class LexiconEOService extends BaseService<LexiconEO, String> {
 //            String m = "__";
 //            String b = "--";
 //
-//            buffer.insert(bufferSta,m);
+//            if (n.equals(s)) {
+//                buffer.insert(start+count*(m.length()+b.length()),m);
 //
-//            System.err.println(buffer);
-//            buffer.insert(bufferEnd,b);
+//                System.err.println(buffer);
 //
-//            System.err.println(buffer);
+//                buffer.insert(start+count*(m.length()+b.length())+m.length()+s.length(),b);
+//
+//                count++;
+//
+//                System.err.println(buffer);
+//            }
+//
+//
 //            end++;
 //        }
 //    }
