@@ -148,42 +148,42 @@
         from article a left join person_info p on a.u_id = p.u_id
         where 1=1
         <if test='id == "1"'>
-            and a.status != 3 and a.status != 4
-        </if>
-        <if test='id == "2"'>
             and a.status = 5 or a.status = 6
         </if>
-        <if test="uId != null" >
+        <if test='id == "2"'>
+            and a.status != 3 and a.status != 4
+        </if>
+        <if test="uId != null and uId != ''" >
             and a.u_id ${uIdOperator} #{uId}
         </if>
-        <if test="releaseTime != null" >
+        <if test="releaseTime != null and releaseTime != ''" >
             and a.release_time &lt;= #{releaseTime}
         </if>
-        <if test="releaseTime1 != null" >
+        <if test="releaseTime1 != null and releaseTime1 != ''" >
             and a.release_time &gt;= #{releaseTime1}
         </if>
-        <if test="releaseTime2 != null" >
+        <if test="releaseTime2 != null and releaseTime2 != ''" >
             and a.release_time &lt;= #{releaseTime2}
         </if>
-        <if test="updateTime != null" >
+        <if test="updateTime != null and updateTime != ''" >
             and a.update_time ${updateTimeOperator} #{updateTime}
         </if>
-        <if test="updateTime1 != null" >
+        <if test="updateTime1 != null and updateTime1 != ''" >
             and a.update_time &gt;= #{updateTime1}
         </if>
-        <if test="updateTime2 != null" >
+        <if test="updateTime2 != null and updateTime2 != ''" >
             and a.update_time &lt;= #{updateTime2}
         </if>
-        <if test="status != null" >
+        <if test="status != null and status != ''" >
             and a.status ${statusOperator} #{status}
         </if>
-        <if test="title != null" >
+        <if test="title != null and title != ''" >
             and a.title like concat('%',#{title},'%')
         </if>
-        <if test="labelId != null" >
-            and a.label_id ${labelIdOperator} #{labelId}
+        <if test="labelId != null and labelId != ''" >
+            and a.label_id like concat('%',#{labelId},'%')
         </if>
-        <if test="type != null" >
+        <if test="type != null and type != ''" >
             and a.type ${typeOperator} #{type}
         </if>
         order by a.release_time desc, a.update_time desc, a.create_time desc
@@ -197,8 +197,8 @@
         from article a left join person_info p on a.u_id = p.u_id
         where 1=1
         <if test="uId != null" >
-            and u_id = ANY(select u_id_2 from relation where u_id_1 = #{uId} and type = 0 and status = 1)
-            or u_id = ANY(select u_id_1 from relation where u_id_2 = #{uId} and type = 0 and status = 1)
+            and a.u_id = ANY(select u_id_2 from relation where u_id_1 = #{uId} and type = 0 and status = 1)
+            or a.u_id = ANY(select u_id_1 from relation where u_id_2 = #{uId} and type = 0 and status = 1)
         </if>
         <if test="releaseTime != null" >
             and a.release_time = #{releaseTime}
