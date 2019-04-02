@@ -54,21 +54,34 @@ public class LexiconEOService extends BaseService<LexiconEO, String> {
         int count = 0;
         int levelAll = 0;
         StringBuffer buffer = new StringBuffer(content);
+        //遍历敏感词
         for (LexiconEO eo: lexiconEOS) {
             String word = eo.getWord();
             Integer level = eo.getLevel();
             int start = 0;
             int end = 0;
+            //通过敏感词的首尾字符截取文章内容字符串
             while ((start = buffer.indexOf(String.valueOf(word.charAt(0)),end)) >= 0) {
                 end = buffer.indexOf(String.valueOf(word.charAt(word.length()-1)),start);
                 if (end < 0) {
                     break;
                 }
+                //截取文章内首尾同敏感词一样的字符串
                 String str = buffer.substring(start, end+1);
+                //去除字符串中间的空格
                 str = str.replaceAll("&nbsp;","");
+                //判断是否与敏感词一样
                 if (str.equals(word)) {
                     if (type == 0) {
-                        String spanStart = "<span style=\"color: red;\">";
+                        String spanStart;
+                        //根据等级选择标记颜色
+                        if (eo.getLevel() == 5) {
+                            spanStart = "<span style=\"color: #FF0000;\">";
+                        } else if (eo.getLevel() == 4 || eo.getLevel() == 3) {
+                            spanStart = "<span style=\"color: #FFF500;\">";
+                        } else {
+                            spanStart = "<span style=\"color: #FF9500;\">";
+                        }
                         String spanEnd = "</span>";
                         buffer.insert(start,spanStart);
                         buffer.insert(start+spanStart.length()+word.length(),spanEnd);
@@ -90,14 +103,18 @@ public class LexiconEOService extends BaseService<LexiconEO, String> {
         }
         double level = count == 0?0:levelAll/count;
         if (type == 0) {
-            if (count > 30 || level > 4) {
+            if (count >= 30 && level >= 3.8 || count >= 80 && level >= 3.0) {
+                //等级一
                 return "$del$" + buffer.toString();
-            } else if (count > 20 || level > 3) {
-                return "$aut$" + buffer.toString();
-            } else if (count < 12 || level < 2.5){
+            } else if (count <= 12 || level < 2.5) {
+                //等级四
                 return content;
-            } else {
+            } else if (count < 20 && level < 3){
+                //等级三
                 return "$che$" + buffer.toString();
+            } else {
+                //登记二
+                return "$aut$" + buffer.toString();
             }
         } else {
             if (count > 15 || level > 3.5) {
