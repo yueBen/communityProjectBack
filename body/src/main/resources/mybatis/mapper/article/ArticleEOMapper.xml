@@ -141,71 +141,84 @@
 
     <!--文章条件查询-->
     <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-        select <include refid="Base_Column_List" /> from article
+        select
+        a.id, a.u_id, a.create_time, a.release_time, a.update_time,
+        a.status, a.title, a.content, a.browse_num, a.collection_num,
+        a.comment_num, a.like_num, a.dislike_num, a.type, p.name as label_id
+        from article a left join person_info p on a.u_id = p.u_id
         where 1=1
+        <if test='id == "1"'>
+            and a.status != 3 and a.status != 4
+        </if>
+        <if test='id == "2"'>
+            and a.status = 5 or a.status = 6
+        </if>
         <if test="uId != null" >
-            and u_id ${uIdOperator} #{uId}
+            and a.u_id ${uIdOperator} #{uId}
         </if>
         <if test="releaseTime != null" >
-            and release_time &lt;= #{releaseTime}
+            and a.release_time &lt;= #{releaseTime}
         </if>
         <if test="releaseTime1 != null" >
-            and release_time &gt;= #{releaseTime1}
+            and a.release_time &gt;= #{releaseTime1}
         </if>
         <if test="releaseTime2 != null" >
-            and release_time &lt;= #{releaseTime2}
+            and a.release_time &lt;= #{releaseTime2}
         </if>
         <if test="updateTime != null" >
-            and update_time ${updateTimeOperator} #{updateTime}
+            and a.update_time ${updateTimeOperator} #{updateTime}
         </if>
         <if test="updateTime1 != null" >
-            and update_time &gt;= #{updateTime1}
+            and a.update_time &gt;= #{updateTime1}
         </if>
         <if test="updateTime2 != null" >
-            and update_time &lt;= #{updateTime2}
+            and a.update_time &lt;= #{updateTime2}
         </if>
         <if test="status != null" >
-            and status ${statusOperator} #{status}
-        </if>
-        <if test="id == 1">
-            and status != 3 and status != 4
+            and a.status ${statusOperator} #{status}
         </if>
         <if test="title != null" >
-            and title like concat('%',#{title},'%')
+            and a.title like concat('%',#{title},'%')
         </if>
         <if test="labelId != null" >
-            and label_id ${labelIdOperator} #{labelId}
+            and a.label_id ${labelIdOperator} #{labelId}
         </if>
         <if test="type != null" >
-            and type ${typeOperator} #{type}
+            and a.type ${typeOperator} #{type}
         </if>
-        order by release_time desc, update_time desc, create_time desc
+        order by a.release_time desc, a.update_time desc, a.create_time desc
         limit ${pager.pageOffset},${pager.pageSize}
     </select>
 
     <select id="getFriItems" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
-        select <include refid="Base_Column_List" /> from article
+        select a.id, a.u_id, a.create_time, a.release_time, a.update_time,
+        a.status, a.title, a.content, a.browse_num, a.collection_num,
+        a.comment_num, a.like_num, a.dislike_num, a.type, p.name as label_id
+        from article a left join person_info p on a.u_id = p.u_id
         where 1=1
         <if test="uId != null" >
             and u_id = ANY(select u_id_2 from relation where u_id_1 = #{uId} and type = 0 and status = 1)
             or u_id = ANY(select u_id_1 from relation where u_id_2 = #{uId} and type = 0 and status = 1)
         </if>
         <if test="releaseTime != null" >
-            and release_time = #{releaseTime}
+            and a.release_time = #{releaseTime}
         </if>
         <if test="releaseTime1 != null" >
-            and release_time &gt;= #{releaseTime1}
+            and a.release_time &gt;= #{releaseTime1}
         </if>
         <if test="releaseTime2 != null" >
-            and release_time &lt;= #{releaseTime2}
+            and a.release_time &lt;= #{releaseTime2}
         </if>
         <if test="title != null" >
-            and title like concat('%',#{title},'%')
+            and a.title like concat('%',#{title},'%')
+        </if>
+        <if test="labelId != null" >
+            and p.name like concat('%',#{labelId},'%')
         </if>
         <if test="type != null" >
-            and type = #{type}
+            and a.type = #{type}
         </if>
-        order by release_time desc, update_time desc, create_time desc
+        order by a.release_time desc, a.update_time desc, a.create_time desc
         limit ${pager.pageOffset},${pager.pageSize}
     </select>
 

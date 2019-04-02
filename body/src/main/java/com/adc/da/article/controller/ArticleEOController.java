@@ -81,7 +81,7 @@ public class ArticleEOController extends BaseController<ArticleEO>{
 
 
     /**
-     *      返回数据时labelId存放姓名
+     *      返回数据时labelId存放姓名,id=1时为主页文章加载，id=2时为我的文章加载
      * @param page
      * @return
      * @throws Exception
@@ -93,8 +93,11 @@ public class ArticleEOController extends BaseController<ArticleEO>{
 	    if (page.getType() != null && page.getType().equals("*")) {
 	        page.setType(null);
         }
+        if (page.getId().equals("1")) {
+            page.setReleaseTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        }
         List<ArticleEO> rows = articleEOService.queryByPage(page);
-        return Result.success(getPageInfo(page.getPager(), addAuthorName(rows)));
+        return Result.success(getPageInfo(page.getPager(), rows));
     }
 
     @ApiOperation(value = "|ArticleEO|好友文章")
@@ -103,17 +106,7 @@ public class ArticleEOController extends BaseController<ArticleEO>{
     public ResponseMessage<PageInfo<ArticleEO>> getFriItem(ArticleEOPage page) throws Exception {
         List<ArticleEO> rows = articleEOService.getFriItems(page);
 
-        return Result.success(getPageInfo(page.getPager(), addAuthorName(rows)));
-    }
-
-    private List<ArticleEO> addAuthorName(List<ArticleEO> rows) {
-        List<ArticleEO> list = new ArrayList<ArticleEO>();
-        for(ArticleEO eo : rows) {
-            PersonInfoEO person = personInfoEOService.getPersonByUid(eo.getUId());
-            eo.setLabelId(person.getName());
-            list.add(eo);
-        }
-        return list;
+        return Result.success(getPageInfo(page.getPager(), rows));
     }
 
     @ApiOperation(value = "|ArticleEO|历史记录")
