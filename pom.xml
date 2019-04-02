@@ -49,7 +49,6 @@
 		<!--<module>mytest</module>-->
 		<module>myutil</module>
 		<module>body</module>
-		<module>adc-da-util</module>
 
 	</modules>
 
