@@ -1,5 +1,6 @@
 package com.adc.da.article.service;
 
+import org.apache.el.parser.BooleanNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class LabelEOService extends BaseService<LabelEO, String> {
     @Transactional
     public int setLabelNum(String uid, String id) {
         return dao.setLabelNum(uid, id);
+    }
+
+    @Transactional
+    public boolean isLabelNameRepeat(String labelName) {
+        return dao.isLabelNameRepeat(labelName) < 1;
     }
 
 }

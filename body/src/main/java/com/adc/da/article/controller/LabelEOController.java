@@ -33,6 +33,7 @@ public class LabelEOController extends BaseController<LabelEO>{
     @Autowired
     private LabelEOService labelEOService;
 
+
 	@ApiOperation(value = "|LabelEO|查询")
     @GetMapping("/list")
     @RequiresPermissions("article:label:list")
@@ -43,11 +44,19 @@ public class LabelEOController extends BaseController<LabelEO>{
     @ApiOperation(value = "|LabelEO|新增")
     @PostMapping("/add")
     @RequiresPermissions("article:label:save")
-    public ResponseMessage<LabelEO> create(@RequestBody LabelEO labelEO) throws Exception {
+    public ResponseMessage<List<LabelEO>> create(@RequestBody LabelEO labelEO) throws Exception {
 	    labelEO.setId(UUID.randomUUID());
 	    labelEO.setNum(0);
-        labelEOService.insertSelective(labelEO);
-        return Result.success(labelEO);
+	    if (labelEOService.isLabelNameRepeat(labelEO.getLabelName())) {
+            labelEOService.insertSelective(labelEO);
+            LabelEOPage page = new LabelEOPage();
+            page.setUId(labelEO.getUId());
+            return Result.success(labelEOService.queryByList(page));
+        } else {
+	        return Result.error("标签重复");
+        }
+
+
     }
 
     @ApiOperation(value = "|LabelEO|删除")

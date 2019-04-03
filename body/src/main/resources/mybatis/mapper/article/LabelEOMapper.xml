@@ -129,5 +129,9 @@
 			limit ${pager.pageOffset},${pager.pageSize}
   </select>
 
+    <select id="isLabelNameRepeat" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT count(*) FROM label WHERE label_name = #{labelName,jdbcType=VARCHAR}
+    </select>
+
 
 </mapper>

@@ -15,4 +15,11 @@ import org.apache.ibatis.annotations.Param;
 public interface LabelEODao extends BaseDao<LabelEO> {
 
     int setLabelNum(@Param("uid") String uId, @Param("id") String id);
+
+    /**
+     * 标签验重
+     * @param labelName
+     * @return
+     */
+    int isLabelNameRepeat(@Param("labelName") String labelName);
 }
