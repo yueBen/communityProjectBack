@@ -76,7 +76,7 @@ public class ArticleEOController extends BaseController<ArticleEO>{
      *          4、浏览时间查询
      *
      *      type：0-学习，1-生活，2-兴趣，3-提问
-     *      status：0-未发布，1-已下线，2-待审批，3-未完成，4-删除，5-已发布, 6-待发布
+     *      status：1-已下线，2-待审批，3-未完成，4-删除，5-已发布, 6-待发布
      */
 
 
