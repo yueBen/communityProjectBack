@@ -363,7 +363,9 @@
 
   <!-- article 列表总数-->
   <select id="queryByCount" resultType="java.lang.Integer" parameterType="com.adc.da.base.page.BasePage">
-    select count(1) from article
+      select
+      count(1)
+      from article a left join person_info p on a.u_id = p.u_id
       where 1=1
       <if test='id == "1"'>
           and (a.status = 5 or a.status = 6)
