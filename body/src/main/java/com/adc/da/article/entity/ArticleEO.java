@@ -28,11 +28,11 @@ public class ArticleEO extends BaseEntity {
     private Integer status;
     private String title;
     private String content;
-    private Integer browseNum = Integer.valueOf(0);
-    private Integer collectionNum = Integer.valueOf(0);
-    private Integer commentNum = Integer.valueOf(0);
-    private Integer likeNum = Integer.valueOf(0);
-    private Integer dislikeNum = Integer.valueOf(0);
+    private Integer browseNum;
+    private Integer collectionNum;
+    private Integer commentNum;
+    private Integer likeNum;
+    private Integer dislikeNum;
     private String labelId;
     private Integer type;
 

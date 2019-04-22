@@ -200,7 +200,7 @@ public class ArticleEOController extends BaseController<ArticleEO>{
             articleEO.setStatus(2);
             articleEOService.updateByPrimaryKeySelective(articleEO);
             labelEOService.setLabelNum(articleEO.getUId(), articleEO.getLabelId());
-            return Result.success("1",null);
+            return Result.error("1",null);
         } else if (level.equals("$che$")) {
             return Result.error("2", checkContent.substring(5,checkContent.length()));
         }
