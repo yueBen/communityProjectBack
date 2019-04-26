@@ -1,27 +1,26 @@
 package com.adc.da.article.controller;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
-
-import java.util.List;
-import java.util.Map;
-
-import com.adc.da.util.utils.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import com.adc.da.base.web.BaseController;
 import com.adc.da.article.entity.LabelEO;
 import com.adc.da.article.page.LabelEOPage;
 import com.adc.da.article.service.LabelEOService;
-
+import com.adc.da.base.web.BaseController;
 import com.adc.da.util.http.ResponseMessage;
 import com.adc.da.util.http.Result;
-import com.adc.da.util.http.PageInfo;
+import com.adc.da.util.utils.UUID;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/${restPath}/article/label")
@@ -60,7 +59,7 @@ public class LabelEOController extends BaseController<LabelEO>{
     }
 
     @ApiOperation(value = "|LabelEO|删除")
-    @DeleteMapping("/{id}")
+    @GetMapping("/{id}")
     @RequiresPermissions("article:label:delete")
     public ResponseMessage delete(@PathVariable String id) throws Exception {
 
