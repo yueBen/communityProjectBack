@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.adc.da.FileDownLoad;
 import com.adc.da.FileUpLoad;
@@ -18,6 +19,7 @@ import com.adc.da.article.service.ImgPathEOService;
 import com.adc.da.article.service.LabelEOService;
 import com.adc.da.personInfo.entity.PersonInfoEO;
 import com.adc.da.personInfo.service.PersonInfoEOService;
+import com.adc.da.util.utils.ObjectUtils;
 import com.adc.da.util.utils.UUID;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
@@ -76,7 +78,7 @@ public class ArticleEOController extends BaseController<ArticleEO>{
      *          4、浏览时间查询
      *
      *      type：0-学习，1-生活，2-兴趣，3-提问
-     *      status：1-已下线，2-待审批，3-未完成，4-删除，5-已发布, 6-待发布，0-已保存
+     *      status：1-已下线，2-待审批，3-未完成，4-删除，5-已发布, 6-待发布，0-已保存, 7-驳回，8-通过
      */
 
 
@@ -190,19 +192,33 @@ public class ArticleEOController extends BaseController<ArticleEO>{
             articleEO.setStatus(6);
         }
 
-        /* 内容检查 */
-        String checkContent = lexiconEOService.checkContent(articleEO.getContent(), 0);
-        String level = checkContent.substring(0,5);
-        if (level.equals("$del$")) {
-            return Result.error("0", checkContent.substring(5,checkContent.length()));
-        } else if (level.equals("$aut$")) {
-            //移送管理员审核
-            articleEO.setStatus(2);
-            articleEOService.updateByPrimaryKeySelective(articleEO);
-            labelEOService.setLabelNum(articleEO.getUId(), articleEO.getLabelId());
-            return Result.error("1",null);
-        } else if (level.equals("$che$")) {
-            return Result.error("2", checkContent.substring(5,checkContent.length()));
+        if (articleEO.getId() != null && articleEO.getId().length() > 0) {
+            String[] idList = articleEO.getId().split("_");
+            if (idList[0].equals("del")) {
+                for (String aid: idList) {
+                    articleEO.setLabelId(aid);
+                    articleEO.setStatus(4);
+                    articleEOService.updateByPrimaryKeySelective(articleEO);
+                }
+                return Result.success();
+            }
+        }
+
+        if (articleEO.getContent() != null && articleEO.getContent().length() > 0) {
+            /* 内容检查 */
+            String checkContent = lexiconEOService.checkContent(articleEO.getContent(), 0);
+            String level = checkContent.substring(0,5);
+            if (level.equals("$del$")) {
+                return Result.error("0", checkContent.substring(5,checkContent.length()));
+            } else if (level.equals("$aut$")) {
+                //移送管理员审核
+                articleEO.setStatus(2);
+                articleEOService.updateByPrimaryKeySelective(articleEO);
+                labelEOService.setLabelNum(articleEO.getUId(), articleEO.getLabelId());
+                return Result.error("1",null);
+            } else if (level.equals("$che$")) {
+                return Result.error("2", checkContent.substring(5,checkContent.length()));
+            }
         }
 
         articleEOService.updateByPrimaryKeySelective(articleEO);
