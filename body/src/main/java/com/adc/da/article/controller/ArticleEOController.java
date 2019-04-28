@@ -196,7 +196,7 @@ public class ArticleEOController extends BaseController<ArticleEO>{
             String[] idList = articleEO.getId().split("_");
             if (idList[0].equals("del")) {
                 for (String aid: idList) {
-                    articleEO.setLabelId(aid);
+                    articleEO.setId(aid);
                     articleEO.setStatus(4);
                     articleEOService.updateByPrimaryKeySelective(articleEO);
                 }
