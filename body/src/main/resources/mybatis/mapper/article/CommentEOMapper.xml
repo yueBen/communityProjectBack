@@ -92,12 +92,12 @@
         where status != 2
         and p_id = #{pId}
         and on_id = #{onId}
-        order by likeNum desc
+        order by create_time desc
     </select>
 
     <!--设置子评论数-->
     <update id="setCommCount">
-        update comment set comment_num = comment_num + #{count,jdbcType=INTEGER} where id = #{id,jdbcType=VARCHAR}
+        update comment set comment_num = comment_num + #{1,jdbcType=INTEGER} where id = #{0,jdbcType=VARCHAR}
     </update>
 
     <!-- 插入记录 -->

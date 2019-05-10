@@ -46,7 +46,8 @@ public class CommentEOController extends BaseController<CommentEO> {
     /**
      *      uid - 评论创建人的id
      *      on_id - 被评论人的id
-     *      pid - 评论的父级id，可能是type：0-文章子评论、1-评论子评论、2-留言子评论
+     *      pid - 评论的父级id
+     *      type：0-文章子评论、1-评论子评论、2-留言子评论
      *
      *      status: 0-未读，1-已读， 2-删除
      */
