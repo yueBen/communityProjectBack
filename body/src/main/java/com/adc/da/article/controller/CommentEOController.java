@@ -2,13 +2,16 @@ package com.adc.da.article.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import com.adc.da.admin.service.LexiconEOService;
+import com.adc.da.article.entity.vo.CommentVo;
 import com.adc.da.personInfo.entity.NoticeEO;
 import com.adc.da.personInfo.service.NoticeEOService;
+import com.adc.da.personInfo.service.PersonInfoEOService;
 import com.adc.da.util.utils.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +46,9 @@ public class CommentEOController extends BaseController<CommentEO> {
     @Autowired
     private LexiconEOService lexiconEOService;
 
+    @Autowired
+    private PersonInfoEOService personInfoEOService;
+
     /**
      *      uid - 评论创建人的id
      *      on_id - 被评论人的id
@@ -65,8 +71,24 @@ public class CommentEOController extends BaseController<CommentEO> {
     @ApiOperation(value = "|CommentEO|查询")
     @GetMapping("/list")
     @RequiresPermissions("article:comment:list")
-    public ResponseMessage<List<CommentEO>> list(CommentEOPage page) throws Exception {
-        return Result.success(commentEOService.queryByList(page));
+    public ResponseMessage<List<CommentVo>> list(CommentEOPage page) throws Exception {
+        List<CommentEO> list = commentEOService.queryByList(page);
+        List<CommentVo> vos = new ArrayList<>();
+        for (CommentEO eo: list) {
+            CommentVo vo = new CommentVo();
+            vo.setComentNum(eo.getCommentNum());
+            vo.setContent(eo.getContent());
+            vo.setDislike(eo.getDislikeNum());
+            vo.setLike(eo.getLikeNum());
+            vo.setPid(eo.getPId());
+            vo.setId(eo.getId());
+            vo.setTime(eo.getCreateTime());
+            vo.setNameA(personInfoEOService.getPersonByUid(eo.getUId()).getName());
+            vo.setNameB(personInfoEOService.getPersonByUid(eo.getOnId()).getName());
+            vo.setUid(personInfoEOService.getPersonByUid(eo.getUId()).getUId());
+            vos.add(vo);
+        }
+        return Result.success(vos);
     }
 
     @ApiOperation(value = "|CommentEO|详情")
@@ -91,6 +113,9 @@ public class CommentEOController extends BaseController<CommentEO> {
         commentEO.setId(UUID.randomUUID());
         commentEO.setCreateTime(new Date());
         commentEO.setStatus(0);
+        commentEO.setLikeNum(0);
+        commentEO.setDislikeNum(0);
+        commentEO.setCommentNum(0);
 
         /* 评论内容过滤返回 */
         String checkContent = lexiconEOService.checkContent(commentEO.getContent(), 1);
@@ -127,11 +152,14 @@ public class CommentEOController extends BaseController<CommentEO> {
     * 2019-03-15
     **/
     @ApiOperation(value = "|CommentEO|修改")
-    @PutMapping(consumes = APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping("/update")
     @RequiresPermissions("article:comment:update")
-    public ResponseMessage<CommentEO> update(@RequestBody CommentEO commentEO) throws Exception {
+    public ResponseMessage<CommentEO> update(CommentEO commentEO) throws Exception {
         Integer status = commentEO.getStatus();
+        commentEO = commentEOService.selectByPrimaryKey(commentEO.getId());
         commentEO.setStatus(null);
+        commentEO.setLikeNum(null);
+        commentEO.setDislikeNum(null);
         switch (status) {
             case 0:
                 //新获得的赞
@@ -177,7 +205,7 @@ public class CommentEOController extends BaseController<CommentEO> {
                 commentEOService.updateByPrimaryKeySelective(commentEO);
                 break;
         }
-        return Result.success(commentEO);
+        return Result.success(commentEOService.selectByPrimaryKey(commentEO.getId()));
     }
 
 }

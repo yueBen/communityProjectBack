@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.List;
 
 @RestController
 @RequestMapping("/${restPath}/personInfo/personInfo")
@@ -122,6 +123,20 @@ public class PersonInfoEOController extends BaseController<PersonInfoEO> {
         } else {
             return null;
         }
+    }
+
+    @ApiOperation(value = "|PersonInfoEO|好友搜索")
+    @GetMapping("/SelAddFri")
+    @RequiresPermissions("personInfo:personInfo:get")
+    public ResponseMessage<List<PersonInfoEO>> addFri(PersonInfoEO eo) {
+        return Result.success(personInfoEOService.SelAddUser(eo));
+    }
+
+    @ApiOperation(value = "|PersonInfoEO|加载好友和关注的人")
+    @GetMapping("/getUser")
+    @RequiresPermissions("personInfo:personInfo:get")
+    public ResponseMessage<List<PersonInfoEO>> getUser(PersonInfoEO eo) {
+        return Result.success(personInfoEOService.getUser(eo));
     }
 
     @ApiOperation(value = "|PersonInfoEO|头像显示")

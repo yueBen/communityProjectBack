@@ -129,6 +129,7 @@
             <if test="commentNum != null">comment_num,</if>
             <if test="createTime != null">create_time,</if>
             <if test="content != null">content,</if>
+            <if test="status != null">status,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -141,6 +142,7 @@
             <if test="commentNum != null">#{commentNum},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="content != null">#{content},</if>
+            <if test="status != null">#{status},</if>
         </trim>
     </insert>
 

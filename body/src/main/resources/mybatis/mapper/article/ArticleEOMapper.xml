@@ -198,13 +198,13 @@
         a.status, a.title, a.content, a.browse_num, a.collection_num,
         a.comment_num, a.like_num, a.dislike_num, a.type, p.name as label_id
         from article a left join person_info p on a.u_id = p.u_id
-        where 1=1
+        where  (a.status = 5 or a.status = 6)
         <if test="uId != null" >
             and (a.u_id = ANY(select u_id_2 from relation where u_id_1 = #{uId} and type = 0 and status = 1)
             or a.u_id = ANY(select u_id_1 from relation where u_id_2 = #{uId} and type = 0 and status = 1))
         </if>
         <if test="releaseTime != null" >
-            and a.release_time = #{releaseTime}
+            and a.release_time &lt;= #{releaseTime}
         </if>
         <if test="releaseTime1 != null" >
             and a.release_time &gt;= #{releaseTime1}
@@ -221,6 +221,29 @@
         <if test="type != null" >
             and a.type = #{type}
         </if>
+        order by a.release_time desc, a.update_time desc, a.create_time desc
+        limit ${pager.pageOffset},${pager.pageSize}
+    </select>
+
+    <select id="getAttentionItem" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
+        select a.id, a.u_id, a.create_time, a.release_time, a.update_time,
+        a.status, a.title, a.content, a.browse_num, a.collection_num,
+        a.comment_num, a.like_num, a.dislike_num, a.type, p.name as label_id
+        from article a left join person_info p on a.u_id = p.u_id
+        where (a.status = 5 or a.status = 6)
+        <if test="uId != null" >
+            and a.u_id = ANY(select u_id_2 from relation where u_id_1 = #{uId} and type = 3 and status = 0)
+        </if>
+        <if test="releaseTime != null" >
+        and a.release_time &lt;= #{releaseTime}
+    </if>
+        <if test="releaseTime1 != null" >
+            and a.release_time &gt;= #{releaseTime1}
+        </if>
+        <if test="releaseTime2 != null" >
+            and a.release_time &lt;= #{releaseTime2}
+        </if>
+
         order by a.release_time desc, a.update_time desc, a.create_time desc
         limit ${pager.pageOffset},${pager.pageSize}
     </select>

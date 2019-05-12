@@ -240,4 +240,33 @@
         from person_info where u_id = #{id,jdbcType=VARCHAR}
     </select>
 
+    <select id="SelAddUser" resultMap="BaseResultMap" parameterType="com.adc.da.personInfo.entity.PersonInfoEO">
+        select
+        <include refid="Base_Column_List"/>
+        from person_info where
+        (u_id like concat('%',#{name},'%') or name like concat('%',#{name},'%'))
+        and u_id != #{uId}
+        <if test='id == "1"'>
+            AND !(u_id IN ( SELECT U_ID_2 FROM relation WHERE TYPE = 0 AND (`STATUS` = 1 OR `STATUS` = 0)))
+        </if>
+        <if test='id == "2"'>
+            AND !(u_id IN ( SELECT U_ID_2 FROM relation WHERE TYPE = 3 AND `STATUS` = 0))
+        </if>
+
+    </select>
+
+    <select id="getUser" resultMap="BaseResultMap" parameterType="com.adc.da.personInfo.entity.PersonInfoEO">
+        select
+        <include refid="Base_Column_List"/>
+        from person_info where
+        u_id != #{uId}
+        <if test='id == "1"'>
+            AND u_id IN ( SELECT U_ID_2 FROM relation WHERE TYPE = 0 AND `STATUS` = 1)
+        </if>
+        <if test='id == "2"'>
+            AND u_id IN ( SELECT U_ID_2 FROM relation WHERE TYPE = 3 AND `STATUS` = 0)
+        </if>
+
+    </select>
+
 </mapper>

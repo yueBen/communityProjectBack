@@ -58,7 +58,8 @@ public class RelationEOService extends BaseService<RelationEO, String> {
      **/
     @Transactional
     public boolean repeatFriend(RelationEO relationEO) {
-        return dao.repeatFriend(relationEO) == 0;
+        int i = dao.repeatFriend(relationEO);
+        return i == 0;
     }
 
     /**
@@ -70,7 +71,8 @@ public class RelationEOService extends BaseService<RelationEO, String> {
      **/
     @Transactional
     public boolean repeatAtten(RelationEO relationEO) {
-        return dao.repeatAtten(relationEO) == 0;
+        int i = dao.repeatAtten(relationEO);
+        return i == 0;
     }
 
 }

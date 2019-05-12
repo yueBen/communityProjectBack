@@ -12,6 +12,8 @@ import com.adc.da.base.service.BaseService;
 import com.adc.da.personInfo.dao.PersonInfoEODao;
 import com.adc.da.personInfo.entity.PersonInfoEO;
 
+import java.util.List;
+
 
 /**
  * <br>
@@ -34,7 +36,6 @@ public class PersonInfoEOService extends BaseService<PersonInfoEO, String> {
     }
 
     /**
-     * 根据uid查询数据并将图片转成base64
      *
      * @param uid
      * @return
@@ -44,6 +45,16 @@ public class PersonInfoEOService extends BaseService<PersonInfoEO, String> {
     @Transactional(readOnly = true)
     public PersonInfoEO getPersonByUid(String uid) {
         return dao.getPersonByUid(uid);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PersonInfoEO> SelAddUser(PersonInfoEO eo) {
+        return dao.SelAddUser(eo);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PersonInfoEO> getUser(PersonInfoEO eo) {
+        return dao.getUser(eo);
     }
 
 }

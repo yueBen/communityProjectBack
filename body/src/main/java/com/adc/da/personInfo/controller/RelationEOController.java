@@ -14,10 +14,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -46,7 +43,9 @@ public class RelationEOController extends BaseController<RelationEO> {
 
     /**
      * 添加好友申请和关注
-     * uid1，uid2, type
+     * uid1 -- 申请人ID
+     * uid2 -- 接受人ID
+     * type
      *
      * @param relationEO
      * @return
@@ -65,6 +64,7 @@ public class RelationEOController extends BaseController<RelationEO> {
             if (relationEOService.repeatFriend(relationEO) && relationEOService.insertSelective(relationEO) == 1) {
                 //创建通知对象
                 NoticeEO noticeEO = new NoticeEO();
+                noticeEO.setId(UUID.randomUUID());
                 noticeEO.setUId1(relationEO.getUId1());
                 noticeEO.setUId2(relationEO.getUId2());
                 noticeEO.setToId(relationEO.getId());
@@ -80,6 +80,7 @@ public class RelationEOController extends BaseController<RelationEO> {
         } else {
             if (relationEOService.repeatAtten(relationEO) && relationEOService.insertSelective(relationEO) == 1) {
                 NoticeEO noticeEO = new NoticeEO();
+                noticeEO.setId(UUID.randomUUID());
                 noticeEO.setUId1(relationEO.getUId1());
                 noticeEO.setUId2(relationEO.getUId2());
                 noticeEO.setToId(relationEO.getId());
@@ -92,8 +93,14 @@ public class RelationEOController extends BaseController<RelationEO> {
         return Result.error("发送失败！");
     }
 
+    @GetMapping("/isAtten")
+    public ResponseMessage isAtten(RelationEO relationEO) {
+        return relationEOService.repeatAtten(relationEO)?Result.success("关注"):Result.success("已关注");
+    }
+
     /**
-     * 通过、拒绝、取消关注、删除
+     * id: 1-通过、2-拒绝、3-取消关注、4-删除、 5-关注
+     *
      * uid1，uid2, type, status
      *
      * @param relationEO

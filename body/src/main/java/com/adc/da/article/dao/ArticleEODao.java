@@ -31,4 +31,6 @@ public interface ArticleEODao extends BaseDao<ArticleEO> {
      */
     List<ArticleEO> getFriItems(ArticleEOPage page);
 
+    List<ArticleEO> getAttentionItem(ArticleEOPage page);
+
 }

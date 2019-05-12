@@ -50,4 +50,11 @@ public class ArticleEOService extends BaseService<ArticleEO, String> {
         return dao.getFriItems(page);
     }
 
+    @Transactional(readOnly = true)
+    public List<ArticleEO> getAttentionItem(ArticleEOPage page) throws Exception {
+        Integer rowCount = this.queryByCount(page);
+        page.getPager().setRowCount(rowCount.intValue());
+        return dao.getAttentionItem(page);
+    }
+
 }

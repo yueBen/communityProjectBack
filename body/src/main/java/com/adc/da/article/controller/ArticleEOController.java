@@ -106,9 +106,17 @@ public class ArticleEOController extends BaseController<ArticleEO>{
     @GetMapping("/friPage")
     @RequiresPermissions("article:article:page")
     public ResponseMessage<PageInfo<ArticleEO>> getFriItem(ArticleEOPage page) throws Exception {
+	    page.setReleaseTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         List<ArticleEO> rows = articleEOService.getFriItems(page);
-
         return Result.success(getPageInfo(page.getPager(), rows));
+    }
+
+    @ApiOperation(value = "|ArticleEO|我的关注文章")
+    @GetMapping("/attePage")
+    @RequiresPermissions("article:article:page")
+    public ResponseMessage<List<ArticleEO>> getAttentionItem(ArticleEOPage page) throws Exception {
+        page.setReleaseTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        return Result.success(articleEOService.getAttentionItem(page));
     }
 
     @ApiOperation(value = "|ArticleEO|历史记录")
@@ -223,7 +231,7 @@ public class ArticleEOController extends BaseController<ArticleEO>{
 
         articleEOService.updateByPrimaryKeySelective(articleEO);
         labelEOService.setLabelNum(articleEO.getUId(), articleEO.getLabelId());
-        return Result.success(articleEO);
+        return Result.success(articleEOService.selectByPrimaryKey(articleEO.getId()));
     }
 
     @ApiOperation(value = "|Img|上传")

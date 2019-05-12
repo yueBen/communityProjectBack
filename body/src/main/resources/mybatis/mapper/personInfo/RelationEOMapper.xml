@@ -85,18 +85,32 @@
             <if test="createTime != null">
                 create_time = #{createTime},
             </if>
-            <if test="type != null">
-                type = #{type},
+            <if test='id == "1"'>
+                type = 0,
+                status = 1,
             </if>
-            <if test="status != null">
-                status = #{status},
+            <if test='id == "2"'>
+                type = 0,
+                status = 2,
+            </if>
+            <if test='id == "3"'>
+                type = 3,
+                status = 1,
+            </if>
+            <if test='id == "4"'>
+                type = 0,
+                status = 3,
+            </if>
+            <if test='id == "5"'>
+                type = 3,
+                status = 0,
             </if>
         </set>
-        where u_id_1 = #{uId1} and u_id_2 = #{uId2}
+        where u_id_1 = #{uId1} and u_id_2 = #{uId2} and type = #{type} and status = #{status}
     </update>
 
     <!--好友查重-->
-    <select id="repeatFriend" parameterType="com.adc.da.personInfo.entity.RelationEO">
+    <select id="repeatFriend" resultType="java.lang.Integer" parameterType="com.adc.da.personInfo.entity.RelationEO">
         select count(*) from relation
         where u_id_1 = #{uId1}
         and u_id_2 = #{uId2}
@@ -106,11 +120,11 @@
     </select>
 
     <!--关注验重-->
-    <select id="repeatAtten" parameterType="com.adc.da.personInfo.entity.RelationEO">
+    <select id="repeatAtten" resultType="java.lang.Integer" parameterType="com.adc.da.personInfo.entity.RelationEO">
         select count(*) from relation
         where u_id_1 = #{uId1}
         and u_id_2 = #{uId2}
-        and type = 1
+        and type = 3
         and status != 1
         and status != 3
     </select>
