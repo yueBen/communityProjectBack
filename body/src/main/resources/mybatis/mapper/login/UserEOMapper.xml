@@ -12,6 +12,17 @@
     <result column="account_level"  jdbcType="INTEGER"      property="accountLevel" />
   </resultMap>
 
+    <resultMap id="BaseResultVOMap" type="com.adc.da.login.entity.UserVO" >
+        <id column="id"                 jdbcType="VARCHAR"      property="id" />
+        <result column="create_time"      jdbcType="TIMESTAMP"      property="createTime" />
+        <result column="online_time"       jdbcType="TIMESTAMP"      property="onlineTime" />
+        <result column="name"    jdbcType="VARCHAR"    property="name" />
+        <result column="birthday"    jdbcType="TIMESTAMP"    property="birthday" />
+        <result column="account_level"         jdbcType="INTEGER"      property="accountLevel" />
+        <result column="ranking"  jdbcType="INTEGER"      property="ranking" />
+        <result column="status"  jdbcType="INTEGER"      property="status" />
+    </resultMap>
+
   <!-- user table all fields -->
   <sql id="Base_Column_List" >
      id, user_name, user_pwd, create_time, online_time, status, account_level
@@ -62,6 +73,30 @@
     <select id="userLogin" resultMap="BaseResultMap" parameterType="com.adc.da.login.entity.UserEO">
         select <include refid="Base_Column_List" /> from user where
         user_name = #{userName,jdbcType=VARCHAR} and user_pwd = #{userPwd, jdbcType=VARCHAR}
+    </select>
+
+    <select id="getUserList" resultMap="BaseResultVOMap" parameterType="com.adc.da.login.entity.UserVO">
+        select u.ID, u.CREATE_TIME, u.ONLINE_TIME, p.`NAME`, p.BIRTHDAY, p.RANKING, u.ACCOUNT_LEVEL, u.`STATUS`
+        from user u left join person_info p on u.ID = p.U_ID where u.ID != '0000000001' and u.`STATUS` != 3
+        <if test="name != null and name != ''">
+            and p.`NAME` like concat('%',#{name},'%')
+        </if>
+        <if test="id != null and id != ''">
+            and u.ID like concat('%',#{id},'%')
+        </if>
+        <if test="createTime1 != null and createTime1 != ''">
+            and u.CREATE_TIME &gt;= #{createTime1}
+        </if>
+        <if test="createTime2 != null and createTime2 != ''">
+            and u.CREATE_TIME &lt;= #{createTime2}
+        </if>
+        <if test="accountLevel != null">
+            and u.ACCOUNT_LEVEL = #{accountLevel}
+        </if>
+        <if test="status != null">
+            and u.`STATUS` = #{status}
+        </if>
+        order by u.ONLINE_TIME desc
     </select>
 
     <!-- 注册 -->

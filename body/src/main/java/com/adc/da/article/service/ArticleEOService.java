@@ -57,4 +57,39 @@ public class ArticleEOService extends BaseService<ArticleEO, String> {
         return dao.getAttentionItem(page);
     }
 
+    @Transactional(readOnly = true)
+    public List<ArticleEO> getAdminReview() throws Exception {
+        return dao.getAdminReview();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ArticleEO> queryArticleRanking(ArticleEOPage page) throws Exception {
+
+        return dao.queryArticleRanking(page);
+    }
+
+    @Transactional(readOnly = true)
+    public int getArticleNum(String uid) throws Exception {
+
+        return dao.getArticleNum(uid);
+    }
+
+    @Transactional(readOnly = true)
+    public int getBrowseNum(String uid) throws Exception {
+
+        return dao.getBrowseNum(uid);
+    }
+
+    @Transactional(readOnly = true)
+    public int getCollecNum(String uid) throws Exception {
+
+        return dao.getCollecNum(uid);
+    }
+
+    @Transactional(readOnly = true)
+    public int getLikeNum(String uid) throws Exception {
+
+        return dao.getLikeNum(uid);
+    }
+
 }

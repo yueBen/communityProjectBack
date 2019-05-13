@@ -123,8 +123,25 @@ public class ArticleEOController extends BaseController<ArticleEO>{
     @GetMapping("/historyList")
     @RequiresPermissions("article:article:page")
     public ResponseMessage<List<HistoryVo>> historyList(HistoryVo historyVo) throws Exception {
-
+	    long time = new Date().getTime();
+	    historyVo.setBrowseTime(new Date(time + (30 * 24 * 60 * 60 * 1000)));
+	    historyVo.setReleaseTime(new Date(time));
         return Result.success(articleEOService.queryHisList(historyVo));
+    }
+
+    @ApiOperation(value = "|ArticleEO|")
+    @GetMapping("/adminReview")
+    @RequiresPermissions("article:article:page")
+    public ResponseMessage<List<ArticleEO>> getAdminReview() throws Exception {
+        return Result.success(articleEOService.getAdminReview());
+    }
+
+    @ApiOperation(value = "|ArticleEO|我的关注文章")
+    @GetMapping("/articleRanking")
+    @RequiresPermissions("article:article:page")
+    public ResponseMessage<List<ArticleEO>> queryArticleRanking(ArticleEOPage page) throws Exception {
+        page.setReleaseTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        return Result.success(articleEOService.queryArticleRanking(page));
     }
 
     /**

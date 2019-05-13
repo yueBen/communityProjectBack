@@ -1,7 +1,10 @@
 package com.adc.da.login.controller;
 
+import com.adc.da.article.service.ArticleEOService;
+import com.adc.da.article.service.CommentEOService;
 import com.adc.da.base.web.BaseController;
 import com.adc.da.login.entity.UserEO;
+import com.adc.da.login.entity.UserVO;
 import com.adc.da.login.page.UserEOPage;
 import com.adc.da.login.service.UserEOService;
 import com.adc.da.personInfo.entity.PersonInfoEO;
@@ -43,21 +46,24 @@ public class UserEOController extends BaseController<UserEO>{
     @Autowired
     private PersonInfoEOService personInfoEOService;
 
+    @Autowired
+    private CommentEOService commentEOService;
+
+    @Autowired
+    private ArticleEOService articleEOService;
+
 
     /**
      * 条件查询
-     * @param page
+     * @param vo
      * @return
      * @author yueben
      * 2019-03-12
      **/
     @ApiOperation(value = "|UserEO|查询")
     @GetMapping("/queryList")
-    @RequiresPermissions("login:user:page")
-    public ResponseMessage<List<UserEO>> list(UserEOPage page) throws Exception {
-        //要使用分页必须设置RowCount
-        page.getPager().setRowCount(userEOService.queryByCount(page));
-        return Result.success(userEOService.queryByList(page));
+    public ResponseMessage<List<UserVO>> list(UserVO vo) throws Exception {
+        return Result.success(userEOService.getUserList(vo));
     }
 
     /**
@@ -87,7 +93,7 @@ public class UserEOController extends BaseController<UserEO>{
     }
 
     /**
-     * 禁言，密码重置，逻辑删除
+     * 禁言，审批，逻辑删除
      * @param userEO
      * @return
      * @author yueben
@@ -125,6 +131,10 @@ public class UserEOController extends BaseController<UserEO>{
                 user.setOnlineTime(new Date());
                 userEOService.updateByPrimaryKeySelective(user);
                 PersonInfoEO person = personInfoEOService.getPersonByUid(user.getId());
+                if (person != null) {
+                    person = updatePersonInfo(person);
+                }
+
                 if (person == null) {
                     PersonInfoEO infoEO = new PersonInfoEO();
                     infoEO.setUId(user.getId());
@@ -142,5 +152,20 @@ public class UserEOController extends BaseController<UserEO>{
             e.printStackTrace();
             return Result.error();
         }
+    }
+
+    private PersonInfoEO updatePersonInfo(PersonInfoEO eo) throws Exception{
+        String uid = eo.getUId();
+        if (uid != null || uid != "") {
+            eo.setCommentNum(commentEOService.getCommNumByUid(uid));
+            eo.setRanking(articleEOService.getCollecNum(uid));
+            eo.setBrowseNum(articleEOService.getBrowseNum(uid));
+            eo.setMessageNum(articleEOService.getArticleNum(uid));
+            eo.setPraiseNum(articleEOService.getLikeNum(uid));
+            personInfoEOService.updateByPrimaryKeySelective(eo);
+        }
+
+
+        return eo;
     }
 }

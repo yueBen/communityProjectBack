@@ -21,7 +21,7 @@
         and id ${idOperator} #{id}
       </if>
       <if test="word != null" >
-        and word ${wordOperator} #{word}
+        and word like concat('%',#{word},'%')
       </if>
       <if test="level != null" >
         and level ${levelOperator} #{level}

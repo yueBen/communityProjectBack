@@ -78,9 +78,9 @@
             and is_read ${isReadOperator} #{isRead}
         </if>
         and is_read != 2
-        and u_id_1 = any(select u_id_1 from notice where u_id_1 = #{id} and type = 0 and status != 1 and status != 2)
+        and (u_id_1 = any(select u_id_1 from notice where u_id_1 = #{id} and type = 0 and status != 1 and status != 2)
         or u_id_1 = any(select u_id_1 from notice where u_id_1 = #{id} and type = 3)
-        or u_id_2 = #{id}
+        or u_id_2 = #{id})
         order by is_read asc,create_time DESC
         limit ${pager.pageOffset},${pager.pageSize}
     </select>

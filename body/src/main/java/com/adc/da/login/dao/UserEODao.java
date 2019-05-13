@@ -2,6 +2,7 @@ package com.adc.da.login.dao;
 
 import com.adc.da.base.dao.BaseDao;
 import com.adc.da.login.entity.UserEO;
+import com.adc.da.login.entity.UserVO;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -33,5 +34,7 @@ public interface UserEODao extends BaseDao<UserEO> {
     * 2019-03-12
     **/
     int userNameCheck(String username);
+
+    List<UserVO> getUserList(UserVO vo);
 
 }

@@ -1,6 +1,8 @@
 package com.adc.da.article.controller;
 
+import com.adc.da.article.entity.ArticleEO;
 import com.adc.da.article.entity.HistoryEO;
+import com.adc.da.article.service.ArticleEOService;
 import com.adc.da.article.service.HistoryEOService;
 import com.adc.da.base.web.BaseController;
 import com.adc.da.util.http.ResponseMessage;
@@ -28,6 +30,9 @@ public class HistoryEOController extends BaseController<HistoryEO>{
     @Autowired
     private HistoryEOService historyEOService;
 
+    @Autowired
+    private ArticleEOService articleEOService;
+
     /**
      *      一、历史记录内容在article里面加载
      *      二、新增
@@ -53,6 +58,13 @@ public class HistoryEOController extends BaseController<HistoryEO>{
     public ResponseMessage create(@RequestBody HistoryEO historyEO) throws Exception {
         historyEO.setBrowseTime(new Date());
         historyEO.setId(UUID.randomUUID());
+        historyEO.setBrowseNum(historyEO.getBrowseNum() + 1);
+
+        ArticleEO articleEO = new ArticleEO();
+        articleEO.setId(historyEO.getAId());
+        articleEO.setBrowseNum(historyEO.getBrowseNum());
+        articleEOService.updateByPrimaryKeySelective(articleEO);
+
         if (historyEOService.insertSelective(historyEO) == 1) {
             return Result.success("新增成功");
         }
@@ -60,11 +72,10 @@ public class HistoryEOController extends BaseController<HistoryEO>{
     }
 
     @ApiOperation(value = "|HistoryEO|删除")
-    @DeleteMapping("/{id}")
+    @GetMapping("/{id}")
     @RequiresPermissions("article:history:delete")
     public ResponseMessage delete(@PathVariable String id) throws Exception {
         historyEOService.deleteByPrimaryKey(id);
-        logger.info("delete from history where id = {}", id);
         return Result.success();
     }
 

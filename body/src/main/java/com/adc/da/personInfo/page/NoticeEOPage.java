@@ -1,6 +1,8 @@
 package com.adc.da.personInfo.page;
 
 import com.adc.da.base.page.BasePage;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -23,7 +25,11 @@ public class NoticeEOPage extends BasePage {
     private String type;
     private String typeOperator = "=";
     private String createTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private String createTime1;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private String createTime2;
     private String createTimeOperator = "=";
     private String content;

@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.adc.da.admin.service.LexiconEOService;
+import com.adc.da.article.entity.ArticleEO;
 import com.adc.da.article.entity.vo.CommentVo;
+import com.adc.da.article.service.ArticleEOService;
 import com.adc.da.personInfo.entity.NoticeEO;
 import com.adc.da.personInfo.service.NoticeEOService;
 import com.adc.da.personInfo.service.PersonInfoEOService;
@@ -48,6 +50,9 @@ public class CommentEOController extends BaseController<CommentEO> {
 
     @Autowired
     private PersonInfoEOService personInfoEOService;
+
+    @Autowired
+    private ArticleEOService articleEOService;
 
     /**
      *      uid - 评论创建人的id
@@ -117,6 +122,8 @@ public class CommentEOController extends BaseController<CommentEO> {
         commentEO.setDislikeNum(0);
         commentEO.setCommentNum(0);
 
+
+
         /* 评论内容过滤返回 */
         String checkContent = lexiconEOService.checkContent(commentEO.getContent(), 1);
         if (checkContent == null) {
@@ -126,6 +133,11 @@ public class CommentEOController extends BaseController<CommentEO> {
         }
 
         if (commentEOService.insertSelective(commentEO) == 1) {
+            ArticleEO eo = articleEOService.selectByPrimaryKey(commentEO.getPId());
+            if (eo != null) {
+                eo.setCommentNum(eo.getCommentNum()+1);
+                articleEOService.updateByPrimaryKeySelective(eo);
+            }
             //父评论计数
             commentEOService.setCommCount(commentEO.getPId(), 1);
             //生成通知

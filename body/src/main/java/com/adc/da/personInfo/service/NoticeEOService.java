@@ -17,6 +17,7 @@ import com.adc.da.personInfo.entity.NoticeEO;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -111,6 +112,7 @@ public class NoticeEOService extends BaseService<NoticeEO, String> {
             Integer type = eo.getType();
             //主动通知，我怎么怎么了
             if (eo.getUId1().equals(uid)) {
+                // $$ == <div class='item-title-btn i-b-left'>详情</div>
                 String name = pdao.getPersonByUid(eo.getUId2()).getName();
                 switch (type) {
                     case 0:
@@ -128,18 +130,18 @@ public class NoticeEOService extends BaseService<NoticeEO, String> {
                 String name = pdao.getPersonByUid(eo.getUId1()).getName();
                 switch (type) {
                     case 0:
-                        eo.setContent(status == 0 ? name + "&nbsp;&nbsp;想和你成为好友。<div class='item-title-btn i-b-left'>详情</div>"
+                        eo.setContent(status == 0 ? name + "&nbsp;&nbsp;想和你成为好友。$$"
                                 : status == 3 ? name + "与您解除了好友关系！" : "介是嘛？B");
                         break;
                     case 1:
-                        eo.setContent(status == 0 || status == 1 ? "您有了新的评论。<div class='item-title-btn i-b-left'>详情</div>"
-                                : status == 2 ? name + "&nbsp;&nbsp;给您的评论点了赞。<div class='item-title-btn i-b-left'>详情</div>"
-                                : status == 3 ? name + "&nbsp;&nbsp;不喜欢您的评论。<div class='item-title-btn i-b-left'>详情</div>" : "介是嘛？C");
+                        eo.setContent(status == 0 || status == 1 ? "您有了新的评论。$$"
+                                : status == 2 ? name + "&nbsp;&nbsp;给您的评论点了赞。$$"
+                                : status == 3 ? name + "&nbsp;&nbsp;不喜欢您的评论。$$" : "介是嘛？C");
                         break;
                     case 2:
-                        eo.setContent(status == 0 ? name + "&nbsp;&nbsp;收藏了您的文章。<div class='item-title-btn i-b-left'>详情</div>"
-                                : status == 1 ? name + "&nbsp;&nbsp;给您的文章点了赞。<div class='item-title-btn i-b-left'>详情</div>"
-                                : status == 2 ? name + "&nbsp;&nbsp;不喜欢您的文章。<div class='item-title-btn i-b-left'>详情</div>" : "介是嘛？D");
+                        eo.setContent(status == 0 ? name + "&nbsp;&nbsp;收藏了您的文章。$$"
+                                : status == 1 ? name + "&nbsp;&nbsp;给您的文章点了赞。$$"
+                                : status == 2 ? name + "&nbsp;&nbsp;不喜欢您的文章。$$" : "介是嘛？D");
                         break;
                     case 3:
                         eo.setContent(status == 0 ? name + "&nbsp;&nbsp;关注了您！"
@@ -150,6 +152,14 @@ public class NoticeEOService extends BaseService<NoticeEO, String> {
                 }
             }
             list.add(eo);
+        }
+
+        Iterator<NoticeEO> it = list.iterator();
+        while (it.hasNext()) {
+            NoticeEO eo = it.next();
+            if (eo.getContent() == null) {
+                it.remove();
+            }
         }
 
         return list;

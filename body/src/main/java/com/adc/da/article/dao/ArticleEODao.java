@@ -33,4 +33,16 @@ public interface ArticleEODao extends BaseDao<ArticleEO> {
 
     List<ArticleEO> getAttentionItem(ArticleEOPage page);
 
+    List<ArticleEO> queryArticleRanking(ArticleEOPage page);
+
+    List<ArticleEO> getAdminReview();
+
+    int getArticleNum(String uid);
+
+    int getBrowseNum(String uid);
+
+    int getCollecNum(String uid);
+
+    int getLikeNum(String uid);
+
 }

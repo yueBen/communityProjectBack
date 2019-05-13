@@ -59,11 +59,17 @@ public class RelationEOController extends BaseController<RelationEO> {
 
         relationEO.setId(UUID.randomUUID());
         relationEO.setCreateTime(new Date());
-        relationEO.setStatus(0);
+        if (relationEO.getType() == 0) {
+            relationEO.setStatus(1);
+        } else {
+            relationEO.setStatus(0);
+        }
+
         if (relationEO.getType() == 0) {
             if (relationEOService.repeatFriend(relationEO) && relationEOService.insertSelective(relationEO) == 1) {
                 //创建通知对象
                 NoticeEO noticeEO = new NoticeEO();
+                noticeEO.setCreateTime(new Date());
                 noticeEO.setId(UUID.randomUUID());
                 noticeEO.setUId1(relationEO.getUId1());
                 noticeEO.setUId2(relationEO.getUId2());
@@ -74,7 +80,7 @@ public class RelationEOController extends BaseController<RelationEO> {
                 if (note != null && note.length() >0) {
                     noticeEO.setContent(note);
                 }
-                noticeEOService.insertSelective(noticeEO);
+                noticeEOService.insertSelect(noticeEO);
                 return Result.success("邀请已发送！");
             }
         } else {
@@ -86,7 +92,7 @@ public class RelationEOController extends BaseController<RelationEO> {
                 noticeEO.setToId(relationEO.getId());
                 noticeEO.setType(3);
                 noticeEO.setStatus(0);
-                noticeEOService.insertSelective(noticeEO);
+                noticeEOService.insertSelect(noticeEO);
                 return Result.success("已关注");
             }
         }

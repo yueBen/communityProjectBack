@@ -34,6 +34,7 @@ public class LexiconEOController extends BaseController<LexiconEO>{
     @GetMapping("/page")
     @RequiresPermissions("admin:lexicon:page")
     public ResponseMessage<PageInfo<LexiconEO>> page(LexiconEOPage page) throws Exception {
+        page.setPageSize(1000);
         List<LexiconEO> rows = lexiconEOService.queryByPage(page);
         return Result.success(getPageInfo(page.getPager(), rows));
     }

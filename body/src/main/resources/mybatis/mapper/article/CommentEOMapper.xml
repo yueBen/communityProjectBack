@@ -100,6 +100,10 @@
         update comment set comment_num = comment_num + #{1,jdbcType=INTEGER} where id = #{0,jdbcType=VARCHAR}
     </update>
 
+    <select id="getCommNumByUid" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(*) FROM `comment` where u_id = #{uid,jdbcType=INTEGER}
+    </select>
+
     <!-- 插入记录 -->
     <insert id="insert" parameterType="com.adc.da.article.entity.CommentEO">
         <!-- <selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">

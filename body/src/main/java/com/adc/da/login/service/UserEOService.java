@@ -1,5 +1,6 @@
 package com.adc.da.login.service;
 
+import com.adc.da.login.entity.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,11 @@ public class UserEOService extends BaseService<UserEO, String> {
     @Transactional(readOnly = true)
     public boolean usernameCheck(String name) {
         return dao.userNameCheck(name) == 0;
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserVO> getUserList(UserVO vo) {
+        return dao.getUserList(vo);
     }
 
 }

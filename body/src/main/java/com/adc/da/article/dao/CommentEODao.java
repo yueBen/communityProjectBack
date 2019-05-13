@@ -22,4 +22,7 @@ public interface CommentEODao extends BaseDao<CommentEO> {
      * @return
      */
     int setCommCount(@Param("id") String id, @Param("count") Integer count);
+
+    //我的评论数
+    int getCommNumByUid(@Param("uid") String uid);
 }

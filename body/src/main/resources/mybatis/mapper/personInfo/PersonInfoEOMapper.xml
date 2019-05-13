@@ -247,7 +247,8 @@
         (u_id like concat('%',#{name},'%') or name like concat('%',#{name},'%'))
         and u_id != #{uId}
         <if test='id == "1"'>
-            AND !(u_id IN ( SELECT U_ID_2 FROM relation WHERE TYPE = 0 AND (`STATUS` = 1 OR `STATUS` = 0)))
+            AND !(u_id = ANY(select u_id_2 from relation where u_id_1 = #{uId} and type = 0 and status = 1)
+            or u_id = ANY(select u_id_1 from relation where u_id_2 = #{uId} and type = 0 and status = 1))
         </if>
         <if test='id == "2"'>
             AND !(u_id IN ( SELECT U_ID_2 FROM relation WHERE TYPE = 3 AND `STATUS` = 0))
@@ -261,10 +262,11 @@
         from person_info where
         u_id != #{uId}
         <if test='id == "1"'>
-            AND u_id IN ( SELECT U_ID_2 FROM relation WHERE TYPE = 0 AND `STATUS` = 1)
+            AND (u_id IN ( SELECT U_ID_2 FROM relation WHERE TYPE = 0 AND `STATUS` = 1 and U_ID_1 = #{uId})
+            or u_id IN ( SELECT U_ID_1 FROM relation WHERE TYPE = 0 AND `STATUS` = 1 and U_ID_2 = #{uId}))
         </if>
         <if test='id == "2"'>
-            AND u_id IN ( SELECT U_ID_2 FROM relation WHERE TYPE = 3 AND `STATUS` = 0)
+            AND u_id IN ( SELECT U_ID_2 FROM relation WHERE TYPE = 3 AND `STATUS` = 0 and U_ID_1 = #{uId})
         </if>
 
     </select>

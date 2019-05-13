@@ -64,18 +64,7 @@
     <select id="queryByPage" resultMap="BaseResultMap" parameterType="com.adc.da.base.page.BasePage">
         select <include refid="Base_Column_List" /> from affiche
         where 1=1
-        <if test="title != null">
-            and title like "%"#{title}"%"
-        </if>
-        <if test="createTime != null" >
-            and create_time = #{createTime}
-        </if>
-        <if test="createTime1 != null" >
-            and create_time &gt;= #{createTime1}
-        </if>
-        <if test="createTime2 != null" >
-            and create_time &lt;= #{createTime2}
-        </if>
+
         <if test="type != null">
             and type = #{type}
         </if>

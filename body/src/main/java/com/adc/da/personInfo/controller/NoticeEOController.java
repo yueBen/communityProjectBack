@@ -58,6 +58,7 @@ public class NoticeEOController extends BaseController<NoticeEO> {
     @GetMapping("/page")
     @RequiresPermissions("personInfo:notice:page")
     public ResponseMessage<List<NoticeEO>> page(NoticeEOPage page) throws Exception {
+        page.setPageSize(1000);
         return Result.success(noticeEOService.queryPage(page));
     }
 
